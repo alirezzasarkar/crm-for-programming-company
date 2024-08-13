@@ -1,0 +1,47 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+body {
+    font-family: 'Shabnam', sans-serif;
+}  
+
+input::placeholder {
+    text-align: right;
+    direction: rtl;    
+}
+
+.placeholder-gray-400::placeholder {
+    color: #b3b7bd;
+  }
+
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
+  
+.gradient-navbar{
+    background: linear-gradient(-90deg, #031738 ,#2e2c86 );
+}
+
+.gradient-sidebar{
+    background: linear-gradient( #031738 ,#2e2c86 );
+}
+
+.gradient-sidebaritem:hover{
+    background: linear-gradient(-90deg, #0317383f ,#2e2c86 );
+}
+
+.gradient-sidebaritem-active{
+    background: linear-gradient(-90deg, #0317383f ,#2e2c86 );
+}
+
+.rmdp-input{
+    text-align: center;
+    border-width: 1px;
+    border-color: rgb(229, 231, 235);
+    border-radius: 0.75rem;
+    height: auto;
+    margin: 1px 0;
+    padding: 0.5rem;
+}
