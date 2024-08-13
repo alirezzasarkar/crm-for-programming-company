@@ -8,7 +8,7 @@ interface SearchProps {
 
 const Search: React.FC<SearchProps> = ({ onSearchChange }) => {
   return (
-    <div className="flex items-center rtl bg-white rounded-md p-2 shadow-gray-200 shadow-md px-5 h-10">
+    <div className="flex items-center rtl bg-white rounded-md p-2 w-1/3 ml-2 shadow-gray-200 shadow-md px-5 h-10">
       <label className="text-blue-600 ml-2 text-sm">جستجو</label>
       <input
         type="text"

@@ -16,7 +16,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           pattern={pattern}
           ref={ref}
           {...rest}
-          className="w-full px-3 py-2 text-gray-700 bg-gray-100 rounded-lg focus:outline-none focus:border-blue-300 text-right"
+          className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-300 text-right"
         />
       </div>
     );

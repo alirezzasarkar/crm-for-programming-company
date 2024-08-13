@@ -239,7 +239,7 @@ const ProjectEntry: React.FC = () => {
               htmlFor="designFiles"
               className="flex items-center cursor-pointer"
             >
-              <span className="text-gray-400 bg-gray-100 py-2 px-3 rounded-md">
+              <span className="text-gray-400 border border-gray-200 py-2 px-3 rounded-xl">
                 آپلود به صورت فایل زیپ
               </span>
               <FaUpload className="text-gray-400 mr-2" />
