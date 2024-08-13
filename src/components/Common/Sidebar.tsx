@@ -116,7 +116,32 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           icon={<MdOutlineAccountBalanceWallet />}
           label="حسابداری"
           isOpen={isOpen}
-        />
+        >
+          <SidebarItem
+            to="/dashboard/accounting/dashboard"
+            icon={<MdOutlineAccountBalanceWallet />}
+            label="داشبورد حسابداری"
+            isOpen={isOpen}
+          />
+          <SidebarItem
+            to="/dashboard/reports/list"
+            icon={<MdOutlineAccountBalanceWallet />}
+            label="وارد کردن تراکنش"
+            isOpen={isOpen}
+          />
+          <SidebarItem
+            to="/dashboard/reports/list"
+            icon={<MdOutlineAccountBalanceWallet />}
+            label="حقوق کارمندان"
+            isOpen={isOpen}
+          />
+          <SidebarItem
+            to="/dashboard/reports/list"
+            icon={<MdOutlineAccountBalanceWallet />}
+            label="تراکنش های واریزی و برداشتی"
+            isOpen={isOpen}
+          />
+        </SidebarItem>
         <SidebarItem
           to="/dashboard/reports"
           icon={<TbReport />}
