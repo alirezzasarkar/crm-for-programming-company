@@ -136,7 +136,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             isOpen={isOpen}
           />
           <SidebarItem
-            to="/dashboard/reports/list"
+            to="/dashboard/accounting/transaction-list"
             icon={<MdOutlineAccountBalanceWallet />}
             label="تراکنش های واریزی و برداشتی"
             isOpen={isOpen}

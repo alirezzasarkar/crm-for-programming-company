@@ -22,6 +22,7 @@ import TicketDetailsPage from "./TicketDetailsPage";
 import AccountingDashboardPage from "./AccountingDashboardPage";
 import AddTransactionPage from "./AddTransactionPage";
 import EmployeeSalariesPage from "./EmployeeSalariesPage";
+import TransactionListPage from "./TransactionListPage";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -58,6 +59,10 @@ const DashboardPage: React.FC = () => {
         <Route
           path="/accounting/employee-salaries"
           element={<EmployeeSalariesPage />}
+        />
+        <Route
+          path="/accounting/transaction-list"
+          element={<TransactionListPage />}
         />
         <Route path="/" element={<Dashboard />} />
       </Routes>
