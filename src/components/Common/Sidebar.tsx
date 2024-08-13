@@ -124,13 +124,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             isOpen={isOpen}
           />
           <SidebarItem
-            to="/dashboard/reports/list"
+            to="/dashboard/accounting/add-transaction"
             icon={<MdOutlineAccountBalanceWallet />}
             label="وارد کردن تراکنش"
             isOpen={isOpen}
           />
           <SidebarItem
-            to="/dashboard/reports/list"
+            to="/dashboard/accounting/employee-salaries"
             icon={<MdOutlineAccountBalanceWallet />}
             label="حقوق کارمندان"
             isOpen={isOpen}
