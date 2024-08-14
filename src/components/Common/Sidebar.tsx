@@ -19,7 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     <div
       className={`bg-blue-100 transition-width duration-300 gradient-sidebar shadow-md ${
         isOpen ? "w-60" : "w-0"
-      } h-full`}
+      } `}
     >
       <div className="flex flex-col items-end py-6 px-3 rtl">
         <SidebarItem

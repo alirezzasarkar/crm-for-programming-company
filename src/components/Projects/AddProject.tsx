@@ -45,7 +45,7 @@ const ProjectEntry: React.FC = () => {
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="projectName"
-            className="w-1/3 text-gray-700 text-right"
+            className="w-1/5 ml-5 text-gray-700 text-right"
           >
             نام پروژه
           </label>
@@ -66,7 +66,7 @@ const ProjectEntry: React.FC = () => {
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="domainExpiryDate"
-            className="w-1/3 text-gray-700 text-right"
+            className="w-1/5 ml-5 text-gray-700 text-right"
           >
             تاریخ اتمام دامین
           </label>
@@ -83,7 +83,7 @@ const ProjectEntry: React.FC = () => {
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="projectManager"
-            className="w-1/3 text-gray-700 text-right"
+            className="w-1/5 ml-5 text-gray-700 text-right"
           >
             مدیر پروژه
           </label>
@@ -104,7 +104,7 @@ const ProjectEntry: React.FC = () => {
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="hostingExpiryDate"
-            className="w-1/3 text-gray-700 text-right"
+            className="w-1/5 ml-5 text-gray-700 text-right"
           >
             تاریخ اتمام هاست
           </label>
@@ -119,7 +119,10 @@ const ProjectEntry: React.FC = () => {
         </div>
 
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label htmlFor="domain" className="w-1/3 text-gray-700 text-right">
+          <label
+            htmlFor="domain"
+            className="w-1/5 ml-5 text-gray-700 text-right"
+          >
             دامنه
           </label>
           <div className="w-2/3">
@@ -137,7 +140,7 @@ const ProjectEntry: React.FC = () => {
         </div>
 
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label htmlFor="team" className="w-1/3 text-gray-700 text-right">
+          <label htmlFor="team" className="w-1/5 ml-5 text-gray-700 text-right">
             تیم
           </label>
           <div className="w-2/3">
@@ -149,7 +152,10 @@ const ProjectEntry: React.FC = () => {
         </div>
 
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label htmlFor="startDate" className="w-1/3 text-gray-700 text-right">
+          <label
+            htmlFor="startDate"
+            className="w-1/5 ml-5 text-gray-700 text-right"
+          >
             تاریخ شروع
           </label>
           <div className="w-2/3">
@@ -164,7 +170,7 @@ const ProjectEntry: React.FC = () => {
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="subSections"
-            className="w-1/3 text-gray-700 text-right"
+            className="w-1/5 ml-5 text-gray-700 text-right"
           >
             زیر بخش‌ها
           </label>
@@ -183,7 +189,10 @@ const ProjectEntry: React.FC = () => {
         </div>
 
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label htmlFor="endDate" className="w-1/3 text-gray-700 text-right">
+          <label
+            htmlFor="endDate"
+            className="w-1/5 ml-5 text-gray-700 text-right"
+          >
             تاریخ اتمام
           </label>
           <div className="w-2/3">
@@ -199,7 +208,7 @@ const ProjectEntry: React.FC = () => {
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="designTeam"
-            className="w-1/3 text-gray-700 text-right"
+            className="w-1/5 ml-5 text-gray-700 text-right"
           >
             تیم دیزاین
           </label>
@@ -220,7 +229,7 @@ const ProjectEntry: React.FC = () => {
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="designFiles"
-            className="w-1/3 text-gray-700 text-right"
+            className="w-1/5 ml-5 text-gray-700 text-right"
           >
             فایل‌های دیزاین
           </label>
@@ -250,7 +259,7 @@ const ProjectEntry: React.FC = () => {
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="implementationTeam"
-            className="w-1/3 text-gray-700 text-right"
+            className="w-1/5 ml-5 text-gray-700 text-right"
           >
             تیم پیاده‌سازی
           </label>
@@ -268,7 +277,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
-        <div className="col-span-2 flex justify-end w-2/5 mt-4 mx-auto">
+        <div className="col-span-2 flex justify-end w-2/5 mt-10 mx-auto">
           <Button
             type="submit"
             className="bg-green-500 w-2/5 flex items-center justify-center"

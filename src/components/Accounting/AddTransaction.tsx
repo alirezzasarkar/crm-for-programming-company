@@ -20,7 +20,7 @@ const TransactionEntry: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="flex justify-center">
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

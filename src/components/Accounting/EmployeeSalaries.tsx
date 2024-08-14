@@ -63,7 +63,7 @@ const transactionList: Transaction[] = [
 const EmployeeSalaries: React.FC = () => {
   return (
     <div className="p-6 bg-white rounded shadow-md rtl">
-      <div className="bg-white rounded-lg  w-full max-w-5xl">
+      <div className="items-center mb-4">
         <Title title="لیست واریزی حقوق کارمندان" />
         <table className="min-w-full bg-white mt-4 border-separate border-spacing-y-3">
           <thead>

@@ -14,7 +14,7 @@ const projects = [
     domain: "adklay.co",
     manager: "محمد رودباری",
     team: "وردپرس",
-    endDate: "18 مهر 1403",
+    endDate: "21 مهر 1403",
     status: "درحال انجام",
   },
   {
@@ -23,7 +23,7 @@ const projects = [
     domain: "adklay.co",
     manager: "محمد رودباری",
     team: "وردپرس",
-    endDate: "18 مهر 1403",
+    endDate: "19 مهر 1403",
     status: "انجام شده",
   },
   {

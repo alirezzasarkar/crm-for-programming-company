@@ -20,7 +20,7 @@ const TicketSubmission: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center min-h-screen">
+    <div className="flex justify-center">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
         <h2 className="text-right text-lg font-medium text-blue-600 mb-4">
           ارسال تیکت

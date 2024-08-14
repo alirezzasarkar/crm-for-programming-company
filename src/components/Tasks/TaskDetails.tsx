@@ -28,7 +28,7 @@ const TaskDetails: React.FC<TaskDetailsProps> = ({
         </h2>
         <div className=" p-3 rounded-md mt-3">
           <div className="mb-2">
-            <span className="font-bold">تیم:</span> {team}
+            <span className="font-bold ml-3">تیم:</span> {team}
           </div>
           <div className="mb-2">
             <span className="font-bold ml-3">تاریخ تحویل:</span> {deliveryDate}

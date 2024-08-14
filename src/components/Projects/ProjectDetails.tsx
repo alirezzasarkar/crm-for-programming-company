@@ -12,6 +12,7 @@ interface ProjectDetailsProps {
   platform: string;
   designTeam: string[];
   implementationTeam: string[];
+  designFilesLink: string; // اضافه کردن prop جدید برای لینک دانلود فایل‌های دیزاین
 }
 
 const ProjectDetails: React.FC<ProjectDetailsProps> = ({
@@ -25,6 +26,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
   platform,
   designTeam,
   implementationTeam,
+  designFilesLink,
 }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md rtl">
@@ -71,6 +73,18 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             <td className="px-4 py-3 text-gray-700">تیم پیاده‌سازی:</td>
             <td className="px-4 py-3 text-gray-500">
               {implementationTeam.join(", ")}
+            </td>
+          </tr>
+          <tr className="w-full border-b border-gray-200">
+            <td className="px-4 py-3 text-gray-700"> فایل‌های دیزاین:</td>
+            <td className="px-4 py-3 text-gray-500">
+              <a
+                href={designFilesLink}
+                className="text-blue-500 hover:text-blue-700"
+                download
+              >
+                دانلود فایل‌ها
+              </a>
             </td>
           </tr>
         </tbody>

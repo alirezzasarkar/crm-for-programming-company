@@ -6,6 +6,8 @@ import TextField from "../../components/Common/TextField";
 import Button from "../../components/Common/Button";
 import Modal from "../../components/Common/Modal";
 import { FaUpload, FaSave } from "react-icons/fa";
+import Title from "../Common/Title";
+import PersianDatePicker from "../Common/PersianDatePicker";
 
 interface ProfileFormInputs {
   email: string;
@@ -52,18 +54,16 @@ const Profile: React.FC = () => {
 
   return (
     <div className="max-md mx-auto p-6 bg-white shadow-md rounded-lg rtl">
-      <h2 className="text-2xl font-bold text-center mb-6">
-        اطلاعات کاربری شما
-      </h2>
+      <Title title="اطلاعات کاربری شما" />
       <form
         onSubmit={handleSubmit(userProfile)}
-        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5"
       >
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label htmlFor="fullName" className="w-1/3 text-gray-700 text-right">
             نام و نام خانوادگی
           </label>
-          <div className="w-2/5">
+          <div className="w-2/4">
             <TextField
               type="text"
               placeholder="نام و نام خانوادگی"
@@ -81,7 +81,7 @@ const Profile: React.FC = () => {
           <label htmlFor="email" className="w-1/3 text-gray-700 text-right">
             ایمیل
           </label>
-          <div className="w-2/3">
+          <div className="w-2/4">
             <TextField type="text" placeholder="ایمیل" {...register("email")} />
             {errors.email && (
               <p className="text-red-500 text-xs pt-1 text-sm">
@@ -98,7 +98,7 @@ const Profile: React.FC = () => {
           >
             کدملی
           </label>
-          <div className="w-2/3">
+          <div className="w-2/4">
             <TextField
               type="text"
               placeholder="کدملی"
@@ -116,7 +116,7 @@ const Profile: React.FC = () => {
           <label htmlFor="jobTitle" className="w-1/3 text-gray-700 text-right">
             سمت شغلی
           </label>
-          <div className="w-2/3">
+          <div className="w-2/4">
             <TextField
               type="text"
               placeholder="سمت شغلی"
@@ -134,12 +134,8 @@ const Profile: React.FC = () => {
           <label htmlFor="birthDate" className="w-1/3 text-gray-700 text-right">
             تاریخ تولد
           </label>
-          <div className="w-2/3">
-            <TextField
-              type="date"
-              placeholder="تاریخ تولد"
-              {...register("birthDate")}
-            />
+          <div className="w-2/4">
+            <PersianDatePicker placeholder="تاریخ" />
             {errors.birthDate && (
               <p className="text-red-500 text-xs pt-1">
                 {errors.birthDate.message}
@@ -155,7 +151,7 @@ const Profile: React.FC = () => {
           >
             آپلود تصویر
           </label>
-          <div className="w-2/3">
+          <div className="w-2/4">
             <input
               id="profileImage"
               type="file"
@@ -170,7 +166,7 @@ const Profile: React.FC = () => {
               htmlFor="profileImage"
               className="flex items-center cursor-pointer"
             >
-              <span className="text-gray-400 bg-gray-100 py-2 px-3 rounded-lg w-4/6">
+              <span className="text-gray-400 border border-gray-200 py-2 px-3 rounded-xl w-3/6">
                 انتخاب فایل
               </span>
               <FaUpload className="text-gray-400 mr-2" />
@@ -182,7 +178,7 @@ const Profile: React.FC = () => {
           <label htmlFor="phone" className="w-1/3 text-gray-700 text-right">
             شماره تماس
           </label>
-          <div className="w-2/3">
+          <div className="w-2/4">
             <TextField
               type="text"
               placeholder="شماره تماس"
@@ -196,10 +192,10 @@ const Profile: React.FC = () => {
           </div>
         </div>
 
-        <div className="col-span-2 flex mt-20 justify-around w-2/4  mr-auto ml-auto">
+        <div className="col-span-2 flex mt-20 justify-around w-1/4  mr-auto ml-auto">
           <Button
             type="submit"
-            className="bg-green-500 w-2/5 flex items-center justify-center"
+            className="bg-green-500 w-2/4 flex items-center justify-center"
             hoverClass="hover:bg-green-600"
           >
             ثبت اطلاعات
@@ -208,7 +204,7 @@ const Profile: React.FC = () => {
           <Button
             type="button"
             onClick={() => setIsPasswordModalOpen(true)}
-            className="bg-yellow-500 w-2/5"
+            className="bg-yellow-500 w-2/4 mr-2"
             hoverClass="hover:bg-yellow-600"
           >
             تغییر رمز عبور
