@@ -6,7 +6,7 @@ import TextField from "../Common/TextField";
 import Button from "../Common/Button";
 import Logo from "../Common/Logo";
 import { forgotPasswordSchema } from "../../utils/validationSchemas";
-import Modal from "../Common/Modal";
+import Swal from "sweetalert2";
 import { IoMdLogIn } from "react-icons/io";
 
 interface ForgotPasswordFormData {
@@ -15,7 +15,6 @@ interface ForgotPasswordFormData {
 }
 
 const ForgotPassword: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
 
   const {
@@ -26,16 +25,40 @@ const ForgotPassword: React.FC = () => {
     resolver: yupResolver(forgotPasswordSchema),
   });
 
-  const onSubmit = (data: ForgotPasswordFormData) => {
-    console.log(data);
-    // ارسال پیامک به شماره موبایل وارد شده
-    setIsModalOpen(true);
-  };
+  const onSubmit = async (data: ForgotPasswordFormData) => {
+    try {
+      console.log(data);
+      // Here you should send the SMS to the provided phone number
+      // Example: await sendSMS(data.phone);
 
-  const handleVerificationSubmit = () => {
-    // بررسی کد ارسال شده و تغییر رمز عبور
-    console.log("کد وارد شده:", verificationCode);
-    setIsModalOpen(false);
+      // Open SweetAlert for verification code
+      const { value: code } = await Swal.fire({
+        title: "کد تأیید را وارد کنید",
+        input: "text",
+        inputPlaceholder: "کد تأیید",
+        showCancelButton: true,
+        confirmButtonText: "تأیید",
+        cancelButtonText: "انصراف",
+        inputValidator: (value) => {
+          if (!value) {
+            return "لطفا کد تأیید را وارد کنید";
+          }
+        },
+      });
+
+      if (code) {
+        setVerificationCode(code);
+        // Verify the code and update the password here
+        console.log("کد وارد شده:", code);
+        // Example: await verifyCode(code);
+
+        // Show success alert
+        Swal.fire("رمز عبور با موفقیت تغییر یافت", "", "success");
+      }
+    } catch (error) {
+      // Show error alert if something goes wrong
+      Swal.fire("خطا", "خطایی در پردازش درخواست شما رخ داد.", "error");
+    }
   };
 
   return (
@@ -77,7 +100,7 @@ const ForgotPassword: React.FC = () => {
             <div className="mt-7 text-center">
               <Button
                 type="submit"
-                className="flex items-center justify-center px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300"
+                className="flex items-center justify-center px-6 py-3 bg-[rgb(59,130,246)] text-white font-semibold rounded-lg shadow-md hover:bg-[rgb(49,115,231)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300"
               >
                 <IoMdLogIn className="mr-2 text-xl transform rotate-180" />
                 ارسال
@@ -96,26 +119,6 @@ const ForgotPassword: React.FC = () => {
           </form>
         </div>
       </div>
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <h2 className="text-lg font-bold mb-4 text-center text-[#359DF5]">
-            کد تأیید را وارد کنید
-          </h2>
-          <input
-            type="text"
-            value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-          <Button
-            onClick={handleVerificationSubmit}
-            className="mt-3 flex items-center justify-center px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300"
-          >
-            <IoMdLogIn className="mr-2 text-xl transform rotate-180" />
-            تأیید
-          </Button>
-        </Modal>
-      )}
     </div>
   );
 };

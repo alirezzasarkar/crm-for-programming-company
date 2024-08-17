@@ -7,6 +7,7 @@ import Logo from "../Common/Logo";
 import { registerSchema } from "../../utils/validationSchemas";
 import { Link } from "react-router-dom";
 import { IoMdLogIn } from "react-icons/io";
+import Swal from "sweetalert2";
 
 interface RegisterFormData {
   username: string;
@@ -24,8 +25,16 @@ const Register: React.FC = () => {
   });
 
   const onSubmit = (data: RegisterFormData) => {
-    console.log(data);
-    // انجام عملیات ثبت‌نام
+    // منطق ثبت‌نام شما
+
+    // نمایش پیام موفقیت
+    Swal.fire({
+      title: "ثبت‌نام موفقیت‌آمیز",
+      text: "شما با موفقیت ثبت‌نام شدید",
+      icon: "success",
+      confirmButtonText: "باشه",
+      confirmButtonColor: "#3b82f6",
+    });
   };
 
   return (
@@ -33,7 +42,7 @@ const Register: React.FC = () => {
       <Logo />
       <div className="max-w-md w-full mx-auto bg-white shadow-md rounded-3xl px-8 pt-6 pb-8 mt-10 mb-4">
         <div className="mb-4 text-center">
-          <h2 className="text-lg font-bold text-[#359DF5] mb-10">
+          <h2 className="text-lg font-bold text-[#3b82f6] mb-10">
             برای ثبت نام اطلاعات زیر را وارد کنید
           </h2>
         </div>
@@ -78,8 +87,7 @@ const Register: React.FC = () => {
           <div className="mt-7 text-center">
             <Button
               type="submit"
-              onClick={handleSubmit(onSubmit)}
-              className="flex items-center justify-center px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300"
+              className="flex items-center justify-center px-6 py-3 bg-[#3b82f6] text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-opacity-50 transition duration-300"
             >
               <IoMdLogIn className="mr-2 text-xl transform rotate-180" />
               ثبت نام
@@ -88,7 +96,7 @@ const Register: React.FC = () => {
         </form>
         <div className="mt-4 text-center">
           <p className="text-gray-600">
-            <Link to="/login" className="text-[#359DF5] hover:text-blue-600">
+            <Link to="/login" className="text-[#3b82f6] hover:text-blue-600">
               آیا حساب کاربری دارید؟
             </Link>
           </p>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 const TicketSubmission: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -10,12 +11,36 @@ const TicketSubmission: React.FC = () => {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     // Handle form submission here, including sending the selected file
     if (selectedFile) {
-      console.log("Selected file:", selectedFile.name);
       // Implement the logic to upload the file to the server here
+      try {
+        // Simulate file upload or any other process
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating a delay
+
+        Swal.fire({
+          title: "موفقیت",
+          text: `فایل ${selectedFile.name} با موفقیت ارسال شد.`,
+          icon: "success",
+          confirmButtonText: "باشه",
+        });
+      } catch (error) {
+        Swal.fire({
+          title: "خطا",
+          text: "مشکلی در ارسال فایل پیش آمد.",
+          icon: "error",
+          confirmButtonText: "باشه",
+        });
+      }
+    } else {
+      Swal.fire({
+        title: "خطا",
+        text: "لطفاً یک فایل انتخاب کنید.",
+        icon: "error",
+        confirmButtonText: "باشه",
+      });
     }
   };
 

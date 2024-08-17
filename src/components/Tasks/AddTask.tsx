@@ -1,14 +1,15 @@
-// components/AddTask.tsx
 import React, { useState } from "react";
 import Title from "../Common/Title";
 import { FaUpload } from "react-icons/fa";
-import PersianDatePicker from "../Common/PersianDatePicker";
+import MyDatePicker from "../Common/PersianDatePicker";
+import Swal from "sweetalert2";
+import { DateObject } from "react-multi-date-picker";
 
 const AddTask: React.FC = () => {
   const [title, setTitle] = useState("");
   const [team, setTeam] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
-  const [dueDate, setDueDate] = useState<Date | null>(null);
+  const [dueDate, setDueDate] = useState<DateObject | null>(null);
   const [details, setDetails] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
@@ -18,18 +19,53 @@ const AddTask: React.FC = () => {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     // Handle form submission logic
+
+    try {
+      await Swal.fire({
+        icon: "success",
+        title: "تسک با موفقیت ثبت شد",
+        text: "تسک شما با موفقیت ارسال شد.",
+      });
+      // Reset form fields after successful submission
+      setTitle("");
+      setTeam("");
+      setAssignedTo("");
+      setDueDate(null);
+      setDetails("");
+      setFile(null);
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: "خطا",
+        text: "در ثبت تسک خطایی رخ داد.",
+      });
+    }
   };
 
   const handleCancel = () => {
-    setTitle("");
-    setTeam("");
-    setAssignedTo("");
-    setDueDate(null);
-    setDetails("");
-    setFile(null);
+    Swal.fire({
+      title: "آیا مطمئن هستید؟",
+      text: "تمامی اطلاعات وارد شده از بین خواهد رفت.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "بله، لغو کن",
+      cancelButtonText: "انصراف",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Reset form fields
+        setTitle("");
+        setTeam("");
+        setAssignedTo("");
+        setDueDate(null);
+        setDetails("");
+        setFile(null);
+      }
+    });
   };
 
   return (
@@ -65,7 +101,10 @@ const AddTask: React.FC = () => {
             />
           </div>
           <div>
-            <PersianDatePicker placeholder="تاریخ تحویل" />
+            <MyDatePicker
+              placeholder="تاریخ تحویل"
+              onChange={(date: DateObject | null) => setDueDate(date)}
+            />
           </div>
         </div>
         <div className="mb-4">

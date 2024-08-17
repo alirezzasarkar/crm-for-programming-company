@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 const TransactionEntry: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -10,12 +11,50 @@ const TransactionEntry: React.FC = () => {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // Handle form submission here, including sending the selected file
+
+    // You can get form data here if needed
+    const transactionType = (
+      event.currentTarget.elements.namedItem(
+        "transactionType"
+      ) as HTMLSelectElement
+    ).value;
+    const amount = (
+      event.currentTarget.elements.namedItem("amount") as HTMLInputElement
+    ).value;
+    const description = (
+      event.currentTarget.elements.namedItem(
+        "description"
+      ) as HTMLTextAreaElement
+    ).value;
+
     if (selectedFile) {
-      console.log("Selected file:", selectedFile.name);
-      // Implement the logic to upload the file to the server here
+      try {
+        // Simulate file upload or any other processing
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
+
+        Swal.fire({
+          title: "موفقیت",
+          text: `تراکنش با موفقیت ذخیره شد. فایل پیوست شده: ${selectedFile.name}`,
+          icon: "success",
+          confirmButtonText: "باشه",
+        });
+      } catch (error) {
+        Swal.fire({
+          title: "خطا",
+          text: "مشکلی در ذخیره تراکنش پیش آمد.",
+          icon: "error",
+          confirmButtonText: "باشه",
+        });
+      }
+    } else {
+      Swal.fire({
+        title: "خطا",
+        text: "لطفاً یک فایل پیوست کنید.",
+        icon: "error",
+        confirmButtonText: "باشه",
+      });
     }
   };
 
@@ -27,7 +66,10 @@ const TransactionEntry: React.FC = () => {
             <label className="block text-right text-gray-600 mb-2 text-sm">
               نوع تراکنش
             </label>
-            <select className="w-full px-3 py-2 border rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 rtl text-gray-700">
+            <select
+              name="transactionType"
+              className="w-full px-3 py-2 border rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 rtl text-gray-700"
+            >
               <option value="wage">واریز حقوق</option>
               <option value="deposit">واریز</option>
               <option value="withdraw">برداشت</option>
@@ -39,6 +81,7 @@ const TransactionEntry: React.FC = () => {
             </label>
             <input
               type="text"
+              name="amount"
               className="w-full px-3 py-2 border rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-700"
             />
           </div>
@@ -46,7 +89,10 @@ const TransactionEntry: React.FC = () => {
             <label className="block text-right text-gray-600 mb-2 text-sm">
               توضیحات
             </label>
-            <textarea className="w-full px-3 py-2 border rounded-md text-right h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700" />
+            <textarea
+              name="description"
+              className="w-full px-3 py-2 border rounded-md text-right h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
+            />
           </div>
           <div className="mb-6">
             <label className="block text-right text-gray-600 mb-2 text-sm">

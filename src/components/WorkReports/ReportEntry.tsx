@@ -3,6 +3,7 @@ import WeekDaysSlider from "../Common/WeekDays";
 import Title from "../Common/Title";
 import { getWeekDates, getStartOfWeek } from "../../utils/dateUtils";
 import moment from "jalali-moment";
+import Swal from "sweetalert2";
 
 const WorkReportForm: React.FC = () => {
   const [description, setDescription] = useState("");
@@ -27,9 +28,31 @@ const WorkReportForm: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Work report submitted:", description);
+
+    // Simulate a form submission or any processing here
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
+
+      Swal.fire({
+        title: "موفقیت",
+        text: "گزارش کار با موفقیت ارسال شد.",
+        icon: "success",
+        confirmButtonText: "باشه",
+      });
+
+      // Optionally reset the form
+      setDescription("");
+      setActiveDayIndex(0);
+    } catch (error) {
+      Swal.fire({
+        title: "خطا",
+        text: "مشکلی در ارسال گزارش پیش آمد.",
+        icon: "error",
+        confirmButtonText: "باشه",
+      });
+    }
   };
 
   const handleDayClick = (index: number) => {

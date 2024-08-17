@@ -5,8 +5,9 @@ import Button from "../../components/Common/Button";
 import { FaUpload, FaSave } from "react-icons/fa";
 import Title from "../Common/Title";
 import PersianDatePicker from "../Common/PersianDatePicker";
+import Swal from "sweetalert2";
 
-// تعریف نوع داده‌ها برای فرم
+// Define the form data type
 interface ProjectFormInputs {
   projectName: string;
   projectManager: string;
@@ -30,9 +31,25 @@ const ProjectEntry: React.FC = () => {
     formState: { errors },
   } = useForm<ProjectFormInputs>();
 
-  const onSubmit: SubmitHandler<ProjectFormInputs> = (data) => {
-    console.log("Project Data:", data);
-    // پیاده‌سازی منطق ارسال داده‌ها به سرور
+  const onSubmit: SubmitHandler<ProjectFormInputs> = async (data) => {
+    try {
+      console.log("Project Data:", data);
+      // Implement your logic to submit the data to the server here
+
+      // Show success message with SweetAlert2
+      await Swal.fire({
+        icon: "success",
+        title: "ثبت اطلاعات موفقیت‌آمیز",
+        text: "اطلاعات پروژه با موفقیت ثبت شد.",
+      });
+    } catch (error) {
+      // Show error message with SweetAlert2
+      await Swal.fire({
+        icon: "error",
+        title: "خطا",
+        text: "خطایی در ثبت اطلاعات پروژه رخ داده است.",
+      });
+    }
   };
 
   return (
@@ -167,6 +184,7 @@ const ProjectEntry: React.FC = () => {
             )}
           </div>
         </div>
+
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="subSections"

@@ -5,6 +5,7 @@ import ControlButtons from "../Common/ControlButtons";
 import Title from "../Common/Title";
 import { getWeekDates, getStartOfWeek } from "../../utils/dateUtils";
 import moment from "jalali-moment";
+import Swal from "sweetalert2";
 
 const WorkTimeEntry: React.FC = () => {
   const [time, setTime] = useState("00:00");
@@ -53,14 +54,26 @@ const WorkTimeEntry: React.FC = () => {
     if (timerInterval !== null) clearInterval(timerInterval);
   };
 
-  const submitTime = () => {
-    console.log(`Time submitted for ${weekDays[activeDayIndex].name}: ${time}`);
-    // Reset timer
-    setTime("00:00");
-    setElapsedTime(0);
-    setIsRunning(false);
-    setIsPaused(false);
-    if (timerInterval !== null) clearInterval(timerInterval);
+  const submitTime = async () => {
+    try {
+      await Swal.fire({
+        icon: "success",
+        title: "زمان ثبت شد",
+        text: `زمان ثبت شده برای ${weekDays[activeDayIndex].name}: ${time}`,
+      });
+      // Reset timer
+      setTime("00:00");
+      setElapsedTime(0);
+      setIsRunning(false);
+      setIsPaused(false);
+      if (timerInterval !== null) clearInterval(timerInterval);
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: "خطا",
+        text: "خطایی در ثبت زمان رخ داد.",
+      });
+    }
   };
 
   const handleDayClick = (index: number) => {

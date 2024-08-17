@@ -8,6 +8,7 @@ import Modal from "../../components/Common/Modal";
 import { FaUpload, FaSave } from "react-icons/fa";
 import Title from "../Common/Title";
 import PersianDatePicker from "../Common/PersianDatePicker";
+import Swal from "sweetalert2";
 
 interface ProfileFormInputs {
   email: string;
@@ -15,7 +16,7 @@ interface ProfileFormInputs {
   fullName: string;
   nationalId: string;
   jobTitle: string;
-  birthDate: string; // تاریخ به صورت string برای ورودی date
+  birthDate: string;
   phone: string;
   newPassword?: string;
   confirmNewPassword?: string;
@@ -35,21 +36,77 @@ const Profile: React.FC = () => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
 
-  const userProfile: SubmitHandler<ProfileFormInputs> = (data) => {
-    console.log("User Profile Data:", data);
-    // Implement further logic
+  const userProfile: SubmitHandler<ProfileFormInputs> = async (data) => {
+    try {
+      // Simulate an API request
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      Swal.fire({
+        title: "موفقیت",
+        text: "اطلاعات کاربری با موفقیت ذخیره شد.",
+        icon: "success",
+        confirmButtonText: "باشه",
+      });
+    } catch (error) {
+      Swal.fire({
+        title: "خطا",
+        text: "مشکلی در ذخیره اطلاعات پیش آمد.",
+        icon: "error",
+        confirmButtonText: "باشه",
+      });
+    }
   };
 
-  const handlePasswordChange: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    console.log("Password change submitted");
-  };
-
-  const handleOtpVerification: React.FormEventHandler<HTMLFormElement> = (
+  const handlePasswordChange: React.FormEventHandler<HTMLFormElement> = async (
     e
   ) => {
     e.preventDefault();
-    console.log("OTP verification submitted");
+    try {
+      // Simulate a password change request
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      Swal.fire({
+        title: "موفقیت",
+        text: "رمز عبور با موفقیت تغییر یافت.",
+        icon: "success",
+        confirmButtonText: "باشه",
+      });
+
+      setIsPasswordModalOpen(false);
+    } catch (error) {
+      Swal.fire({
+        title: "خطا",
+        text: "مشکلی در تغییر رمز عبور پیش آمد.",
+        icon: "error",
+        confirmButtonText: "باشه",
+      });
+    }
+  };
+
+  const handleOtpVerification: React.FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
+    e.preventDefault();
+    try {
+      // Simulate an OTP verification request
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      Swal.fire({
+        title: "موفقیت",
+        text: "کد تایید با موفقیت بررسی شد.",
+        icon: "success",
+        confirmButtonText: "باشه",
+      });
+
+      setIsOtpModalOpen(false);
+    } catch (error) {
+      Swal.fire({
+        title: "خطا",
+        text: "مشکلی در تایید کد پیش آمد.",
+        icon: "error",
+        confirmButtonText: "باشه",
+      });
+    }
   };
 
   return (
@@ -192,14 +249,14 @@ const Profile: React.FC = () => {
           </div>
         </div>
 
-        <div className="col-span-2 flex mt-20 justify-around w-1/4  mr-auto ml-auto">
+        <div className="col-span-2 flex mt-20 justify-around w-1/4 mr-auto ml-auto">
           <Button
             type="submit"
             className="bg-green-500 w-2/4 flex items-center justify-center"
             hoverClass="hover:bg-green-600"
           >
             ثبت اطلاعات
-            <FaSave className="mr-3 " />
+            <FaSave className="mr-3" />
           </Button>
           <Button
             type="button"
