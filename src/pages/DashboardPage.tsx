@@ -23,6 +23,7 @@ import AddTransactionPage from "./AddTransactionPage";
 import EmployeeSalariesPage from "./EmployeeSalariesPage";
 import TransactionListPage from "./TransactionListPage";
 import ProtectedRoute from "../components/Authentication/ProtectedRoutes";
+import Dashboard from "../components/Dashboard/Dashboard";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ const DashboardPage: React.FC = () => {
           path="/"
           element={<ProtectedRoute allowedRoles={["employee", "manager"]} />}
         >
+          <Route path="/" element={<Dashboard />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="employee-info" element={<EmployeeInfo />} />
           <Route path="reports/entry" element={<ReportEntryPage />} />

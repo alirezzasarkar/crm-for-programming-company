@@ -5,7 +5,7 @@ import {
 } from "../../services/userService"; // مسیر صحیح فایل خدمات API
 
 interface User {
-  full_name: string;
+  phone_number: string;
   role: string;
 }
 
@@ -29,7 +29,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>({
+    phone_number: "09901032844",
+    role: "manager",
+  });
 
   const login = async (credentials: {
     phone_number: string;

@@ -25,6 +25,11 @@
       "phone_number": "09901032844",
       "password": "123456",
       "role": "manager"
+    },
+    {
+      "id": "bf41",
+      "phone_number": "09901032844",
+      "password": "123456"
     }
   ]
 }
