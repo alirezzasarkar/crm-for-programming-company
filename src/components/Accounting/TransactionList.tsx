@@ -43,9 +43,6 @@ const EmployeeSalaries: React.FC = () => {
                 <th className="py-2 text-center text-xs sm:text-sm font-medium text-yellow-500">
                   ویرایش تراکنش
                 </th>
-                <th className="py-2 text-center text-xs sm:text-sm font-medium text-red-600">
-                  حذف تراکنش
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -68,9 +65,6 @@ const EmployeeSalaries: React.FC = () => {
                   </td>
                   <td className="py-3 text-center text-yellow-500">
                     <FaEdit className="inline cursor-pointer" />
-                  </td>
-                  <td className="py-3 text-center text-red-600">
-                    <FaTrashAlt className="inline cursor-pointer" />
                   </td>
                 </tr>
               ))}

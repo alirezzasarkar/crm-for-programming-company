@@ -18,12 +18,12 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ filter, onFilterChange }) => {
   };
 
   return (
-    <div className="relative inline-block w-1/3 text-right">
+    <div className="relative inline-block w-1/3 text-right mr-2 shadow-md shadow-gray-200">
       <button
         onClick={toggleDropdown}
-        className="flex justify-between items-center w-full bg-white shadow-md rounded-md px-4 py-3 text-sm font-medium text-blue-600 hover:bg-gray-100 focus:outline-none"
+        className="flex justify-between items-center w-full bg-white h-10 rounded-md px-4 py-3 text-sm  text-blue-600 hover:bg-gray-100 focus:outline-none"
       >
-        <span className="font-semibold">فیلتر بر اساس</span>
+        <span className="font-normal">فیلتر بر اساس</span>
         <span className="flex items-center text-gray-600 font-normal">
           {filter === "sent" ? "ارسال شده" : "دریافت شده"}
           <FaChevronDown className="mr-2 text-gray-600" />

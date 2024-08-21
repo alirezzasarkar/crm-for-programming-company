@@ -4,6 +4,7 @@ import { FaEllipsisV } from "react-icons/fa";
 import Title from "../Common/Title";
 import ReportFilter from "./ReportFilter";
 import { useNavigate } from "react-router-dom";
+import Search from "../Common/Search";
 
 interface Report {
   index: number;
@@ -52,9 +53,13 @@ const ReportList: React.FC = () => {
     navigate(`/dashboard/reports/detail/${detail.index}`);
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <>
       <div className="flex rtl mb-5">
+        <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+
         <ReportFilter
           filter={teamFilter}
           options={teamOptions}

@@ -3,6 +3,7 @@ import { FaCheckCircle, FaEllipsisV } from "react-icons/fa";
 import Title from "../Common/Title";
 import TaskFilter from "./TaskFilter";
 import { useNavigate } from "react-router-dom";
+import Search from "../Common/Search";
 
 interface Task {
   index: number;
@@ -42,6 +43,7 @@ const tasks: Task[] = [
 const TaskListPage: React.FC = () => {
   const [filter, setFilter] = useState<string>("sent");
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const filteredTasks = tasks.filter((task) => task.type === filter);
 
@@ -51,10 +53,10 @@ const TaskListPage: React.FC = () => {
 
   return (
     <>
-      <div className="mb-5 rtl">
+      <div className="flex justify-start mb-4 rtl">
+        <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         <TaskFilter filter={filter} onFilterChange={setFilter} />
       </div>
-
       <div className="bg-white p-6 rounded-lg shadow-md rtl">
         <Title title="لیست تسک ها" />
         <table className="min-w-full bg-white mt-2 border-separate border-spacing-y-3">
