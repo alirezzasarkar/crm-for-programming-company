@@ -14,6 +14,7 @@ const projectData = {
   platform: "وردپرس",
   designTeam: ["لیلا کردی", "رایکا پورعلی"],
   implementationTeam: ["علیرضا سرکار", "حسام فیض الهی"],
+  description: "توضیحات پروژه",
 };
 
 const ProjectDetailsPage: React.FC = () => {

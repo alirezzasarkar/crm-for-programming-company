@@ -28,10 +28,7 @@ const ForgotPassword: React.FC = () => {
   const onSubmit = async (data: ForgotPasswordFormData) => {
     try {
       console.log(data);
-      // Here you should send the SMS to the provided phone number
-      // Example: await sendSMS(data.phone);
 
-      // Open SweetAlert for verification code
       const { value: code } = await Swal.fire({
         title: "کد تأیید را وارد کنید",
         input: "text",
@@ -48,35 +45,31 @@ const ForgotPassword: React.FC = () => {
 
       if (code) {
         setVerificationCode(code);
-        // Verify the code and update the password here
-        console.log("کد وارد شده:", code);
-        // Example: await verifyCode(code);
 
-        // Show success alert
+        console.log("کد وارد شده:", code);
+
         Swal.fire("رمز عبور با موفقیت تغییر یافت", "", "success");
       }
     } catch (error) {
-      // Show error alert if something goes wrong
       Swal.fire("خطا", "خطایی در پردازش درخواست شما رخ داد.", "error");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-gray-200 to-gray-500">
-      <div className="max-w-md w-full mx-auto">
+      <div className="max-w-md w-full mx-auto p-4">
         <Logo />
-        <div className="max-w-md w-full mx-auto bg-white shadow-md rounded-3xl px-8 pt-6 pb-8 mt-10 mb-4">
-          <div className="mb-4 text-center">
-            <h2 className="text-lg font-bold text-[#359DF5] mb-10">
+        <div className="bg-white shadow-md rounded-3xl px-8 pt-6 pb-8 mt-10 mb-4">
+          <div className="text-center mb-10">
+            <h2 className="text-lg font-bold text-blue-600">
               برای تغییر رمز عبور اطلاعات زیر را وارد کنید
             </h2>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-4 text-right">
+            <div className="mb-4">
               <TextField
                 type="text"
                 placeholder="شماره موبایل"
-                pattern="\d*"
                 {...register("phone")}
               />
               {errors.phone && (
@@ -85,7 +78,7 @@ const ForgotPassword: React.FC = () => {
                 </p>
               )}
             </div>
-            <div className="mb-4 text-right">
+            <div className="mb-4">
               <TextField
                 type="password"
                 placeholder="رمز عبور جدید"
@@ -97,10 +90,10 @@ const ForgotPassword: React.FC = () => {
                 </p>
               )}
             </div>
-            <div className="mt-7 text-center">
+            <div className="text-center mt-7">
               <Button
                 type="submit"
-                className="flex items-center justify-center px-6 py-3 bg-[rgb(59,130,246)] text-white font-semibold rounded-lg shadow-md hover:bg-[rgb(49,115,231)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300"
+                className="flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
               >
                 <IoMdLogIn className="mr-2 text-xl transform rotate-180" />
                 ارسال
@@ -108,10 +101,7 @@ const ForgotPassword: React.FC = () => {
             </div>
             <div className="mt-4 text-center">
               <p className="text-gray-600">
-                <Link
-                  to="/login"
-                  className="text-[#359DF5] hover:text-blue-600"
-                >
+                <Link to="/login" className="text-blue-600 hover:text-blue-700">
                   بازگشت به صفحه ورود
                 </Link>
               </p>

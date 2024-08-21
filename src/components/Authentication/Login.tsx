@@ -26,7 +26,6 @@ const Login: React.FC = () => {
   const onSubmit = (data: LoginFormData) => {
     // منطق ورود شما
 
-    // نمایش پیام موفقیت
     Swal.fire({
       title: "ورود موفقیت‌آمیز",
       text: "شما با موفقیت وارد شدید",
@@ -37,20 +36,19 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md w-full mx-auto">
+    <div className="max-w-md w-full mx-auto p-4">
       <Logo />
-      <div className="max-w-md w-full mx-auto bg-white shadow-md rounded-3xl px-8 pt-6 pb-8 mt-10 mb-4">
-        <div className="mb-4 text-center">
-          <h2 className="text-lg font-bold text-[#3b82f6] mb-10">
+      <div className="bg-white shadow-md rounded-3xl px-8 pt-6 pb-8 mt-10 mb-4">
+        <div className="text-center mb-10">
+          <h2 className="text-lg font-bold text-blue-600">
             برای ورود اطلاعات زیر را وارد کنید
           </h2>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4 text-right">
+          <div className="mb-4">
             <TextField
               type="text"
               placeholder="شماره موبایل"
-              pattern="\d*"
               {...register("phone")}
             />
             {errors.phone && (
@@ -59,7 +57,7 @@ const Login: React.FC = () => {
               </p>
             )}
           </div>
-          <div className="mb-4 text-right">
+          <div className="mb-4">
             <TextField
               type="password"
               placeholder="رمز عبور"
@@ -71,10 +69,10 @@ const Login: React.FC = () => {
               </p>
             )}
           </div>
-          <div className="flex items-center justify-between rtl">
+          <div className="flex items-center justify-between">
             <Link
               to="/forget-password"
-              className="inline-block align-baseline text-sm text-[#3b82f6] hover:text-blue-600"
+              className="text-sm text-blue-600 hover:text-blue-700"
             >
               فراموشی رمز عبور
             </Link>
@@ -82,7 +80,7 @@ const Login: React.FC = () => {
           <div className="mt-7">
             <Button
               type="submit"
-              className="flex items-center justify-center px-6 py-3 bg-[#3b82f6] text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-opacity-50 transition duration-300"
+              className="flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
             >
               <IoMdLogIn className="mr-2 text-xl transform rotate-180" />
               ورود
@@ -91,7 +89,7 @@ const Login: React.FC = () => {
         </form>
         <div className="mt-4 text-center">
           <p className="text-gray-600">
-            <Link to="/register" className="text-[#3b82f6] hover:text-blue-600">
+            <Link to="/register" className="text-blue-600 hover:text-blue-700">
               آیا می‌خواهید ثبت‌نام کنید؟
             </Link>
           </p>

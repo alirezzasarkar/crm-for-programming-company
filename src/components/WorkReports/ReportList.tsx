@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import Title from "../Common/Title";
 import ReportFilter from "./ReportFilter";
+import { useNavigate } from "react-router-dom";
 
 interface Report {
   index: number;
@@ -44,6 +45,12 @@ const ReportList: React.FC = () => {
       dateFilter === "همه زمان‌ها" || report.date === dateFilter;
     return teamMatches && dateMatches;
   });
+
+  const navigate = useNavigate();
+
+  const handleClick = (detail: Report) => {
+    navigate(`/dashboard/reports/detail/${detail.index}`);
+  };
 
   return (
     <>
@@ -99,7 +106,10 @@ const ReportList: React.FC = () => {
                 </td>
                 <td className="py-3 text-sm text-center">{report.date}</td>
                 <td className="py-3 text-sm flex justify-center items-center">
-                  <FaEllipsisV className="text-gray-500 cursor-pointer" />
+                  <FaEllipsisV
+                    className="text-gray-500 cursor-pointer"
+                    onClick={() => handleClick(report)}
+                  />
                 </td>
               </tr>
             ))}

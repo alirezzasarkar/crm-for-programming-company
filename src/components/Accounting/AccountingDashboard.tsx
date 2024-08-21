@@ -11,10 +11,10 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className=" bg-gray-100 min-h-screen">
-      <div className="grid grid-cols-3 gap-6">
+    <div className="bg-gray-100 min-h-screen p-4 sm:p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {/* Withdrawals */}
-        <div className="bg-white p-6 rounded-xl shadow-md col-span-1 rtl">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md rtl">
           <Title title="لیست آخرین تراکنش های واریزی" />
           <table className="min-w-full bg-white border-separate border-spacing-y-3">
             <thead>
@@ -46,9 +46,9 @@ const Dashboard = () => {
         </div>
 
         {/* Deposits */}
-        <div className="bg-white p-6 rounded-xl shadow-md col-span-1">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md rtl">
           <Title title="لیست آخرین تراکنش های برداشتی" />
-          <table className="min-w-full bg-white border-separate border-spacing-y-3 rtl">
+          <table className="min-w-full bg-white border-separate border-spacing-y-3">
             <thead>
               <tr className="text-right">
                 <th className="py-2 text-center text-sm font-medium">مبلغ</th>
@@ -78,14 +78,14 @@ const Dashboard = () => {
         </div>
 
         {/* Sidebar */}
-        <div className="col-span-1 space-y-6">
-          <div className="bg-white p-5 flex rtl justify-between rounded-xl shadow-md">
+        <div className="space-y-6 sm:col-span-1">
+          <div className="bg-white p-4 sm:p-5 flex rtl justify-between rounded-xl shadow-md">
             <h2 className="text-sm font-medium text-blue-600">
               موجودی فعلی حساب شرکت
             </h2>
             <p className="text-sm font-medium ">100,000,000 تومان</p>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-md">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
             <button className="w-full text-sm py-2 px-4 gradient-navbar text-white rounded-md mb-2">
               وارد کردن تراکنش جدید
             </button>

@@ -14,7 +14,6 @@ const TransactionEntry: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // You can get form data here if needed
     const transactionType = (
       event.currentTarget.elements.namedItem(
         "transactionType"
@@ -31,7 +30,6 @@ const TransactionEntry: React.FC = () => {
 
     if (selectedFile) {
       try {
-        // Simulate file upload or any other processing
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
 
         Swal.fire({
@@ -59,8 +57,8 @@ const TransactionEntry: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+    <div className="flex justify-center p-4">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-right text-gray-600 mb-2 text-sm">

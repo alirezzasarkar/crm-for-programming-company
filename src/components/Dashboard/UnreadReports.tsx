@@ -9,22 +9,22 @@ const UnreadReports: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white p-6 pt-4 rounded-2xl shadow-md rtl">
-      <h2 className="text-blue-700 text-md font-bold mb-4">
+    <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
+      <h2 className="text-blue-700 text-sm md:text-md font-bold mb-3 md:mb-4">
         گزارش کار های خوانده نشده
       </h2>
       <div className="p-2 rounded-md mb-2">
-        <div className="flex justify-between">
-          <span className="font-medium text-sm">ردیف</span>
-          <span className="font-medium text-sm">نام و نام خانوادگی</span>
-          <span className="font-medium text-sm">جزئیات</span>
+        <div className="flex justify-between text-xs md:text-sm">
+          <span className="font-medium">ردیف</span>
+          <span className="font-medium">نام و نام خانوادگی</span>
+          <span className="font-medium">جزئیات</span>
         </div>
       </div>
-      <ul className="mt-4">
+      <ul className="mt-2">
         {reports.map((report) => (
           <li
             key={report.id}
-            className="flex justify-between items-center p-1 px-3 text-sm rounded-md mb-3 bg-gray-100"
+            className="flex justify-between items-center p-2 rounded-md mb-2 bg-gray-100 text-xs md:text-sm"
           >
             <span>{report.index}</span>
             <span>{report.name}</span>

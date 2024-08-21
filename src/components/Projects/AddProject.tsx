@@ -21,6 +21,8 @@ interface ProjectFormInputs {
   designTeam: string;
   implementationTeam: string;
   designFiles?: FileList;
+  contractFile?: FileList;
+  description: string;
 }
 
 const ProjectEntry: React.FC = () => {
@@ -290,6 +292,59 @@ const ProjectEntry: React.FC = () => {
             {errors.implementationTeam && (
               <p className="text-red-500 text-xs pt-1">
                 {errors.implementationTeam.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="col-span-2 md:col-span-1 flex items-center mt-2">
+          <label
+            htmlFor="designFiles"
+            className="w-1/5 ml-5 text-gray-700 text-right"
+          >
+            فایل قرارداد
+          </label>
+          <div className="w-2/3">
+            <input
+              id="designFiles"
+              type="file"
+              onChange={(e) => {
+                if (e.target.files) {
+                  setValue("designFiles", e.target.files);
+                }
+              }}
+              className="hidden"
+            />
+            <label
+              htmlFor="designFiles"
+              className="flex items-center cursor-pointer"
+            >
+              <span className="text-gray-400 border border-gray-200 py-2 px-3 rounded-xl">
+                آپلود به صورت فایل زیپ
+              </span>
+              <FaUpload className="text-gray-400 mr-2" />
+            </label>
+          </div>
+        </div>
+
+        <div className="col-span-2 md:col-span-1 flex items-center mt-2">
+          <label
+            htmlFor="description"
+            className="w-1/5 ml-5 text-gray-700 text-right"
+          >
+            توضیحات
+          </label>
+          <div className="w-2/3">
+            <textarea
+              id="description"
+              placeholder="توضیحات"
+              rows={4}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              {...register("description")}
+            />
+            {errors.description && (
+              <p className="text-red-500 text-xs pt-1">
+                {errors.description.message}
               </p>
             )}
           </div>
