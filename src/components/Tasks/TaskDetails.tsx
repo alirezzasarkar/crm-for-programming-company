@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import Title from "../Common/Title";
 
@@ -15,10 +15,17 @@ const TaskDetails: React.FC<TaskDetailsProps> = ({
   sender,
   team,
   deliveryDate,
-  status,
+  status: initialStatus,
   title,
   details,
 }) => {
+  const [status, setStatus] = useState(initialStatus);
+
+  const handleCompleteTask = () => {
+    setStatus("انجام شده");
+    // می‌توانید اینجا کدهای مربوط به بروزرسانی وضعیت تسک در سرور یا هر پردازش دیگری را اضافه کنید
+  };
+
   return (
     <div className="flex justify-around">
       <div className="bg-white p-6 rounded-lg shadow-md rtl w-1/4 h-1/3">
@@ -45,6 +52,14 @@ const TaskDetails: React.FC<TaskDetailsProps> = ({
             )}
           </div>
         </div>
+        {status !== "انجام شده" && (
+          <button
+            onClick={handleCompleteTask}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-xl w-full hover:bg-blue-600"
+          >
+            انجام شد
+          </button>
+        )}
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md rtl w-8/12">
         <div>

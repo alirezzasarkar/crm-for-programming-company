@@ -17,7 +17,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   return (
     <div
-      className={`bg-blue-100 transition-width duration-300 gradient-sidebar shadow-md ${
+      className={`bg-blue-100 transition-width duration-300 gradient-sidebar shadow-md h-auto ${
         isOpen ? "w-60" : "w-0"
       } `}
     >

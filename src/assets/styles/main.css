@@ -11,6 +11,10 @@ input::placeholder {
     direction: rtl;    
 }
 
+.min-height{
+    min-height: 100vh;
+}
+
 .placeholder-gray-400::placeholder {
     color: #b3b7bd;
   }
