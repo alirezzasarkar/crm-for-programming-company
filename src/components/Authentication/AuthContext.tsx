@@ -1,19 +1,27 @@
-import React, { createContext, useContext, ReactNode } from "react";
-import { ROLES } from "./Roles";
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import {
+  login as apiLogin,
+  register as apiRegister,
+} from "../../services/userService"; // مسیر صحیح فایل خدمات API
 
-// تعریف نوع User
 interface User {
-  username: string;
+  full_name: string;
   role: string;
 }
 
-// نوع داده‌های AuthContext
 interface AuthContextType {
   user: User | null;
-  login: (user: User) => void;
-  logout: () => void;
   isAuthenticated: boolean;
-  hasRole: (role: string) => boolean;
+  login: (credentials: {
+    phone_number: string;
+    password: string;
+  }) => Promise<void>;
+  register: (userData: {
+    full_name: string;
+    phone_number: string;
+    password: string;
+  }) => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,25 +29,45 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = React.useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  const login = (user: User) => {
-    setUser(user);
+  const login = async (credentials: {
+    phone_number: string;
+    password: string;
+  }) => {
+    try {
+      const response = await apiLogin(credentials);
+      setUser(response.user);
+      localStorage.setItem("authToken", response.token);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
+  const register = async (userData: {
+    full_name: string;
+    phone_number: string;
+    password: string;
+  }) => {
+    try {
+      const response = await apiRegister(userData);
+      setUser(response.user);
+      localStorage.setItem("authToken", response.token);
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
   };
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("authToken");
   };
 
   const isAuthenticated = !!user;
 
-  const hasRole = (role: string) => {
-    return user?.role === role;
-  };
-
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, isAuthenticated, hasRole }}
+      value={{ user, isAuthenticated, login, register, logout }}
     >
       {children}
     </AuthContext.Provider>

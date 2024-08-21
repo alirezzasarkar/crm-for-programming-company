@@ -16,18 +16,18 @@ const passwordSchema = yup.string()
   .required("رمز عبور الزامی است");
 
 export const loginSchema = yup.object().shape({
-  phone: phoneNumberSchema,
+  phone_number: phoneNumberSchema,
   password: passwordSchema,
 });
 
 export const registerSchema = yup.object().shape({
-  username: persianUsernameSchema,
-  phone: phoneNumberSchema,
+  full_name: persianUsernameSchema,
+  phone_number: phoneNumberSchema,
   password: passwordSchema,
 });
 
 export const forgotPasswordSchema = yup.object().shape({
-  phone: phoneNumberSchema,
+  phone_number: phoneNumberSchema,
   newPassword: passwordSchema,
 });
 
@@ -40,7 +40,7 @@ export const profileSchema = yup.object().shape({
     .string()
     .matches(/^\d{10}$/, "کد ملی باید عدد و 10 رقم باشد")
     .required("کد ملی الزامی است"),
-  phone: yup
+  phone_number: yup
     .string()
     .matches(/^\d{11}$/, "شماره تماس باید 11 رقم باشد")
     .required("شماره تماس الزامی است"),

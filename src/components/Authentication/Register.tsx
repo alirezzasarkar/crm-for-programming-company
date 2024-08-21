@@ -12,12 +12,12 @@ import { useAuth } from "./AuthContext";
 import { ROLES } from "./Roles";
 
 interface RegisterFormData {
-  username: string;
-  phone: string;
+  full_name: string;
+  phone_number: string;
   password: string;
 }
 
-const Register: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -26,24 +26,27 @@ const Register: React.FC = () => {
     resolver: yupResolver(registerSchema),
   });
 
-  const { login } = useAuth();
+  const { register: registerUser } = useAuth();
 
-  const onSubmit = (data: RegisterFormData) => {
-    // منطق ثبت‌نام شما
-
-    // مثال برای تعیین نقش کاربر بعد از ثبت‌نام موفقیت‌آمیز
-    login({
-      username: data.username,
-      role: ROLES.EMPLOYEE, // یا ROLES.MANAGER بر اساس منطق خود
-    });
-
-    Swal.fire({
-      title: "ثبت‌نام موفقیت‌آمیز",
-      text: "شما با موفقیت ثبت‌نام شدید",
-      icon: "success",
-      confirmButtonText: "باشه",
-      confirmButtonColor: "#3b82f6",
-    });
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      await registerUser(data);
+      Swal.fire({
+        title: "ثبت‌نام موفقیت‌آمیز",
+        text: "شما با موفقیت ثبت‌نام شدید",
+        icon: "success",
+        confirmButtonText: "باشه",
+        confirmButtonColor: "#3b82f6",
+      });
+    } catch (error) {
+      Swal.fire({
+        title: "خطا",
+        text: "ثبت‌نام ناموفق بود",
+        icon: "error",
+        confirmButtonText: "باشه",
+        confirmButtonColor: "#f87171",
+      });
+    }
   };
 
   return (
@@ -60,11 +63,11 @@ const Register: React.FC = () => {
             <TextField
               type="text"
               placeholder="نام کاربری"
-              {...register("username")}
+              {...register("full_name")}
             />
-            {errors.username && (
+            {errors.full_name && (
               <p className="text-red-500 mt-2 text-sm">
-                {errors.username.message}
+                {errors.full_name.message}
               </p>
             )}
           </div>
@@ -72,11 +75,11 @@ const Register: React.FC = () => {
             <TextField
               type="text"
               placeholder="شماره موبایل"
-              {...register("phone")}
+              {...register("phone_number")}
             />
-            {errors.phone && (
+            {errors.phone_number && (
               <p className="text-red-500 mt-2 text-sm">
-                {errors.phone.message}
+                {errors.phone_number.message}
               </p>
             )}
           </div>
@@ -114,4 +117,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default RegisterPage;
