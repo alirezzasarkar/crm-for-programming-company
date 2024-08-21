@@ -1,6 +1,12 @@
 import React, { createContext, useContext, ReactNode } from "react";
 import { ROLES } from "./Roles";
 
+// تعریف نوع User
+interface User {
+  username: string;
+  role: string;
+}
+
 // نوع داده‌های AuthContext
 interface AuthContextType {
   user: User | null;

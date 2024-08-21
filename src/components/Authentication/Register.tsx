@@ -8,6 +8,8 @@ import { registerSchema } from "../../utils/validationSchemas";
 import { Link } from "react-router-dom";
 import { IoMdLogIn } from "react-icons/io";
 import Swal from "sweetalert2";
+import { useAuth } from "./AuthContext";
+import { ROLES } from "./Roles";
 
 interface RegisterFormData {
   username: string;
@@ -24,8 +26,16 @@ const Register: React.FC = () => {
     resolver: yupResolver(registerSchema),
   });
 
+  const { login } = useAuth();
+
   const onSubmit = (data: RegisterFormData) => {
     // منطق ثبت‌نام شما
+
+    // مثال برای تعیین نقش کاربر بعد از ثبت‌نام موفقیت‌آمیز
+    login({
+      username: data.username,
+      role: ROLES.EMPLOYEE, // یا ROLES.MANAGER بر اساس منطق خود
+    });
 
     Swal.fire({
       title: "ثبت‌نام موفقیت‌آمیز",

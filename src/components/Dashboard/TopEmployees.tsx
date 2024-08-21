@@ -10,7 +10,7 @@ const TopEmployees: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
+    <div className="bg-white p-4 md:p-6 rounded-lg shadow-md rtl">
       <h2 className="text-blue-700 text-sm md:text-md font-bold mb-3 md:mb-4">
         کارمندان برتر هفته
       </h2>

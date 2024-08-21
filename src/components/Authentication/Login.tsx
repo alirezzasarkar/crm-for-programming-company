@@ -8,6 +8,8 @@ import Logo from "../Common/Logo";
 import { loginSchema } from "../../utils/validationSchemas";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useAuth } from "./AuthContext";
+import { ROLES } from "./Roles";
 
 interface LoginFormData {
   phone: string;
@@ -23,8 +25,16 @@ const Login: React.FC = () => {
     resolver: yupResolver(loginSchema),
   });
 
+  const { login } = useAuth();
+
   const onSubmit = (data: LoginFormData) => {
     // منطق ورود شما
+
+    // مثال برای تعیین نقش کاربر بعد از ورود موفقیت‌آمیز
+    login({
+      username: "user123", // باید این مقدار از داده‌های ورود به دست آید
+      role: ROLES.EMPLOYEE, // یا ROLES.MANAGER بر اساس منطق خود
+    });
 
     Swal.fire({
       title: "ورود موفقیت‌آمیز",

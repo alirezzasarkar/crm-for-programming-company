@@ -23,6 +23,7 @@ import AccountingDashboardPage from "./AccountingDashboardPage";
 import AddTransactionPage from "./AddTransactionPage";
 import EmployeeSalariesPage from "./EmployeeSalariesPage";
 import TransactionListPage from "./TransactionListPage";
+import ProtectedRoute from "../components/Authentication/ProtectedRoutes";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -48,21 +49,42 @@ const DashboardPage: React.FC = () => {
         <Route path="/tickets/new" element={<SendTicketPage />} />
         <Route path="/tickets/list" element={<TicketListPage />} />
         <Route path="/tickets/detail/:id" element={<TicketDetailsPage />} />
+
         <Route
           path="/accounting/dashboard"
-          element={<AccountingDashboardPage />}
+          element={
+            <ProtectedRoute
+              element={<AccountingDashboardPage />}
+              allowedRoles={["manager"]}
+            />
+          }
         />
         <Route
           path="/accounting/add-transaction"
-          element={<AddTransactionPage />}
+          element={
+            <ProtectedRoute
+              element={<AddTransactionPage />}
+              allowedRoles={["manager"]}
+            />
+          }
         />
         <Route
           path="/accounting/employee-salaries"
-          element={<EmployeeSalariesPage />}
+          element={
+            <ProtectedRoute
+              element={<EmployeeSalariesPage />}
+              allowedRoles={["manager"]}
+            />
+          }
         />
         <Route
           path="/accounting/transaction-list"
-          element={<TransactionListPage />}
+          element={
+            <ProtectedRoute
+              element={<TransactionListPage />}
+              allowedRoles={["manager"]}
+            />
+          }
         />
         <Route path="/" element={<Dashboard />} />
       </Routes>
