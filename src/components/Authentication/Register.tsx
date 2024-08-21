@@ -5,11 +5,10 @@ import TextField from "../Common/TextField";
 import Button from "../Common/Button";
 import Logo from "../Common/Logo";
 import { registerSchema } from "../../utils/validationSchemas";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdLogIn } from "react-icons/io";
 import Swal from "sweetalert2";
 import { useAuth } from "./AuthContext";
-import { ROLES } from "./Roles";
 
 interface RegisterFormData {
   full_name: string;
@@ -27,6 +26,7 @@ const RegisterPage: React.FC = () => {
   });
 
   const { register: registerUser } = useAuth();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
@@ -37,6 +37,8 @@ const RegisterPage: React.FC = () => {
         icon: "success",
         confirmButtonText: "باشه",
         confirmButtonColor: "#3b82f6",
+      }).then(() => {
+        navigate("/login");
       });
     } catch (error) {
       Swal.fire({

@@ -1,0 +1,30 @@
+{
+  "register": [
+    {
+      "id": "756b",
+      "full_name": "علیرضا",
+      "phone_number": "09901032844",
+      "password": "123456",
+      "role": "manager"
+    },
+    {
+      "id": "c9a5",
+      "full_name": "سجاد",
+      "phone_number": "09901032845",
+      "password": "123456"
+    }
+  ],
+  "login": [
+    {
+      "id": "d277",
+      "phone_number": "09901032845",
+      "password": "123456"
+    },
+    {
+      "id": "bc67",
+      "phone_number": "09901032844",
+      "password": "123456",
+      "role": "manager"
+    }
+  ]
+}
