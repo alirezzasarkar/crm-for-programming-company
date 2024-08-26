@@ -12,7 +12,7 @@ const persianUsernameSchema = yup.string()
 
 // Password schema with a minimum length of 6 characters
 const passwordSchema = yup.string()
-  .min(6, "رمز عبور باید حداقل 6 کاراکتر باشد")
+  .min(5, "رمز عبور باید حداقل 5 کاراکتر باشد")
   .required("رمز عبور الزامی است");
 
 export const loginSchema = yup.object().shape({

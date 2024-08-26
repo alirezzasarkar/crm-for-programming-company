@@ -6,10 +6,9 @@ import TextField from "../Common/TextField";
 import Button from "../Common/Button";
 import Logo from "../Common/Logo";
 import { loginSchema } from "../../utils/validationSchemas";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAuth } from "../Authentication/AuthContext";
-import { ROLES } from "./Roles";
 
 interface LoginFormData {
   phone_number: string;
@@ -26,6 +25,7 @@ const LoginPage: React.FC = () => {
   });
 
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: LoginFormData) => {
     try {
@@ -36,6 +36,8 @@ const LoginPage: React.FC = () => {
         icon: "success",
         confirmButtonText: "باشه",
         confirmButtonColor: "#3b82f6",
+      }).then(() => {
+        navigate("/dashboard");
       });
     } catch (error) {
       Swal.fire({
