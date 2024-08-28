@@ -7,7 +7,6 @@ import { DateObject } from "react-multi-date-picker";
 
 const AddTask: React.FC = () => {
   const [title, setTitle] = useState("");
-  const [team, setTeam] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
   const [dueDate, setDueDate] = useState<DateObject | null>(null);
   const [details, setDetails] = useState("");
@@ -31,7 +30,6 @@ const AddTask: React.FC = () => {
       });
       // Reset form fields after successful submission
       setTitle("");
-      setTeam("");
       setAssignedTo("");
       setDueDate(null);
       setDetails("");
@@ -59,7 +57,6 @@ const AddTask: React.FC = () => {
       if (result.isConfirmed) {
         // Reset form fields
         setTitle("");
-        setTeam("");
         setAssignedTo("");
         setDueDate(null);
         setDetails("");
@@ -68,11 +65,18 @@ const AddTask: React.FC = () => {
     });
   };
 
+  const companyMembers = [
+    "عضو ۱",
+    "عضو ۲",
+    "عضو ۳",
+    // نام اعضای شرکت خود را اینجا اضافه کنید
+  ];
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md rtl">
       <Title title="وارد کردن تسک" />
       <form onSubmit={handleSubmit} className="mt-5">
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 gap-4 mb-4">
           <div>
             <input
               type="text"
@@ -83,22 +87,20 @@ const AddTask: React.FC = () => {
             />
           </div>
           <div>
-            <input
-              type="text"
-              value={team}
-              onChange={(e) => setTeam(e.target.value)}
-              placeholder="تیم"
-              className="w-full p-2 border rounded-xl"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
+            <select
               value={assignedTo}
               onChange={(e) => setAssignedTo(e.target.value)}
-              placeholder="ارسال به"
-              className="w-full p-2 border rounded-xl"
-            />
+              className="w-full p-2 border rounded-xl bg-white text-gray-400"
+            >
+              <option value="" disabled>
+                ارسال به
+              </option>
+              {companyMembers.map((member) => (
+                <option key={member} value={member}>
+                  {member}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <MyDatePicker

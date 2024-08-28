@@ -7,14 +7,16 @@ interface ProjectDetailsProps {
   domain: string;
   startDate: string;
   endDate: string;
-  completionDate: string;
-  hostingEndDate: string;
-  platform: string;
-  designTeam: string[];
-  implementationTeam: string[];
-  designFilesLink: string; // اضافه کردن prop جدید برای لینک دانلود فایل‌های دیزاین
-  contractFile: string;
-  description: string;
+  completionDate: string; // تاریخ اتمام پروژه
+  hostingEndDate: string; // تاریخ اتمام هاست
+  platform: string; // پلتفرم
+  clientName: string; // نام کارفرما
+  clientContact: string; // شماره تماس کارفرما
+  projectStatus: string; // وضعیت پروژه
+  teamMembers: string; // اعضای تیم
+  designFilesLink: string; // لینک فایل‌های دیزاین
+  contractFile: string; // لینک فایل‌های قرارداد
+  description: string; // توضیحات
 }
 
 const ProjectDetails: React.FC<ProjectDetailsProps> = ({
@@ -26,8 +28,10 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
   completionDate,
   hostingEndDate,
   platform,
-  designTeam,
-  implementationTeam,
+  clientName,
+  clientContact,
+  projectStatus,
+  teamMembers,
   designFilesLink,
   contractFile,
   description,
@@ -58,7 +62,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             <td className="px-4 py-3 text-gray-500">{endDate}</td>
           </tr>
           <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">تاریخ اتمام دامنه:</td>
+            <td className="px-4 py-3 text-gray-700">تاریخ اتمام پروژه:</td>
             <td className="px-4 py-3 text-gray-500">{completionDate}</td>
           </tr>
           <tr className="w-full border-b border-gray-200">
@@ -66,21 +70,27 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             <td className="px-4 py-3 text-gray-500">{hostingEndDate}</td>
           </tr>
           <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">تیم:</td>
+            <td className="px-4 py-3 text-gray-700">پلتفرم:</td>
             <td className="px-4 py-3 text-gray-500">{platform}</td>
           </tr>
           <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">تیم دیزاین:</td>
-            <td className="px-4 py-3 text-gray-500">{designTeam.join(", ")}</td>
+            <td className="px-4 py-3 text-gray-700">نام کارفرما:</td>
+            <td className="px-4 py-3 text-gray-500">{clientName}</td>
           </tr>
           <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">تیم پیاده‌سازی:</td>
-            <td className="px-4 py-3 text-gray-500">
-              {implementationTeam.join(", ")}
-            </td>
+            <td className="px-4 py-3 text-gray-700">شماره تماس کارفرما:</td>
+            <td className="px-4 py-3 text-gray-500">{clientContact}</td>
           </tr>
           <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">فایل های قرارداد:</td>
+            <td className="px-4 py-3 text-gray-700">وضعیت پروژه:</td>
+            <td className="px-4 py-3 text-gray-500">{projectStatus}</td>
+          </tr>
+          <tr className="w-full border-b border-gray-200">
+            <td className="px-4 py-3 text-gray-700">اعضای تیم:</td>
+            <td className="px-4 py-3 text-gray-500">{teamMembers}</td>
+          </tr>
+          <tr className="w-full border-b border-gray-200">
+            <td className="px-4 py-3 text-gray-700">فایل‌های دیزاین:</td>
             <td className="px-4 py-3 text-gray-500">
               <a
                 href={designFilesLink}
@@ -92,7 +102,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             </td>
           </tr>
           <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700"> فایل‌های دیزاین:</td>
+            <td className="px-4 py-3 text-gray-700">فایل‌های قرارداد:</td>
             <td className="px-4 py-3 text-gray-500">
               <a
                 href={contractFile}
@@ -104,7 +114,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             </td>
           </tr>
           <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">توضیحات</td>
+            <td className="px-4 py-3 text-gray-700">توضیحات:</td>
             <td className="px-4 py-3 text-gray-500">{description}</td>
           </tr>
         </tbody>

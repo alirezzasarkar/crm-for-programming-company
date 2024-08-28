@@ -16,10 +16,10 @@ interface ProjectFormInputs {
   endDate: string;
   domainExpiryDate: string;
   hostingExpiryDate: string;
-  team: string;
-  subSections: string;
-  designTeam: string;
-  implementationTeam: string;
+  clientName: string; // نام کارفرما
+  clientContact: string; // شماره تماس کارفرما
+  projectStatus: string; // وضعیت پروژه
+  teamMembers: string; // اعضای تیم
   designFiles?: FileList;
   contractFile?: FileList;
   description: string;
@@ -158,14 +158,46 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
+        {/* اضافه کردن فیلد نام کارفرما */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label htmlFor="team" className="w-1/5 ml-5 text-gray-700 text-right">
-            تیم
+          <label
+            htmlFor="clientName"
+            className="w-1/5 ml-5 text-gray-700 text-right"
+          >
+            نام کارفرما
           </label>
           <div className="w-2/3">
-            <TextField type="text" placeholder="تیم" {...register("team")} />
-            {errors.team && (
-              <p className="text-red-500 text-xs pt-1">{errors.team.message}</p>
+            <TextField
+              type="text"
+              placeholder="نام کارفرما"
+              {...register("clientName")}
+            />
+            {errors.clientName && (
+              <p className="text-red-500 text-xs pt-1">
+                {errors.clientName.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* اضافه کردن فیلد شماره تماس کارفرما */}
+        <div className="col-span-2 md:col-span-1 flex items-center mt-2">
+          <label
+            htmlFor="clientContact"
+            className="w-1/5 ml-5 text-gray-700 text-right"
+          >
+            شماره تماس کارفرما
+          </label>
+          <div className="w-2/3">
+            <TextField
+              type="text"
+              placeholder="شماره تماس کارفرما"
+              {...register("clientContact")}
+            />
+            {errors.clientContact && (
+              <p className="text-red-500 text-xs pt-1">
+                {errors.clientContact.message}
+              </p>
             )}
           </div>
         </div>
@@ -187,22 +219,46 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
+        {/* حذف فیلدهای تیم، زیر بخش‌ها، تیم دیزاین، تیم پیاده‌سازی */}
+        {/* اضافه کردن فیلد وضعیت پروژه */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="subSections"
+            htmlFor="projectStatus"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
-            زیر بخش‌ها
+            وضعیت پروژه
           </label>
           <div className="w-2/3">
             <TextField
               type="text"
-              placeholder="زیر بخش‌ها"
-              {...register("subSections")}
+              placeholder="وضعیت پروژه"
+              {...register("projectStatus")}
             />
-            {errors.subSections && (
+            {errors.projectStatus && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.subSections.message}
+                {errors.projectStatus.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* اضافه کردن فیلد اعضای تیم */}
+        <div className="col-span-2 md:col-span-1 flex items-center mt-2">
+          <label
+            htmlFor="teamMembers"
+            className="w-1/5 ml-5 text-gray-700 text-right"
+          >
+            اعضای تیم
+          </label>
+          <div className="w-2/3">
+            <TextField
+              type="text"
+              placeholder="اعضای تیم"
+              {...register("teamMembers")}
+            />
+            {errors.teamMembers && (
+              <p className="text-red-500 text-xs pt-1">
+                {errors.teamMembers.message}
               </p>
             )}
           </div>
@@ -227,27 +283,6 @@ const ProjectEntry: React.FC = () => {
 
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="designTeam"
-            className="w-1/5 ml-5 text-gray-700 text-right"
-          >
-            تیم دیزاین
-          </label>
-          <div className="w-2/3">
-            <TextField
-              type="text"
-              placeholder="تیم دیزاین"
-              {...register("designTeam")}
-            />
-            {errors.designTeam && (
-              <p className="text-red-500 text-xs pt-1">
-                {errors.designTeam.message}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label
             htmlFor="designFiles"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
@@ -257,6 +292,7 @@ const ProjectEntry: React.FC = () => {
             <input
               id="designFiles"
               type="file"
+              accept=".zip"
               onChange={(e) => {
                 if (e.target.files) {
                   setValue("designFiles", e.target.files);
@@ -278,45 +314,25 @@ const ProjectEntry: React.FC = () => {
 
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="implementationTeam"
-            className="w-1/5 ml-5 text-gray-700 text-right"
-          >
-            تیم پیاده‌سازی
-          </label>
-          <div className="w-2/3">
-            <TextField
-              type="text"
-              placeholder="تیم پیاده‌سازی"
-              {...register("implementationTeam")}
-            />
-            {errors.implementationTeam && (
-              <p className="text-red-500 text-xs pt-1">
-                {errors.implementationTeam.message}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label
-            htmlFor="designFiles"
+            htmlFor="contractFile"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             فایل قرارداد
           </label>
           <div className="w-2/3">
             <input
-              id="designFiles"
+              id="contractFile"
               type="file"
+              accept=".zip"
               onChange={(e) => {
                 if (e.target.files) {
-                  setValue("designFiles", e.target.files);
+                  setValue("contractFile", e.target.files);
                 }
               }}
               className="hidden"
             />
             <label
-              htmlFor="designFiles"
+              htmlFor="contractFile"
               className="flex items-center cursor-pointer"
             >
               <span className="text-gray-400 border border-gray-200 py-2 px-3 rounded-xl">

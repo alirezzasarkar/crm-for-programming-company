@@ -13,7 +13,6 @@ const projects = [
     projectName: "وبسایت ادکلای",
     domain: "adklay.co",
     manager: "محمد رودباری",
-    team: "وردپرس",
     endDate: "21 مهر 1403",
     status: "درحال انجام",
   },
@@ -22,7 +21,6 @@ const projects = [
     projectName: "وبسایت ادکلای",
     domain: "adklay.co",
     manager: "محمد رودباری",
-    team: "وردپرس",
     endDate: "19 مهر 1403",
     status: "انجام شده",
   },
@@ -31,7 +29,6 @@ const projects = [
     projectName: "وبسایت ادکلای",
     domain: "adklay.co",
     manager: "محمد رودباری",
-    team: "وردپرس",
     endDate: "18 مهر 1403",
     status: "درحال انجام",
   },
@@ -95,9 +92,11 @@ const ProjectListPage: React.FC = () => {
               <th className="py-2 text-center text-sm font-medium pb-5">
                 مدیر پروژه
               </th>
-              <th className="py-2 text-center text-sm font-medium pb-5">تیم</th>
               <th className="py-2 text-center text-sm font-medium pb-5">
                 تاریخ اتمام
+              </th>
+              <th className="py-2 text-center text-sm font-medium pb-5">
+                وضعیت پروژه
               </th>
               <th className="py-2 text-center text-sm font-medium pb-5">
                 نمایش جزئیات
@@ -118,9 +117,17 @@ const ProjectListPage: React.FC = () => {
                   {project.domain}
                 </td>
                 <td className="py-3 text-sm text-center">{project.manager}</td>
-                <td className="py-3 text-sm text-center">{project.team}</td>
                 <td className="py-3 text-sm text-center text-yellow-500">
                   {project.endDate}
+                </td>
+                <td
+                  className={`py-3 text-sm text-center ${
+                    project.status === "درحال انجام"
+                      ? "text-orange-500"
+                      : "text-green-500"
+                  }`}
+                >
+                  {project.status}
                 </td>
                 <td className="py-3 text-sm text-center">
                   <FaEllipsisV className="text-gray-500 mx-auto cursor-pointer" />

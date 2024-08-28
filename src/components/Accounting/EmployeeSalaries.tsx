@@ -60,7 +60,7 @@ const transactionList: Transaction[] = [
   },
 ];
 
-const EmployeeSalaries: React.FC = () => {
+const TransactionList: React.FC = () => {
   return (
     <div className="p-6 bg-white rounded shadow-md rtl">
       <div className="items-center mb-4">
@@ -103,4 +103,4 @@ const EmployeeSalaries: React.FC = () => {
   );
 };
 
-export default EmployeeSalaries;
+export default TransactionList;

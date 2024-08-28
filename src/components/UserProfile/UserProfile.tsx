@@ -34,7 +34,6 @@ const Profile: React.FC = () => {
   });
 
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
 
   const userProfile: SubmitHandler<ProfileFormInputs> = async (data) => {
     try {
@@ -83,26 +82,21 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleOtpVerification: React.FormEventHandler<HTMLFormElement> = async (
-    e
-  ) => {
-    e.preventDefault();
+  const sendOtpCode = async () => {
     try {
-      // Simulate an OTP verification request
+      // Simulate sending OTP code
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       Swal.fire({
         title: "موفقیت",
-        text: "کد تایید با موفقیت بررسی شد.",
+        text: "کد تایید با موفقیت ارسال شد.",
         icon: "success",
         confirmButtonText: "باشه",
       });
-
-      setIsOtpModalOpen(false);
     } catch (error) {
       Swal.fire({
         title: "خطا",
-        text: "مشکلی در تایید کد پیش آمد.",
+        text: "مشکلی در ارسال کد تایید پیش آمد.",
         icon: "error",
         confirmButtonText: "باشه",
       });
@@ -274,8 +268,26 @@ const Profile: React.FC = () => {
           <form onSubmit={handlePasswordChange}>
             <div className="mb-4 mt-5">
               <label
+                htmlFor="otpCode"
+                className="block text-gray-700 text-right mb-2"
+              >
+                کد تایید
+              </label>
+              <div>
+                <TextField
+                  type="text"
+                  placeholder="کد تایید"
+                  {...register("otpCode")}
+                />
+                <Button type="button" className="mt-4" onClick={sendOtpCode}>
+                  ارسال کد
+                </Button>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label
                 htmlFor="newPassword"
-                className="block text-gray-700 text-center mb-2"
+                className="block text-gray-700 text-right mb-2"
               >
                 رمز جدید
               </label>
@@ -283,40 +295,6 @@ const Profile: React.FC = () => {
                 type="password"
                 placeholder="رمز جدید"
                 {...register("newPassword")}
-              />
-            </div>
-            <div className="mb-8">
-              <label
-                htmlFor="confirmNewPassword"
-                className="block text-gray-700 text-center mb-2"
-              >
-                تایید رمز جدید
-              </label>
-              <TextField
-                type="password"
-                placeholder="تایید رمز جدید"
-                {...register("confirmNewPassword")}
-              />
-            </div>
-            <Button type="submit">تایید</Button>
-          </form>
-        </Modal>
-      )}
-
-      {isOtpModalOpen && (
-        <Modal onClose={() => setIsOtpModalOpen(false)}>
-          <form onSubmit={handleOtpVerification}>
-            <div className="mb-4">
-              <label
-                htmlFor="otpCode"
-                className="block text-gray-700 text-right mb-2"
-              >
-                کد تایید
-              </label>
-              <TextField
-                type="text"
-                placeholder="کد تایید"
-                {...register("otpCode")}
               />
             </div>
             <Button type="submit">تایید</Button>
