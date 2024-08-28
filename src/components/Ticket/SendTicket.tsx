@@ -3,6 +3,14 @@ import Swal from "sweetalert2";
 
 const TicketSubmission: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [assignedTo, setAssignedTo] = useState("");
+
+  const companyMembers = [
+    "عضو ۱",
+    "عضو ۲",
+    "عضو ۳",
+    // نام اعضای شرکت خود را اینجا اضافه کنید
+  ];
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -61,12 +69,21 @@ const TicketSubmission: React.FC = () => {
               className="w-full px-3 py-2 border rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="ارسال به"
-              className="w-full px-3 py-2 border rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          <div className="mb-4 rtl">
+            <select
+              value={assignedTo}
+              onChange={(e) => setAssignedTo(e.target.value)}
+              className="w-full p-2 border rounded-md bg-white text-gray-400"
+            >
+              <option value="" disabled>
+                ارسال به
+              </option>
+              {companyMembers.map((member) => (
+                <option key={member} value={member}>
+                  {member}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <textarea
