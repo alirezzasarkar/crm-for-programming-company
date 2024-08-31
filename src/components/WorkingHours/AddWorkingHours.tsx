@@ -80,13 +80,22 @@ const WorkTimeEntry: React.FC = () => {
     setActiveDayIndex(index);
   };
 
+  // محاسبه تاریخ جاری
+  const today = moment().format("jYYYY/jMM/jDD"); // تاریخ جاری شمسی
+
+  // محاسبه تاریخ شروع هفته
+  const startOfWeek = getStartOfWeek(moment(today, "jYYYY/jMM/jDD"));
+
+  // محاسبه تاریخ‌های هفته
+  const weekDates = getWeekDates(startOfWeek);
+
   return (
     <div className="p-4 bg-white rounded shadow-md rtl">
       <Title title="وارد کردن زمان کاری" />
       <WeekDaysSlider
-        days={weekDays}
-        activeIndex={activeDayIndex}
-        onDayClick={handleDayClick}
+        days={weekDates}
+        activeDate={today} // پاس کردن تاریخ جاری
+        onDayClick={(index) => console.log("Clicked day index:", index)}
       />
       <div className="mt-20">
         <TimerDisplay time={time} />

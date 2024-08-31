@@ -6,7 +6,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 
 interface MyDatePickerProps {
   placeholder?: string;
-  onChange?: (date: DateObject | null) => void; // Explicitly type the onChange prop
+  onChange?: (date: DateObject | null) => void;
 }
 
 const MyDatePicker: React.FC<MyDatePickerProps> = ({
@@ -24,10 +24,7 @@ const MyDatePicker: React.FC<MyDatePickerProps> = ({
 
   return (
     <div className="flex items-center relative border border-gray-200 rounded-xl p-2">
-      {/* Calendar Icon */}
       <FaCalendarAlt className="absolute left-2 text-gray-400 pointer-events-none" />
-
-      {/* Date Picker Field */}
       <DatePicker
         value={value}
         onChange={handleDateChange}
@@ -35,7 +32,7 @@ const MyDatePicker: React.FC<MyDatePickerProps> = ({
         locale={persian_fa}
         calendarPosition="bottom-right"
         placeholder={placeholder}
-        inputClass="pl-8 outline-none w-full" // Space for icon
+        inputClass="pl-8 outline-none w-full"
       />
     </div>
   );
