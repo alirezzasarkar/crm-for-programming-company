@@ -35,6 +35,7 @@ const DashboardPage: React.FC = () => {
         >
           <Route path="/" element={<Dashboard />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile/:id" element={<ProfilePage />} />
           <Route path="employee-info" element={<EmployeeInfo />} />
           <Route path="reports/entry" element={<ReportEntryPage />} />
           <Route path="reports/list" element={<ReportListPage />} />

@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const response = await apiLogin(credentials);
       setUser(response.user);
-      localStorage.setItem("authToken", response.token);
+      localStorage.setItem("authToken", response.data.access);
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -56,7 +56,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const response = await apiRegister(userData);
       setUser(response.user);
-      localStorage.setItem("authToken", response.token);
+      localStorage.setItem("authToken", response.data.access);
     } catch (error) {
       console.error("Registration failed:", error);
     }

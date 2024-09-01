@@ -1,51 +1,26 @@
-// EmployeeListPage.tsx
-import React, { useState, useMemo } from "react";
+// src/pages/EmployeeListPage.tsx
+import React, { useState, useMemo, useEffect } from "react";
 import EmployeeList from "../components/EmployeeInfo/EmployeeList";
 import EmployeeModal from "../components/EmployeeInfo/EmployeeModal";
 import EmployeeFilter from "../components/EmployeeInfo/EmployeeFilter";
 import Title from "../components/Common/Title";
+import { getEmployees, deleteEmployee } from "../services/employeeList";
 
-// صادر کردن نوع Employee
 export interface Employee {
   id: number;
   index: number;
   name: string;
-  contactNumber: string;
-  jobTitle: string;
-  nationalId: string;
-  birthDate: string;
+  last_name: string;
+  phone_number: string;
+  work_position: string;
+  post_code: string;
+  date_of_birth: string;
   email: string;
-  profileImage: string;
+  picture: string;
 }
 
-const initialEmployeesData: Employee[] = [
-  {
-    id: 1,
-    index: 1,
-    name: "علیرضا سرکار",
-    contactNumber: "09029828541",
-    jobTitle: "مدیر بخش فرانت",
-    nationalId: "1234567890",
-    birthDate: "1365/05/20",
-    email: "alireza@example.com",
-    profileImage: "https://via.placeholder.com/150",
-  },
-  {
-    id: 2,
-    index: 2,
-    name: "علیرضا سرکار",
-    contactNumber: "09901032844",
-    jobTitle: "مدیر بخش بک اند",
-    nationalId: "1234567891",
-    birthDate: "1365/05/20",
-    email: "alireza@example.com",
-    profileImage: "https://via.placeholder.com/150",
-  },
-  // other employees...
-];
-
 const EmployeeListPage: React.FC = () => {
-  const [employees, setEmployees] = useState<Employee[]>(initialEmployeesData);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
@@ -55,6 +30,19 @@ const EmployeeListPage: React.FC = () => {
     direction: "ascending" | "descending";
   } | null>(null);
   const [filter, setFilter] = useState("نام و نام خانوادگی");
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const data = await getEmployees();
+        setEmployees(data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
 
   const sortedEmployees = useMemo(() => {
     let sortableEmployees = [...employees];
@@ -98,16 +86,21 @@ const EmployeeListPage: React.FC = () => {
     setFilter(newFilter);
     const filterKeyMap: { [key: string]: keyof Employee } = {
       "نام و نام خانوادگی": "name",
-      "شماره تماس": "contactNumber",
-      "سمت شغلی": "jobTitle",
+      "شماره تماس": "phone_number",
+      "سمت شغلی": "work_position",
     };
     requestSort(filterKeyMap[newFilter]);
   };
 
-  const handleDeleteEmployee = (id: number) => {
-    setEmployees((prevEmployees) =>
-      prevEmployees.filter((employee) => employee.id !== id)
-    );
+  const handleDeleteEmployee = async (id: number) => {
+    try {
+      await deleteEmployee(id);
+      setEmployees((prevEmployees) =>
+        prevEmployees.filter((employee) => employee.id !== id)
+      );
+    } catch (error) {
+      console.error("Error deleting employee:", error);
+    }
   };
 
   return (

@@ -1,13 +1,14 @@
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import TextField from "../../components/Common/TextField";
-import Button from "../../components/Common/Button";
-import { FaUpload, FaSave } from "react-icons/fa";
-import Title from "../Common/Title";
-import PersianDatePicker from "../Common/PersianDatePicker";
+import { useForm, SubmitHandler, UseFormSetValue } from "react-hook-form";
 import Swal from "sweetalert2";
+import PersianDatePicker from "../Common/PersianDatePicker";
+import TextField from "../Common/TextField";
+import Button from "../Common/Button";
+import { FaUpload, FaSave } from "react-icons/fa";
+import { createProject } from "../../services/addProject"; // وارد کردن تابع API
+import Title from "../Common/Title";
 
-// Define the form data type
+// تعریف نوع داده‌های فرم
 interface ProjectFormInputs {
   projectName: string;
   projectManager: string;
@@ -16,16 +17,17 @@ interface ProjectFormInputs {
   endDate: string;
   domainExpiryDate: string;
   hostingExpiryDate: string;
-  clientName: string; // نام کارفرما
-  clientContact: string; // شماره تماس کارفرما
-  projectStatus: string; // وضعیت پروژه
-  teamMembers: string; // اعضای تیم
+  clientName: string;
+  clientContact: string;
+  projectStatus: string;
+  teamMembers: string;
   designFiles?: FileList;
   contractFile?: FileList;
   description: string;
 }
+type ProjectFormField = keyof ProjectFormInputs;
 
-const ProjectEntry: React.FC = () => {
+const AddProjectPage: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -33,19 +35,23 @@ const ProjectEntry: React.FC = () => {
     formState: { errors },
   } = useForm<ProjectFormInputs>();
 
+  // تابع برای ارسال داده‌ها به سرور
   const onSubmit: SubmitHandler<ProjectFormInputs> = async (data) => {
     try {
-      console.log("Project Data:", data);
-      // Implement your logic to submit the data to the server here
+      // ارسال داده‌های فرم به API
+      await createProject(data, {
+        designFiles: data.designFiles,
+        contractFile: data.contractFile,
+      });
 
-      // Show success message with SweetAlert2
+      // نمایش پیام موفقیت با SweetAlert2
       await Swal.fire({
         icon: "success",
         title: "ثبت اطلاعات موفقیت‌آمیز",
         text: "اطلاعات پروژه با موفقیت ثبت شد.",
       });
     } catch (error) {
-      // Show error message with SweetAlert2
+      // نمایش پیام خطا با SweetAlert2
       await Swal.fire({
         icon: "error",
         title: "خطا",
@@ -72,7 +78,7 @@ const ProjectEntry: React.FC = () => {
             <TextField
               type="text"
               placeholder="نام پروژه"
-              {...register("projectName")}
+              {...register("projectName", { required: "نام پروژه الزامی است" })}
             />
             {errors.projectName && (
               <p className="text-red-500 text-xs pt-1">
@@ -110,7 +116,9 @@ const ProjectEntry: React.FC = () => {
             <TextField
               type="text"
               placeholder="مدیر پروژه"
-              {...register("projectManager")}
+              {...register("projectManager", {
+                required: "مدیر پروژه الزامی است",
+              })}
             />
             {errors.projectManager && (
               <p className="text-red-500 text-xs pt-1">
@@ -148,7 +156,7 @@ const ProjectEntry: React.FC = () => {
             <TextField
               type="text"
               placeholder="دامنه"
-              {...register("domain")}
+              {...register("domain", { required: "دامنه الزامی است" })}
             />
             {errors.domain && (
               <p className="text-red-500 text-xs pt-1">
@@ -158,7 +166,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
-        {/* اضافه کردن فیلد نام کارفرما */}
+        {/* فیلد نام کارفرما */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="clientName"
@@ -170,7 +178,9 @@ const ProjectEntry: React.FC = () => {
             <TextField
               type="text"
               placeholder="نام کارفرما"
-              {...register("clientName")}
+              {...register("clientName", {
+                required: "نام کارفرما الزامی است",
+              })}
             />
             {errors.clientName && (
               <p className="text-red-500 text-xs pt-1">
@@ -180,7 +190,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
-        {/* اضافه کردن فیلد شماره تماس کارفرما */}
+        {/* فیلد شماره تماس کارفرما */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="clientContact"
@@ -192,7 +202,9 @@ const ProjectEntry: React.FC = () => {
             <TextField
               type="text"
               placeholder="شماره تماس کارفرما"
-              {...register("clientContact")}
+              {...register("clientContact", {
+                required: "شماره تماس کارفرما الزامی است",
+              })}
             />
             {errors.clientContact && (
               <p className="text-red-500 text-xs pt-1">
@@ -202,6 +214,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
+        {/* فیلد تاریخ شروع */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="startDate"
@@ -219,8 +232,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
-        {/* حذف فیلدهای تیم، زیر بخش‌ها، تیم دیزاین، تیم پیاده‌سازی */}
-        {/* اضافه کردن فیلد وضعیت پروژه */}
+        {/* فیلد وضعیت پروژه */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="projectStatus"
@@ -232,7 +244,9 @@ const ProjectEntry: React.FC = () => {
             <TextField
               type="text"
               placeholder="وضعیت پروژه"
-              {...register("projectStatus")}
+              {...register("projectStatus", {
+                required: "وضعیت پروژه الزامی است",
+              })}
             />
             {errors.projectStatus && (
               <p className="text-red-500 text-xs pt-1">
@@ -242,7 +256,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
-        {/* اضافه کردن فیلد اعضای تیم */}
+        {/* فیلد اعضای تیم */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="teamMembers"
@@ -254,7 +268,7 @@ const ProjectEntry: React.FC = () => {
             <TextField
               type="text"
               placeholder="اعضای تیم"
-              {...register("teamMembers")}
+              {...register("teamMembers", { required: "اعضای تیم الزامی است" })}
             />
             {errors.teamMembers && (
               <p className="text-red-500 text-xs pt-1">
@@ -264,6 +278,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
+        {/* فیلد تاریخ اتمام */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="endDate"
@@ -281,6 +296,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
+        {/* فیلد فایل‌های دیزاین */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="designFiles"
@@ -312,6 +328,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
+        {/* فیلد فایل قرارداد */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="contractFile"
@@ -343,6 +360,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
+        {/* فیلد توضیحات */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="description"
@@ -356,7 +374,7 @@ const ProjectEntry: React.FC = () => {
               placeholder="توضیحات"
               rows={4}
               className="w-full p-2 border border-gray-300 rounded-md"
-              {...register("description")}
+              {...register("description", { required: "توضیحات الزامی است" })}
             />
             {errors.description && (
               <p className="text-red-500 text-xs pt-1">
@@ -366,6 +384,7 @@ const ProjectEntry: React.FC = () => {
           </div>
         </div>
 
+        {/* دکمه ثبت اطلاعات */}
         <div className="col-span-2 flex justify-end w-2/5 mt-10 mx-auto">
           <Button
             type="submit"
@@ -381,4 +400,4 @@ const ProjectEntry: React.FC = () => {
   );
 };
 
-export default ProjectEntry;
+export default AddProjectPage;

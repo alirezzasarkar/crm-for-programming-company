@@ -42,11 +42,15 @@ const EmployeeList: React.FC<EmployeeListProps> = ({
         {employees.map((employee) => (
           <tr key={employee.id} className="bg-gray-100 hover:bg-gray-200">
             <td className="py-3 text-sm text-center">{employee.index}</td>
-            <td className="py-3 text-sm text-center">{employee.name}</td>
             <td className="py-3 text-sm text-center">
-              {employee.contactNumber}
+              {employee.name} {employee.last_name}
             </td>
-            <td className="py-3 text-sm text-center">{employee.jobTitle}</td>
+            <td className="py-3 text-sm text-center">
+              {employee.phone_number}
+            </td>
+            <td className="py-3 text-sm text-center">
+              {employee.work_position}
+            </td>
             <td className="py-3 text-sm text-center">
               <FaInfoCircle
                 className="text-green-500 cursor-pointer mx-auto"

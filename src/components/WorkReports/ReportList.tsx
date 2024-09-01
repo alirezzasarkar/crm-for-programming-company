@@ -1,9 +1,7 @@
-// ReportList.tsx
-import React, { useState } from "react";
+import React from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import Title from "../Common/Title";
 import ReportFilter from "./ReportFilter";
-import { useNavigate } from "react-router-dom";
 import Search from "../Common/Search";
 
 interface Report {
@@ -14,31 +12,31 @@ interface Report {
   date: string;
 }
 
-const reports: Report[] = [
-  {
-    index: 1,
-    name: "علیرضا سرکار",
-    team: "تیم طراحی وبسایت",
-    status: "بررسی شده",
-    date: "1403/03/01",
-  },
-  {
-    index: 2,
-    name: "علیرضا سرکار",
-    team: "تیم تولید محتوا",
-    status: "درحال بررسی",
-    date: "1403/03/01",
-  },
-  // More reports...
-];
+interface ReportListProps {
+  reports: Report[];
+  teamFilter: string;
+  dateFilter: string;
+  searchQuery: string;
+  teamOptions: string[];
+  dateOptions: string[];
+  onTeamFilterChange: (team: string) => void;
+  onDateFilterChange: (date: string) => void;
+  onSearchChange: (query: string) => void;
+  onReportClick: (report: Report) => void;
+}
 
-const ReportList: React.FC = () => {
-  const [teamFilter, setTeamFilter] = useState<string>("همه تیم‌ها");
-  const [dateFilter, setDateFilter] = useState<string>("همه زمان‌ها");
-
-  const teamOptions = ["همه تیم‌ها", "تیم طراحی وبسایت", "تیم تولید محتوا"];
-  const dateOptions = ["همه زمان‌ها", "هفته گذشته", "ماه گذشته"];
-
+const ReportList: React.FC<ReportListProps> = ({
+  reports,
+  teamFilter,
+  dateFilter,
+  searchQuery,
+  teamOptions,
+  dateOptions,
+  onTeamFilterChange,
+  onDateFilterChange,
+  onSearchChange,
+  onReportClick,
+}) => {
   const filteredReports = reports.filter((report) => {
     const teamMatches =
       teamFilter === "همه تیم‌ها" || report.team === teamFilter;
@@ -47,31 +45,23 @@ const ReportList: React.FC = () => {
     return teamMatches && dateMatches;
   });
 
-  const navigate = useNavigate();
-
-  const handleClick = (detail: Report) => {
-    navigate(`/dashboard/reports/detail/${detail.index}`);
-  };
-
-  const [searchQuery, setSearchQuery] = useState("");
-
   return (
     <>
       <div className="flex rtl mb-5">
-        <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <Search searchQuery={searchQuery} onSearchChange={onSearchChange} />
 
         <ReportFilter
           filter={teamFilter}
           options={teamOptions}
           label="فیلتر بر اساس تیم"
-          onFilterChange={setTeamFilter}
+          onFilterChange={onTeamFilterChange}
         />
         <div className="mr-5"></div>
         <ReportFilter
           filter={dateFilter}
           options={dateOptions}
           label="فیلتر بر اساس تاریخ"
-          onFilterChange={setDateFilter}
+          onFilterChange={onDateFilterChange}
         />
       </div>
 
@@ -113,7 +103,7 @@ const ReportList: React.FC = () => {
                 <td className="py-3 text-sm flex justify-center items-center">
                   <FaEllipsisV
                     className="text-gray-500 cursor-pointer"
-                    onClick={() => handleClick(report)}
+                    onClick={() => onReportClick(report)}
                   />
                 </td>
               </tr>

@@ -36,4 +36,3 @@ const today = moment(); // تاریخ امروز
 const startOfWeek = getStartOfWeek(today); // شروع هفته
 const weekDates = getWeekDates(startOfWeek); // تاریخ‌های هفته
 
-console.log(weekDates);

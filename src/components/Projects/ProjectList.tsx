@@ -1,85 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaEllipsisV } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import Title from "../Common/Title";
-import Filter from "./ProjectFilter";
-import SearchBox from "../Common/Search";
-import { filterProjectsByDate } from "../Common/DateFilter";
 
-// داده‌های پروژه‌ها
-const projects = [
-  {
-    index: 1,
-    projectName: "وبسایت ادکلای",
-    domain: "adklay.co",
-    manager: "محمد رودباری",
-    endDate: "21 مهر 1403",
-    status: "درحال انجام",
-  },
-  {
-    index: 2,
-    projectName: "وبسایت ادکلای",
-    domain: "adklay.co",
-    manager: "محمد رودباری",
-    endDate: "19 مهر 1403",
-    status: "انجام شده",
-  },
-  {
-    index: 3,
-    projectName: "وبسایت ادکلای",
-    domain: "adklay.co",
-    manager: "محمد رودباری",
-    endDate: "18 مهر 1403",
-    status: "درحال انجام",
-  },
-];
+// تعریف نوع پروژه
+interface Project {
+  index: number;
+  projectName: string;
+  domain: string;
+  manager: string;
+  endDate: string;
+  status: string;
+}
 
-const statusOptions = ["تمام پروژه‌ها", "درحال انجام", "انجام شده"];
-const dateOptions = ["تمام پروژه‌ها", "این هفته", "این ماه", "این سال"];
+interface ProjectListProps {
+  projects: Project[];
+  onProjectClick: (projectId: number) => void;
+}
 
-const ProjectListPage: React.FC = () => {
-  const navigate = useNavigate();
-
-  // وضعیت فیلترها
-  const [statusFilter, setStatusFilter] = useState("تمام پروژه‌ها");
-  const [dateFilter, setDateFilter] = useState("تمام پروژه‌ها");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  // فیلتر کردن پروژه‌ها
-  let filteredProjects = projects.filter((project) => {
-    const matchesStatus =
-      statusFilter === "تمام پروژه‌ها" || project.status === statusFilter;
-    const matchesSearch = project.projectName
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
-
-  filteredProjects = filterProjectsByDate(filteredProjects, dateFilter);
-
-  const handleProjectClick = (project: any) => {
-    navigate(`/dashboard/projects/detail/${project.index}`);
-  };
-
+const ProjectList: React.FC<ProjectListProps> = ({
+  projects,
+  onProjectClick,
+}) => {
   return (
     <>
-      <div className="flex justify-start mb-4 rtl">
-        <SearchBox searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-        <Filter
-          filter={statusFilter}
-          options={statusOptions}
-          label="وضعیت"
-          onFilterChange={setStatusFilter}
-        />
-        <Filter
-          filter={dateFilter}
-          options={dateOptions}
-          label="تاریخ"
-          onFilterChange={setDateFilter}
-        />
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow-md rtl">
-        <Title title="لیست پروژه های من" />
+      <div className="bg-white p-6 rounded-lg rtl">
         <table className="min-w-full bg-white mt-2 border-separate border-spacing-y-3">
           <thead>
             <tr className="text-right">
@@ -104,11 +47,11 @@ const ProjectListPage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredProjects.map((project) => (
+            {projects.map((project) => (
               <tr
                 key={project.index}
                 className="bg-gray-100 hover:bg-gray-200"
-                onClick={() => handleProjectClick(project)}
+                onClick={() => onProjectClick(project.index)}
               >
                 <td className="py-3 text-sm text-center">
                   {project.projectName}
@@ -130,7 +73,10 @@ const ProjectListPage: React.FC = () => {
                   {project.status}
                 </td>
                 <td className="py-3 text-sm text-center">
-                  <FaEllipsisV className="text-gray-500 mx-auto cursor-pointer" />
+                  <FaEllipsisV
+                    className="text-gray-500 mx-auto cursor-pointer"
+                    onClick={() => onProjectClick(project.index)}
+                  />
                 </td>
               </tr>
             ))}
@@ -141,4 +87,4 @@ const ProjectListPage: React.FC = () => {
   );
 };
 
-export default ProjectListPage;
+export default ProjectList;

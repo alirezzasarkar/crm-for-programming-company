@@ -6,12 +6,13 @@ interface EmployeeModalProps {
   employee: {
     index: number;
     name: string;
-    nationalId: string;
-    jobTitle: string;
-    birthDate: string;
-    contactNumber: string;
+    last_name: string;
+    post_code: string;
+    work_position: string;
+    date_of_birth: string;
+    phone_number: string;
     email: string;
-    profileImage: string;
+    picture: string;
   } | null;
   isOpen: boolean;
   onClose: () => void;
@@ -33,7 +34,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
           </button>
           <div className="text-center">
             <img
-              src={employee.profileImage}
+              src={employee.picture}
               alt={`${employee.name} profile`}
               className="mx-auto rounded-full w-24 h-24 object-cover"
             />
@@ -48,19 +49,19 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
           </p>
           <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
             <strong className="text-blue-600 text-sm">کد ملی:</strong>
-            {employee.nationalId}
+            {employee.post_code}
           </p>
           <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
             <strong className="text-blue-600 text-sm">سمت شغلی:</strong>
-            {employee.jobTitle}
+            {employee.work_position}
           </p>
           <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
             <strong className="text-blue-600 text-sm">تاریخ تولد:</strong>
-            {employee.birthDate}
+            {employee.date_of_birth}
           </p>
           <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
             <strong className="text-blue-600 text-sm">شماره تماس:</strong>
-            {employee.contactNumber}
+            {employee.phone_number}
           </p>
           <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
             <strong className="text-blue-600 text-sm">ایمیل:</strong>
