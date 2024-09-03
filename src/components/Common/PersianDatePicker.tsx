@@ -23,7 +23,7 @@ const PersianDatePicker: React.FC<MyDatePickerProps> = ({
   };
 
   return (
-    <div className="relative">
+    <div className="w-full">
       <DatePicker
         calendar={persian}
         locale={persian_fa}
@@ -33,13 +33,13 @@ const PersianDatePicker: React.FC<MyDatePickerProps> = ({
         render={(value, openCalendar) => {
           return (
             <div
-              className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-300 text-right"
+              className="w-full flex justify-between px-3 py-2 text-gray-700 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-300 text-right"
               onClick={openCalendar}
             >
-              <FaCalendarAlt className="text-gray-500 mr-2" />
-              <span className="text-gray-600">
+              <span className="text-gray-400">
                 {value || placeholder || "تاریخ را انتخاب کنید"}
               </span>
+              <FaCalendarAlt className="text-gray-500 mr-2" />
             </div>
           );
         }}

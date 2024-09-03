@@ -20,7 +20,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   errors,
   setValue,
 }) => (
-  <div className="col-span-2 md:col-span-1 flex items-center mt-2">
+  <div className="flex items-center mt-2">
     <label htmlFor={id} className="w-1/5 ml-5 text-gray-700 text-right">
       {label}
     </label>
