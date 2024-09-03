@@ -2,26 +2,22 @@ import React from "react";
 import AddProject from "../components/Projects/AddProject";
 import { useForm, SubmitHandler, UseFormSetValue } from "react-hook-form";
 import Swal from "sweetalert2";
-import PersianDatePicker from "../components/Common/PersianDatePicker";
-import TextField from "../components/Common/TextField";
-import Button from "../components/Common/Button";
-import { FaUpload, FaSave } from "react-icons/fa";
 
 // Define the form data type
 interface ProjectFormInputs {
-  projectName: string;
+  project_name: string;
   projectManager: string;
   domain: string;
-  startDate: string;
-  endDate: string;
-  domainExpiryDate: string;
-  hostingExpiryDate: string;
-  clientName: string;
-  clientContact: string;
-  projectStatus: string;
+  start_date: string;
+  end_date: string;
+  domain_end_date: string;
+  host_end_date: string;
+  manager_full_name: string;
+  phone_number: string;
+  status: string;
   teamMembers: string;
-  designFiles?: FileList;
-  contractFile?: FileList;
+  design_files?: FileList;
+  contract_files?: FileList;
   description: string;
 }
 

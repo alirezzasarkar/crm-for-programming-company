@@ -1,4 +1,3 @@
-// AuthContext.tsx
 import React, {
   createContext,
   useContext,
@@ -38,8 +37,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    // Load user from localStorage on initial load
     const token = localStorage.getItem("authToken");
     if (token) {
       try {
@@ -49,6 +49,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         localStorage.removeItem("authToken");
       }
     }
+    setLoading(false); // پس از بررسی JWT، لودینگ را به پایان برسانید
   }, []);
 
   const decodeToken = (token: string): User => {
@@ -94,6 +95,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const isAuthenticated = !!user;
+
+  if (loading) {
+    return <div>Loading...</div>; // نمایش یک لودینگ ساده تا وقتی که وضعیت JWT بررسی شود
+  }
 
   return (
     <AuthContext.Provider

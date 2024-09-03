@@ -1,65 +1,54 @@
 import React from "react";
-import { useForm, SubmitHandler, UseFormSetValue } from "react-hook-form";
-import Swal from "sweetalert2";
+import {
+  UseFormRegister,
+  UseFormHandleSubmit,
+  UseFormSetValue,
+  FieldErrors,
+} from "react-hook-form";
 import PersianDatePicker from "../Common/PersianDatePicker";
 import TextField from "../Common/TextField";
 import Button from "../Common/Button";
 import { FaUpload, FaSave } from "react-icons/fa";
-import { createProject } from "../../services/addProject"; // وارد کردن تابع API
 import Title from "../Common/Title";
 
 // تعریف نوع داده‌های فرم
 interface ProjectFormInputs {
-  projectName: string;
+  project_name: string;
   projectManager: string;
   domain: string;
-  startDate: string;
-  endDate: string;
-  domainExpiryDate: string;
-  hostingExpiryDate: string;
-  clientName: string;
-  clientContact: string;
-  projectStatus: string;
+  start_date: string;
+  end_date: string;
+  domain_end_date: string;
+  host_end_date: string;
+  manager_full_name: string;
+  phone_number: string;
+  status: string;
   teamMembers: string;
-  designFiles?: FileList;
-  contractFile?: FileList;
+  design_files?: FileList;
+  contract_files?: FileList;
   description: string;
 }
-type ProjectFormField = keyof ProjectFormInputs;
 
-const AddProjectPage: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<ProjectFormInputs>();
+interface AddProjectProps {
+  register: UseFormRegister<ProjectFormInputs>;
+  handleSubmit: UseFormHandleSubmit<ProjectFormInputs>;
+  setValue: UseFormSetValue<ProjectFormInputs>;
+  errors: FieldErrors<ProjectFormInputs>;
+  onSubmit: (data: ProjectFormInputs) => void;
+  handleFileChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: keyof ProjectFormInputs
+  ) => void;
+}
 
-  // تابع برای ارسال داده‌ها به سرور
-  const onSubmit: SubmitHandler<ProjectFormInputs> = async (data) => {
-    try {
-      // ارسال داده‌های فرم به API
-      await createProject(data, {
-        designFiles: data.designFiles,
-        contractFile: data.contractFile,
-      });
-
-      // نمایش پیام موفقیت با SweetAlert2
-      await Swal.fire({
-        icon: "success",
-        title: "ثبت اطلاعات موفقیت‌آمیز",
-        text: "اطلاعات پروژه با موفقیت ثبت شد.",
-      });
-    } catch (error) {
-      // نمایش پیام خطا با SweetAlert2
-      await Swal.fire({
-        icon: "error",
-        title: "خطا",
-        text: "خطایی در ثبت اطلاعات پروژه رخ داده است.",
-      });
-    }
-  };
-
+const AddProject: React.FC<AddProjectProps> = ({
+  register,
+  handleSubmit,
+  setValue,
+  errors,
+  onSubmit,
+  handleFileChange,
+}) => {
   return (
     <div className="max-md mx-auto p-6 bg-white shadow-md rounded-lg rtl">
       <Title title="وارد کردن اطلاعات پروژه" />
@@ -69,7 +58,7 @@ const AddProjectPage: React.FC = () => {
       >
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="projectName"
+            htmlFor="project_name"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             نام پروژه
@@ -78,11 +67,13 @@ const AddProjectPage: React.FC = () => {
             <TextField
               type="text"
               placeholder="نام پروژه"
-              {...register("projectName", { required: "نام پروژه الزامی است" })}
+              {...register("project_name", {
+                required: "نام پروژه الزامی است",
+              })}
             />
-            {errors.projectName && (
+            {errors.project_name && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.projectName.message}
+                {errors.project_name.message}
               </p>
             )}
           </div>
@@ -90,16 +81,16 @@ const AddProjectPage: React.FC = () => {
 
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="domainExpiryDate"
+            htmlFor="domain_end_date"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             تاریخ اتمام دامین
           </label>
           <div className="w-2/3">
             <PersianDatePicker placeholder="تاریخ اتمام دامین" />
-            {errors.domainExpiryDate && (
+            {errors.domain_end_date && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.domainExpiryDate.message}
+                {errors.domain_end_date.message}
               </p>
             )}
           </div>
@@ -130,16 +121,16 @@ const AddProjectPage: React.FC = () => {
 
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="hostingExpiryDate"
+            htmlFor="host_end_date"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             تاریخ اتمام هاست
           </label>
           <div className="w-2/3">
             <PersianDatePicker placeholder="تاریخ اتمام هاست" />
-            {errors.hostingExpiryDate && (
+            {errors.host_end_date && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.hostingExpiryDate.message}
+                {errors.host_end_date.message}
               </p>
             )}
           </div>
@@ -169,7 +160,7 @@ const AddProjectPage: React.FC = () => {
         {/* فیلد نام کارفرما */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="clientName"
+            htmlFor="manager_full_name"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             نام کارفرما
@@ -178,13 +169,13 @@ const AddProjectPage: React.FC = () => {
             <TextField
               type="text"
               placeholder="نام کارفرما"
-              {...register("clientName", {
+              {...register("manager_full_name", {
                 required: "نام کارفرما الزامی است",
               })}
             />
-            {errors.clientName && (
+            {errors.manager_full_name && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.clientName.message}
+                {errors.manager_full_name.message}
               </p>
             )}
           </div>
@@ -193,7 +184,7 @@ const AddProjectPage: React.FC = () => {
         {/* فیلد شماره تماس کارفرما */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="clientContact"
+            htmlFor="phone_number"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             شماره تماس کارفرما
@@ -202,13 +193,13 @@ const AddProjectPage: React.FC = () => {
             <TextField
               type="text"
               placeholder="شماره تماس کارفرما"
-              {...register("clientContact", {
+              {...register("phone_number", {
                 required: "شماره تماس کارفرما الزامی است",
               })}
             />
-            {errors.clientContact && (
+            {errors.phone_number && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.clientContact.message}
+                {errors.phone_number.message}
               </p>
             )}
           </div>
@@ -217,16 +208,16 @@ const AddProjectPage: React.FC = () => {
         {/* فیلد تاریخ شروع */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="startDate"
+            htmlFor="start_date"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             تاریخ شروع
           </label>
           <div className="w-2/3">
             <PersianDatePicker placeholder="تاریخ شروع" />
-            {errors.startDate && (
+            {errors.start_date && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.startDate.message}
+                {errors.start_date.message}
               </p>
             )}
           </div>
@@ -235,7 +226,7 @@ const AddProjectPage: React.FC = () => {
         {/* فیلد وضعیت پروژه */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="projectStatus"
+            htmlFor="status"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             وضعیت پروژه
@@ -244,13 +235,13 @@ const AddProjectPage: React.FC = () => {
             <TextField
               type="text"
               placeholder="وضعیت پروژه"
-              {...register("projectStatus", {
+              {...register("status", {
                 required: "وضعیت پروژه الزامی است",
               })}
             />
-            {errors.projectStatus && (
+            {errors.status && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.projectStatus.message}
+                {errors.status.message}
               </p>
             )}
           </div>
@@ -281,16 +272,16 @@ const AddProjectPage: React.FC = () => {
         {/* فیلد تاریخ اتمام */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="endDate"
+            htmlFor="end_date"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             تاریخ اتمام
           </label>
           <div className="w-2/3">
             <PersianDatePicker placeholder="تاریخ اتمام" />
-            {errors.endDate && (
+            {errors.end_date && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.endDate.message}
+                {errors.end_date.message}
               </p>
             )}
           </div>
@@ -299,25 +290,25 @@ const AddProjectPage: React.FC = () => {
         {/* فیلد فایل‌های دیزاین */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="designFiles"
+            htmlFor="design_files"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             فایل‌های دیزاین
           </label>
           <div className="w-2/3">
             <input
-              id="designFiles"
+              id="design_files"
               type="file"
               accept=".zip"
               onChange={(e) => {
                 if (e.target.files) {
-                  setValue("designFiles", e.target.files);
+                  setValue("design_files", e.target.files);
                 }
               }}
               className="hidden"
             />
             <label
-              htmlFor="designFiles"
+              htmlFor="design_files"
               className="flex items-center cursor-pointer"
             >
               <span className="text-gray-400 border border-gray-200 py-2 px-3 rounded-xl">
@@ -331,25 +322,25 @@ const AddProjectPage: React.FC = () => {
         {/* فیلد فایل قرارداد */}
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
-            htmlFor="contractFile"
+            htmlFor="contract_files"
             className="w-1/5 ml-5 text-gray-700 text-right"
           >
             فایل قرارداد
           </label>
           <div className="w-2/3">
             <input
-              id="contractFile"
+              id="contract_files"
               type="file"
               accept=".zip"
               onChange={(e) => {
                 if (e.target.files) {
-                  setValue("contractFile", e.target.files);
+                  setValue("contract_files", e.target.files);
                 }
               }}
               className="hidden"
             />
             <label
-              htmlFor="contractFile"
+              htmlFor="contract_files"
               className="flex items-center cursor-pointer"
             >
               <span className="text-gray-400 border border-gray-200 py-2 px-3 rounded-xl">
@@ -400,4 +391,4 @@ const AddProjectPage: React.FC = () => {
   );
 };
 
-export default AddProjectPage;
+export default AddProject;

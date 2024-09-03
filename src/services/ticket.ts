@@ -5,7 +5,7 @@ import { handleApiError } from './errorHandler';
 // دریافت تمام تیکت‌ها
 export const getTickets = async () => {
   try {
-    const response = await axios.get(`${API_URL}/tickets`);
+    const response = await axios.get(`${API_URL}/ticket/messages/`);
     return response.data;
   } catch (error) {
     handleApiError(error);
