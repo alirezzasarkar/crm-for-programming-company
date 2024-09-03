@@ -10,7 +10,7 @@ const persianUsernameSchema = yup.string()
   .matches(/^[\u0600-\u06FF\s]+$/, "نام کاربری باید حتما فارسی باشد")
   .required("نام کاربری الزامی است");
 
-// Password schema with a minimum length of 6 characters
+// Password schema with a minimum length of 5 characters
 const passwordSchema = yup.string()
   .min(5, "رمز عبور باید حداقل 5 کاراکتر باشد")
   .required("رمز عبور الزامی است");
@@ -31,6 +31,7 @@ export const forgotPasswordSchema = yup.object().shape({
   newPassword: passwordSchema,
 });
 
+// Updated profile schema
 export const profileSchema = yup.object().shape({
   fullName: yup
     .string()
@@ -40,7 +41,7 @@ export const profileSchema = yup.object().shape({
     .string()
     .matches(/^\d{10}$/, "کد ملی باید عدد و 10 رقم باشد")
     .required("کد ملی الزامی است"),
-  phone_number: yup
+  phone: yup
     .string()
     .matches(/^\d{11}$/, "شماره تماس باید 11 رقم باشد")
     .required("شماره تماس الزامی است"),
@@ -50,5 +51,5 @@ export const profileSchema = yup.object().shape({
     .required("ایمیل الزامی است"),
   jobTitle: yup.string().required("سمت شغلی الزامی است"),
   birthDate: yup.string().required("تاریخ تولد الزامی است"),
-  profileImage: yup.mixed().notRequired(), // Adjust for file upload
+  profileImage: yup.mixed().nullable(), // Adjusted for file upload
 });

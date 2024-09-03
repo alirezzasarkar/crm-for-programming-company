@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 
 interface ProfileFormInputs {
   email: string;
-  profileImage?: FileList;
+  profileImage?: FileList; // Ensure this type matches the schema
   fullName: string;
   nationalId: string;
   jobTitle: string;
