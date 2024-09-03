@@ -1,6 +1,5 @@
 import React from "react";
-import { FaEllipsisV } from "react-icons/fa"; // Assuming icons for status indicators
-import { useNavigate } from "react-router-dom";
+import { FaEllipsisV } from "react-icons/fa";
 
 interface Ticket {
   id: number;
@@ -9,34 +8,25 @@ interface Ticket {
   dateSent: string;
 }
 
-const ticketList: Ticket[] = [
-  { id: 21, title: "متن تستی", status: "پاسخ داده شد", dateSent: "1403/03/01" },
-  { id: 21, title: "متن تستی", status: "درحال بررسی", dateSent: "1403/03/01" },
-  { id: 21, title: "متن تستی", status: "پاسخ داده شد", dateSent: "1403/03/01" },
-  { id: 21, title: "متن تستی", status: "پاسخ داده شد", dateSent: "1403/03/01" },
-  { id: 21, title: "متن تستی", status: "پاسخ داده شد", dateSent: "1403/03/01" },
-  { id: 21, title: "متن تستی", status: "پاسخ داده شد", dateSent: "1403/03/01" },
-  { id: 21, title: "متن تستی", status: "پاسخ داده شد", dateSent: "1403/03/01" },
-  { id: 21, title: "متن تستی", status: "پاسخ داده شد", dateSent: "1403/03/01" },
-];
+interface TicketListProps {
+  tickets: Ticket[];
+  onDetailsClick: (ticket: Ticket) => void;
+  onNewClick: () => void;
+  onDeleteClick: (id: number) => void;
+}
 
-const TicketList: React.FC = () => {
-  const navigate = useNavigate();
-
-  const handleDetailsClick = (ticket: Ticket) => {
-    navigate(`/dashboard/tickets/detail/${ticket.id}`);
-  };
-
-  const handleNewClick = () => {
-    navigate("/dashboard/tickets/new");
-  };
-
+const TicketList: React.FC<TicketListProps> = ({
+  tickets,
+  onDetailsClick,
+  onNewClick,
+  onDeleteClick,
+}) => {
   return (
     <div className="p-6 bg-white rounded shadow-md rtl">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-md font-semibold text-blue-600">لیست تیکت ها</h2>
         <button
-          onClick={() => handleNewClick()}
+          onClick={() => onNewClick()}
           className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
         >
           ایجاد تیکت جدید
@@ -52,13 +42,11 @@ const TicketList: React.FC = () => {
             <th className="py-2 text-center text-sm font-medium">
               تاریخ ارسال
             </th>
-            <th className="py-2 text-center text-sm font-medium">
-              نمایش جزئیات
-            </th>
+            <th className="py-2 text-center text-sm font-medium">عملیات</th>
           </tr>
         </thead>
         <tbody>
-          {ticketList.map((ticket, index) => (
+          {tickets.map((ticket, index) => (
             <tr
               key={index}
               className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
@@ -75,11 +63,17 @@ const TicketList: React.FC = () => {
                 {ticket.status}
               </td>
               <td className="py-3 text-sm text-center">{ticket.dateSent}</td>
-              <td className="py-3 text-sm text-center">
+              <td className="py-3 text-sm text-center flex justify-around">
                 <FaEllipsisV
                   className="text-gray-500 mx-auto cursor-pointer"
-                  onClick={() => handleDetailsClick(ticket)}
+                  onClick={() => onDetailsClick(ticket)}
                 />
+                <button
+                  onClick={() => onDeleteClick(ticket.id)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  حذف
+                </button>
               </td>
             </tr>
           ))}

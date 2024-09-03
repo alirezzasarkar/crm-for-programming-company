@@ -1,3 +1,4 @@
+// ProtectedRoute.tsx
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
@@ -14,6 +15,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { user } = useAuth();
   const location = useLocation();
 
+  // If no user or user's role is not in allowedRoles, redirect to login
   if (!user || !allowedRoles.includes(user.role)) {
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }

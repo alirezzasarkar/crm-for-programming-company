@@ -1,11 +1,19 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+// AuthContext.tsx
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import { jwtDecode } from "jwt-decode";
 import {
   login as apiLogin,
   register as apiRegister,
-} from "../../services/userService"; // مسیر صحیح فایل خدمات API
+} from "../../services/userService";
 
 interface User {
-  phone_number: string;
+  user_id: number;
   role: string;
 }
 
@@ -29,11 +37,27 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  // const [user, setUser] = useState<User | null>(null);
-  const [user, setUser] = useState<User | null>({
-    phone_number: "09901032844",
-    role: "manager",
-  });
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    // Load user from localStorage on initial load
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      try {
+        setUser(decodeToken(token));
+      } catch (e) {
+        console.error("Error decoding token:", e);
+        localStorage.removeItem("authToken");
+      }
+    }
+  }, []);
+
+  const decodeToken = (token: string): User => {
+    const decoded: any = jwtDecode(token);
+    return {
+      user_id: decoded.user_id,
+      role: decoded.role,
+    };
+  };
 
   const login = async (credentials: {
     phone_number: string;
@@ -41,8 +65,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   }) => {
     try {
       const response = await apiLogin(credentials);
-      setUser(response.user);
-      localStorage.setItem("authToken", response.data.access);
+      const token = response.access;
+      localStorage.setItem("authToken", token);
+      setUser(decodeToken(token));
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -55,8 +80,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   }) => {
     try {
       const response = await apiRegister(userData);
-      setUser(response.user);
-      localStorage.setItem("authToken", response.data.access);
+      const token = response.data.access;
+      localStorage.setItem("authToken", token);
+      setUser(decodeToken(token));
     } catch (error) {
       console.error("Registration failed:", error);
     }

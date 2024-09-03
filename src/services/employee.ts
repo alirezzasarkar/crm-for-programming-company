@@ -1,15 +1,13 @@
-// employeeApi.ts
-import axios from 'axios';
-import API_URL from './apiConfig';
+import apiClient from './axiosConfig';
+import { handleApiError } from './errorHandler';
 
 // دریافت تمام کارمندان
 export const getEmployees = async () => {
   try {
-    const response = await axios.get(`${API_URL}/users/profiles`);
-    console.log(response.data)
+    const response = await apiClient.get('/users/profiles');
     return response.data;
   } catch (error) {
-    console.error('Error fetching employees:', error);
+    handleApiError(error);
     throw error;
   }
 };
@@ -17,10 +15,10 @@ export const getEmployees = async () => {
 // دریافت کارمند بر اساس شناسه
 export const getEmployeeById = async (id: number) => {
   try {
-    const response = await axios.get(`${API_URL}/employees/${id}`);
+    const response = await apiClient.get(`/employees/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching employee:', error);
+    handleApiError(error);
     throw error;
   }
 };
@@ -28,9 +26,9 @@ export const getEmployeeById = async (id: number) => {
 // حذف کارمند بر اساس شناسه
 export const deleteEmployee = async (id: number) => {
   try {
-    await axios.delete(`${API_URL}/employees/${id}`);
+    await apiClient.delete(`/employees/${id}`);
   } catch (error) {
-    console.error('Error deleting employee:', error);
+    handleApiError(error);
     throw error;
   }
 };
@@ -38,11 +36,10 @@ export const deleteEmployee = async (id: number) => {
 // ویرایش اطلاعات کارمند
 export const updateEmployee = async (id: number, employeeData: any) => {
   try {
-    const response = await axios.put(`${API_URL}/users/profiles/update/${id}/`, employeeData);
-    console.log(response.data)
+    const response = await apiClient.put(`/users/profiles/update/${id}/`, employeeData);
     return response.data;
   } catch (error) {
-    console.error('Error updating employee:', error);
+    handleApiError(error);
     throw error;
   }
 };

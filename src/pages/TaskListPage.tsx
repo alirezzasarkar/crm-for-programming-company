@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import TaskList from "../components/Tasks/TaskList";
 import Search from "../components/Common/Search";
 import TaskFilter from "../components/Tasks/TaskFilter";
-import { fetchTasks } from "../services/taskList"; // ایمپورت تابع API
+import { fetchTasks } from "../services/task"; // ایمپورت تابع API
 
 interface Task {
   index: number;

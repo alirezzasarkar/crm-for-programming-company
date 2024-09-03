@@ -30,15 +30,15 @@ const RegisterPage: React.FC = () => {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      await registerUser(data);
+      await registerUser(data); // Call the register function from AuthContext
       Swal.fire({
-        title: "ثبت‌نام موفقیت‌آمیز",
-        text: "شما با موفقیت ثبت‌نام شدید",
+        title: "درخواست ثبت نام شما ثبت شد",
+        text: "لطفا منتظر تایید بمانید",
         icon: "success",
         confirmButtonText: "باشه",
         confirmButtonColor: "#3b82f6",
       }).then(() => {
-        navigate("/login");
+        navigate("/login"); // Navigate to login page upon successful registration
       });
     } catch (error) {
       Swal.fire({

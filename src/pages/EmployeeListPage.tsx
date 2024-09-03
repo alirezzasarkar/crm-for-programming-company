@@ -4,7 +4,7 @@ import EmployeeList from "../components/EmployeeInfo/EmployeeList";
 import EmployeeModal from "../components/EmployeeInfo/EmployeeModal";
 import EmployeeFilter from "../components/EmployeeInfo/EmployeeFilter";
 import Title from "../components/Common/Title";
-import { getEmployees, deleteEmployee } from "../services/employeeList";
+import { getEmployees, deleteEmployee } from "../services/employee";
 
 export interface Employee {
   id: number;

@@ -29,7 +29,9 @@ const LoginPage: React.FC = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
+      // Attempt to log in the user
       await login(data);
+      // If login is successful, show success message and navigate
       Swal.fire({
         title: "ورود موفقیت‌آمیز",
         text: "شما با موفقیت وارد شدید",
@@ -40,6 +42,7 @@ const LoginPage: React.FC = () => {
         navigate("/dashboard");
       });
     } catch (error) {
+      // If an error occurs, show error message
       Swal.fire({
         title: "خطا",
         text: "ورود ناموفق بود",
@@ -105,7 +108,7 @@ const LoginPage: React.FC = () => {
         <div className="mt-4 text-center">
           <p className="text-gray-600">
             <Link to="/register" className="text-blue-600 hover:text-blue-700">
-              آیا می‌خواهید ثبت‌نام کنید؟
+              آیا حساب کاربری دارید؟
             </Link>
           </p>
         </div>

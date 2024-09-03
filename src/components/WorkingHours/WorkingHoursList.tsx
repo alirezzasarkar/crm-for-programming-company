@@ -1,59 +1,40 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import Title from "../Common/Title";
-import { useNavigate } from "react-router-dom";
 import Search from "../Common/Search";
 
 interface WorkTimeEntry {
-  index: number;
+  id: number;
   name: string;
   team: string;
   timeRecorded: string;
 }
 
-const workTimeEntries: WorkTimeEntry[] = [
-  {
-    index: 1,
-    name: "علیرضا سرکار",
-    team: "وردپرس",
-    timeRecorded: "48 ساعت و 45 دقیقه",
-  },
-  {
-    index: 2,
-    name: "علیرضا سرکار",
-    team: "وردپرس",
-    timeRecorded: "48 ساعت و 45 دقیقه",
-  },
-  {
-    index: 3,
-    name: "علیرضا سرکار",
-    team: "وردپرس",
-    timeRecorded: "48 ساعت و 45 دقیقه",
-  },
-  {
-    index: 4,
-    name: "علیرضا سرکار",
-    team: "وردپرس",
-    timeRecorded: "48 ساعت و 45 دقیقه",
-  },
-];
+interface WorkingHoursListProps {
+  workTimeEntries: WorkTimeEntry[];
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  onEntryClick: (entry: WorkTimeEntry) => void;
+  onDelete: (id: number) => void;
+  onUpdate: (id: number, updatedEntry: WorkTimeEntry) => void;
+}
 
-const WorkTimeList: React.FC = () => {
-  const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleClick = (detail: WorkTimeEntry) => {
-    navigate(`/dashboard/work-time/detail/${detail.index}`);
-  };
-
+const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
+  workTimeEntries,
+  searchQuery,
+  onSearchChange,
+  onEntryClick,
+  onDelete,
+  onUpdate,
+}) => {
   return (
     <>
       <div className="flex justify-start mb-4 rtl">
-        <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <Search searchQuery={searchQuery} onSearchChange={onSearchChange} />
       </div>
       <div className="p-4 bg-white rounded shadow-md rtl">
         <Title title="لیست زمان کاری" />
-        <table className="min-w-full bg-white mt-4 border-separate border-spacing-y-3 ">
+        <table className="min-w-full bg-white mt-4 border-separate border-spacing-y-3">
           <thead>
             <tr className="text-right">
               <th className="py-2 text-center text-sm font-medium pb-5">
@@ -65,6 +46,10 @@ const WorkTimeList: React.FC = () => {
               </th>
               <th className="py-2 text-center text-sm font-medium pb-5">
                 نمایش جزئیات
+              </th>
+              <th className="py-2 text-center text-sm font-medium pb-5">حذف</th>
+              <th className="py-2 text-center text-sm font-medium pb-5">
+                ویرایش
               </th>
             </tr>
           </thead>
@@ -82,8 +67,29 @@ const WorkTimeList: React.FC = () => {
                 <td className="py-3 text-sm text-center">
                   <FaEllipsisV
                     className="text-gray-500 mx-auto cursor-pointer"
-                    onClick={() => handleClick(entry)}
+                    onClick={() => onEntryClick(entry)}
                   />
+                </td>
+                <td className="py-3 text-sm text-center">
+                  <button
+                    className="text-red-500"
+                    onClick={() => onDelete(entry.id)}
+                  >
+                    حذف
+                  </button>
+                </td>
+                <td className="py-3 text-sm text-center">
+                  <button
+                    className="text-blue-500"
+                    onClick={() =>
+                      onUpdate(entry.id, {
+                        ...entry,
+                        name: "نام جدید", // برای مثال: نام جدیدی که می‌خواهید ویرایش کنید
+                      })
+                    }
+                  >
+                    ویرایش
+                  </button>
                 </td>
               </tr>
             ))}
@@ -94,4 +100,4 @@ const WorkTimeList: React.FC = () => {
   );
 };
 
-export default WorkTimeList;
+export default WorkingHoursList;

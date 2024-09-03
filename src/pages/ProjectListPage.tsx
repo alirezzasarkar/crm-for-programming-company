@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ProjectList from "./../components/Projects/ProjectList";
-import { fetchProjects } from "../services/projectList";
+import { fetchProjects } from "../services/project";
 import SearchBox from "../components/Common/Search";
 import Filter from "../components/Projects/ProjectFilter";
 import Title from "../components/Common/Title";

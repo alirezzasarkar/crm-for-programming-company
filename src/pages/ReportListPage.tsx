@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReportList from "../components/WorkReports/ReportList";
-import { fetchReports } from "../services/reportList"; // وارد کردن تابع fetchReports از فایل API
+import { fetchReports } from "../services/report"; // وارد کردن تابع fetchReports از فایل API
 import { useNavigate } from "react-router-dom";
 
 const ReportListPage: React.FC = () => {
