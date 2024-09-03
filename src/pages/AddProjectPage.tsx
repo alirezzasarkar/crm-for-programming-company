@@ -1,27 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AddProject from "../components/Projects/AddProject";
-import { useForm, SubmitHandler, UseFormSetValue } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import Swal from "sweetalert2";
+import { getEmployees, createProject } from "../services/project";
 
-// Define the form data type
-interface ProjectFormInputs {
+export interface ProjectFormInputs {
   project_name: string;
-  projectManager: string;
+  responsible_person: number;
   domain: string;
   start_date: string;
   end_date: string;
   domain_end_date: string;
   host_end_date: string;
-  manager_full_name: string;
   phone_number: string;
   status: string;
-  teamMembers: string;
+  team_members: number[];
   design_files?: FileList;
   contract_files?: FileList;
   description: string;
 }
 
-type ProjectFormField = keyof ProjectFormInputs;
+export interface Employee {
+  id: number;
+  last_name: string;
+}
 
 const AddProjectPage: React.FC = () => {
   const {
@@ -31,19 +33,40 @@ const AddProjectPage: React.FC = () => {
     formState: { errors },
   } = useForm<ProjectFormInputs>();
 
-  const onSubmit: SubmitHandler<ProjectFormInputs> = async (data) => {
-    try {
-      console.log("Project Data:", data);
-      // Implement your logic to submit the data to the server here
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [selectedTeamMembers, setSelectedTeamMembers] = useState<number[]>([]);
+  const [selectedResponsiblePerson, setSelectedResponsiblePerson] =
+    useState<number>(0);
 
-      // Show success message with SweetAlert2
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const employeesData = await getEmployees();
+        setEmployees(
+          employeesData.map((employee: any) => ({
+            id: employee.id,
+            last_name: employee.last_name,
+          }))
+        );
+      } catch (error) {
+        console.error("Failed to fetch employees", error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  const onSubmit: SubmitHandler<ProjectFormInputs> = async (data) => {
+    console.log("Submitted data:", data);
+
+    try {
+      await createProject(data);
       await Swal.fire({
         icon: "success",
         title: "ثبت اطلاعات موفقیت‌آمیز",
         text: "اطلاعات پروژه با موفقیت ثبت شد.",
       });
     } catch (error) {
-      // Show error message with SweetAlert2
       await Swal.fire({
         icon: "error",
         title: "خطا",
@@ -54,22 +77,37 @@ const AddProjectPage: React.FC = () => {
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    field: ProjectFormField
+    field: keyof ProjectFormInputs
   ) => {
     if (event.target.files) {
       setValue(field, event.target.files);
     }
   };
 
+  const handleTeamMemberSelect = (id: number) => {
+    setSelectedTeamMembers((prev) => [...prev, id]);
+    setValue("team_members", [...selectedTeamMembers, id]);
+  };
+
+  const handleResponsiblePersonSelect = (id: number) => {
+    setSelectedResponsiblePerson(id);
+    setValue("responsible_person", id);
+  };
+
   return (
-    <AddProject
-      register={register}
-      handleSubmit={handleSubmit}
-      setValue={setValue as UseFormSetValue<ProjectFormInputs>}
-      errors={errors}
-      onSubmit={onSubmit}
-      handleFileChange={handleFileChange}
-    />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <AddProject
+        handleFileChange={handleFileChange}
+        employees={employees}
+        onTeamMemberSelect={handleTeamMemberSelect}
+        selectedTeamMembers={selectedTeamMembers}
+        selectedResponsiblePerson={selectedResponsiblePerson}
+        onResponsiblePersonSelect={handleResponsiblePersonSelect}
+        register={register}
+        errors={errors}
+        setValue={setValue}
+      />
+    </form>
   );
 };
 

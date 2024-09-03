@@ -24,7 +24,8 @@ interface AuthContextType {
     password: string;
   }) => Promise<void>;
   register: (userData: {
-    full_name: string;
+    first_name: string; // تغییر نام فیلد به first_name
+    last_name: string;
     phone_number: string;
     password: string;
   }) => Promise<void>;
@@ -75,7 +76,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const register = async (userData: {
-    full_name: string;
+    first_name: string; // تغییر نام فیلد به first_name
+    last_name: string;
     phone_number: string;
     password: string;
   }) => {

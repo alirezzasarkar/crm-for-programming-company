@@ -9,7 +9,7 @@ interface MyDatePickerProps {
   onChange?: (date: DateObject | null) => void;
 }
 
-const MyDatePicker: React.FC<MyDatePickerProps> = ({
+const PersianDatePicker: React.FC<MyDatePickerProps> = ({
   placeholder,
   onChange,
 }) => {
@@ -23,19 +23,29 @@ const MyDatePicker: React.FC<MyDatePickerProps> = ({
   };
 
   return (
-    <div className="flex items-center relative border border-gray-200 rounded-xl p-2">
-      <FaCalendarAlt className="absolute left-2 text-gray-400 pointer-events-none" />
+    <div className="relative">
       <DatePicker
-        value={value}
-        onChange={handleDateChange}
         calendar={persian}
         locale={persian_fa}
         calendarPosition="bottom-right"
-        placeholder={placeholder}
-        inputClass="pl-8 outline-none w-full"
+        value={value}
+        onChange={handleDateChange}
+        render={(value, openCalendar) => {
+          return (
+            <div
+              className="w-full px-3 py-2 text-gray-700 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-300 text-right"
+              onClick={openCalendar}
+            >
+              <FaCalendarAlt className="text-gray-500 mr-2" />
+              <span className="text-gray-600">
+                {value || placeholder || "تاریخ را انتخاب کنید"}
+              </span>
+            </div>
+          );
+        }}
       />
     </div>
   );
 };
 
-export default MyDatePicker;
+export default PersianDatePicker;

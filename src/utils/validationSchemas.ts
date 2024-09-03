@@ -15,13 +15,19 @@ const passwordSchema = yup.string()
   .min(5, "رمز عبور باید حداقل 5 کاراکتر باشد")
   .required("رمز عبور الزامی است");
 
+// First name schema
+const firstNameSchema = yup.string()
+  .matches(/^[\u0600-\u06FF\s]+$/, "نام باید حتما فارسی باشد")
+  .required("نام الزامی است");
+
 export const loginSchema = yup.object().shape({
   phone_number: phoneNumberSchema,
   password: passwordSchema,
 });
 
 export const registerSchema = yup.object().shape({
-  full_name: persianUsernameSchema,
+  first_name: firstNameSchema,
+  last_name: persianUsernameSchema,
   phone_number: phoneNumberSchema,
   password: passwordSchema,
 });

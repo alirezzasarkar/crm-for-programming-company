@@ -11,7 +11,8 @@ import Swal from "sweetalert2";
 import { useAuth } from "./AuthContext";
 
 interface RegisterFormData {
-  full_name: string;
+  first_name: string; // Added first_name
+  last_name: string;
   phone_number: string;
   password: string;
 }
@@ -64,12 +65,24 @@ const RegisterPage: React.FC = () => {
           <div className="mb-4">
             <TextField
               type="text"
-              placeholder="نام کاربری"
-              {...register("full_name")}
+              placeholder="نام"
+              {...register("first_name")} // Added first_name
             />
-            {errors.full_name && (
+            {errors.first_name && (
               <p className="text-red-500 mt-2 text-sm">
-                {errors.full_name.message}
+                {errors.first_name.message}
+              </p>
+            )}
+          </div>
+          <div className="mb-4">
+            <TextField
+              type="text"
+              placeholder="نام خانوادگی"
+              {...register("last_name")}
+            />
+            {errors.last_name && (
+              <p className="text-red-500 mt-2 text-sm">
+                {errors.last_name.message}
               </p>
             )}
           </div>

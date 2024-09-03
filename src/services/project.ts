@@ -1,10 +1,23 @@
 import apiClient from './axiosConfig';
 import { handleApiError } from './errorHandler';
+import { ProjectFormInputs } from '../pages/AddProjectPage'; // Adjust path as needed
 
 // دریافت تمام کارمندان برای نام مدیر پروژه
 export const getEmployees = async () => {
   try {
     const response = await apiClient.get('/users/profiles');
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
+// ایجاد پروژه جدید
+export const createProject = async (projectData: ProjectFormInputs) => {
+  try {
+    const response = await apiClient.post('/projects/projects/', projectData);
+    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);

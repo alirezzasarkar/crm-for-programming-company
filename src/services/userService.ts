@@ -14,7 +14,7 @@ export const login = async (credentials: { phone_number: string; password: strin
 };
 
 // ثبت‌نام
-export const register = async (userData: { full_name: string; phone_number: string; password: string }) => {
+export const register = async (userData: { first_name: string; last_name: string; phone_number: string; password: string }) => {
   try {
     const response = await axios.post(`${API_URL}/account/register/`, userData);
     return response.data;
