@@ -1,29 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { profileSchema } from "../../utils/validationSchemas";
-import TextField from "../../components/Common/TextField";
-import Button from "../../components/Common/Button";
-import Modal from "../../components/Common/Modal";
-import { FaUpload, FaSave } from "react-icons/fa";
-import Title from "../Common/Title";
-import PersianDatePicker from "../Common/PersianDatePicker";
 import Swal from "sweetalert2";
+import PersianDatePicker from "../Common/PersianDatePicker";
+import Button from "../../components/Common/Button";
+import TextField from "../../components/Common/TextField";
+import { FaSave, FaUpload } from "react-icons/fa";
+import { MdClose } from "react-icons/md";
+import Title from "../Common/Title";
 
 interface ProfileFormInputs {
   email: string;
-  profileImage?: FileList; // Ensure this type matches the schema
-  fullName: string;
-  nationalId: string;
-  jobTitle: string;
-  birthDate: string;
-  phone: string;
+  picture?: FileList;
+  name: string;
+  last_name: string;
+  post_code: string;
+  work_position: string;
+  date_of_birth: string;
+  phone_number: string;
   newPassword?: string;
   confirmNewPassword?: string;
   otpCode?: string;
 }
 
-const Profile: React.FC = () => {
+interface ProfileProps {
+  userProfile: (data: ProfileFormInputs) => Promise<void>;
+  handlePasswordChange: React.FormEventHandler<HTMLFormElement>;
+  sendOtpCode: () => Promise<void>;
+  isPasswordModalOpen: boolean;
+  setIsPasswordModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userProfileData: ProfileFormInputs;
+}
+
+const Profile: React.FC<ProfileProps> = ({
+  userProfile,
+  handlePasswordChange,
+  isPasswordModalOpen,
+  setIsPasswordModalOpen,
+  userProfileData,
+}) => {
   const {
     register,
     handleSubmit,
@@ -31,75 +47,45 @@ const Profile: React.FC = () => {
     formState: { errors },
   } = useForm<ProfileFormInputs>({
     resolver: yupResolver(profileSchema),
+    defaultValues: userProfileData,
   });
 
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-
-  const userProfile: SubmitHandler<ProfileFormInputs> = async (data) => {
-    try {
-      // Simulate an API request
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      Swal.fire({
-        title: "موفقیت",
-        text: "اطلاعات کاربری با موفقیت ذخیره شد.",
-        icon: "success",
-        confirmButtonText: "باشه",
-      });
-    } catch (error) {
-      Swal.fire({
-        title: "خطا",
-        text: "مشکلی در ذخیره اطلاعات پیش آمد.",
-        icon: "error",
-        confirmButtonText: "باشه",
-      });
+  useEffect(() => {
+    if (userProfileData) {
+      setValue("email", userProfileData.email);
+      setValue("name", userProfileData.name);
+      setValue("last_name", userProfileData.last_name);
+      setValue("post_code", userProfileData.post_code);
+      setValue("work_position", userProfileData.work_position);
+      setValue("date_of_birth", userProfileData.date_of_birth);
+      setValue("phone_number", userProfileData.phone_number);
     }
+  }, [userProfileData, setValue]);
+
+  const showErrorAlert = (message: string) => {
+    Swal.fire({
+      title: "خطا",
+      text: message,
+      icon: "error",
+      confirmButtonText: "باشه",
+    });
   };
 
-  const handlePasswordChange: React.FormEventHandler<HTMLFormElement> = async (
-    e
-  ) => {
-    e.preventDefault();
-    try {
-      // Simulate a password change request
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      Swal.fire({
-        title: "موفقیت",
-        text: "رمز عبور با موفقیت تغییر یافت.",
-        icon: "success",
-        confirmButtonText: "باشه",
-      });
-
-      setIsPasswordModalOpen(false);
-    } catch (error) {
-      Swal.fire({
-        title: "خطا",
-        text: "مشکلی در تغییر رمز عبور پیش آمد.",
-        icon: "error",
-        confirmButtonText: "باشه",
-      });
-    }
+  const showSuccessAlert = (message: string) => {
+    Swal.fire({
+      title: "موفقیت",
+      text: message,
+      icon: "success",
+      confirmButtonText: "باشه",
+    });
   };
 
-  const sendOtpCode = async () => {
+  const onSubmit: SubmitHandler<ProfileFormInputs> = async (data) => {
     try {
-      // Simulate sending OTP code
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      Swal.fire({
-        title: "موفقیت",
-        text: "کد تایید با موفقیت ارسال شد.",
-        icon: "success",
-        confirmButtonText: "باشه",
-      });
+      await userProfile(data);
+      showSuccessAlert("اطلاعات کاربری با موفقیت ذخیره شد.");
     } catch (error) {
-      Swal.fire({
-        title: "خطا",
-        text: "مشکلی در ارسال کد تایید پیش آمد.",
-        icon: "error",
-        confirmButtonText: "باشه",
-      });
+      showErrorAlert("مشکلی در ذخیره اطلاعات کاربری پیش آمد.");
     }
   };
 
@@ -107,27 +93,37 @@ const Profile: React.FC = () => {
     <div className="max-md mx-auto p-6 bg-white shadow-md rounded-lg rtl">
       <Title title="اطلاعات کاربری شما" />
       <form
-        onSubmit={handleSubmit(userProfile)}
+        onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5"
       >
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label htmlFor="fullName" className="w-1/3 text-gray-700 text-right">
+          <label htmlFor="name" className="w-1/3 text-gray-700 text-right">
+            نام
+          </label>
+          <div className="w-2/4">
+            <TextField type="text" placeholder="نام" {...register("name")} />
+            {errors.name && (
+              <p className="text-red-500 text-xs pt-1">{errors.name.message}</p>
+            )}
+          </div>
+        </div>
+        <div className="col-span-2 md:col-span-1 flex items-center mt-2">
+          <label htmlFor="last_name" className="w-1/3 text-gray-700 text-right">
             نام و نام خانوادگی
           </label>
           <div className="w-2/4">
             <TextField
               type="text"
               placeholder="نام و نام خانوادگی"
-              {...register("fullName")}
+              {...register("last_name")}
             />
-            {errors.fullName && (
+            {errors.last_name && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.fullName.message}
+                {errors.last_name.message}
               </p>
             )}
           </div>
         </div>
-
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label htmlFor="email" className="w-1/3 text-gray-700 text-right">
             ایمیل
@@ -135,86 +131,93 @@ const Profile: React.FC = () => {
           <div className="w-2/4">
             <TextField type="text" placeholder="ایمیل" {...register("email")} />
             {errors.email && (
-              <p className="text-red-500 text-xs pt-1 text-sm">
+              <p className="text-red-500 text-xs pt-1">
                 {errors.email.message}
               </p>
             )}
           </div>
         </div>
-
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label
-            htmlFor="nationalId"
-            className="w-1/3 text-gray-700 text-right"
-          >
+          <label htmlFor="post_code" className="w-1/3 text-gray-700 text-right">
             کدملی
           </label>
           <div className="w-2/4">
             <TextField
               type="text"
               placeholder="کدملی"
-              {...register("nationalId")}
+              {...register("post_code")}
             />
-            {errors.nationalId && (
+            {errors.post_code && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.nationalId.message}
+                {errors.post_code.message}
               </p>
             )}
           </div>
         </div>
-
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label htmlFor="jobTitle" className="w-1/3 text-gray-700 text-right">
+          <label
+            htmlFor="work_position"
+            className="w-1/3 text-gray-700 text-right"
+          >
             سمت شغلی
           </label>
           <div className="w-2/4">
             <TextField
               type="text"
               placeholder="سمت شغلی"
-              {...register("jobTitle")}
+              {...register("work_position")}
             />
-            {errors.jobTitle && (
+            {errors.work_position && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.jobTitle.message}
+                {errors.work_position.message}
               </p>
             )}
           </div>
         </div>
-
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label htmlFor="birthDate" className="w-1/3 text-gray-700 text-right">
+          <label
+            htmlFor="date_of_birth"
+            className="w-1/3 text-gray-700 text-right"
+          >
             تاریخ تولد
           </label>
           <div className="w-2/4">
-            <PersianDatePicker placeholder="تاریخ" />
-            {errors.birthDate && (
+            <PersianDatePicker
+              placeholder="تاریخ"
+              onChange={(date) => {
+                if (date) {
+                  const formattedDate = date.format("YYYY-MM-DD"); // فرمت دلخواه خود را استفاده کنید
+                  setValue("date_of_birth", formattedDate, {
+                    shouldValidate: true,
+                  });
+                } else {
+                  setValue("date_of_birth", "", { shouldValidate: true }); // اگر تاریخ انتخاب نشده است
+                }
+              }}
+            />
+            {errors.date_of_birth && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.birthDate.message}
+                {errors.date_of_birth.message}
               </p>
             )}
           </div>
         </div>
 
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label
-            htmlFor="profileImage"
-            className="w-1/3 text-gray-700 text-right"
-          >
+          <label htmlFor="picture" className="w-1/3 text-gray-700 text-right">
             آپلود تصویر
           </label>
           <div className="w-2/4">
             <input
-              id="profileImage"
+              id="picture"
               type="file"
-              onChange={(e) => {
-                if (e.target.files) {
-                  setValue("profileImage", e.target.files);
-                }
-              }}
+              onChange={(e) =>
+                e.target.files && setValue("picture", e.target.files)
+              }
               className="hidden"
             />
             <label
-              htmlFor="profileImage"
+              htmlFor="picture"
               className="flex items-center cursor-pointer"
             >
               <span className="text-gray-400 border border-gray-200 py-2 px-3 rounded-xl w-3/6">
@@ -224,26 +227,27 @@ const Profile: React.FC = () => {
             </label>
           </div>
         </div>
-
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-          <label htmlFor="phone" className="w-1/3 text-gray-700 text-right">
+          <label
+            htmlFor="phone_number"
+            className="w-1/3 text-gray-700 text-right"
+          >
             شماره تماس
           </label>
           <div className="w-2/4">
             <TextField
               type="text"
               placeholder="شماره تماس"
-              {...register("phone")}
+              {...register("phone_number")}
             />
-            {errors.phone && (
+            {errors.phone_number && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.phone.message}
+                {errors.phone_number.message}
               </p>
             )}
           </div>
         </div>
-
-        <div className="col-span-2 flex mt-20 justify-around w-1/4 mr-auto ml-auto">
+        <div className="col-span-2 flex mt-20 justify-around w-1/4 mx-auto">
           <Button
             type="submit"
             className="bg-green-500 w-2/4 flex items-center justify-center"
@@ -252,54 +256,83 @@ const Profile: React.FC = () => {
             ثبت اطلاعات
             <FaSave className="mr-3" />
           </Button>
-          <Button
-            type="button"
-            onClick={() => setIsPasswordModalOpen(true)}
-            className="bg-yellow-500 w-2/4 mr-2"
-            hoverClass="hover:bg-yellow-600"
-          >
-            تغییر رمز عبور
-          </Button>
         </div>
       </form>
 
+      <div className="mt-10 w-1/4 mx-auto">
+        <Button
+          type="button"
+          className="bg-orange-500 w-full flex items-center justify-center"
+          hoverClass="hover:bg-orange-600"
+        >
+          تغییر رمز عبور
+        </Button>
+      </div>
+
       {isPasswordModalOpen && (
-        <Modal onClose={() => setIsPasswordModalOpen(false)}>
-          <form onSubmit={handlePasswordChange}>
-            <div className="mb-4 mt-5">
-              <label
-                htmlFor="otpCode"
-                className="block text-gray-700 text-right mb-2"
-              >
-                کد تایید
-              </label>
-              <div>
-                <TextField
-                  type="text"
-                  placeholder="کد تایید"
-                  {...register("otpCode")}
-                />
-                <Button type="button" className="mt-4" onClick={sendOtpCode}>
-                  ارسال کد
-                </Button>
-              </div>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg overflow-hidden shadow-lg w-11/12 md:w-1/3 relative">
+            <button
+              onClick={() => setIsPasswordModalOpen(false)}
+              className="absolute top-3 right-3 text-gray-600 hover:text-gray-900"
+              aria-label="Close modal"
+            >
+              <MdClose className="h-6 w-6" />
+            </button>
+            <div className="p-6">
+              <h2 className="text-xl font-bold mb-4">تغییر رمز عبور</h2>
+              <form onSubmit={handlePasswordChange} className="space-y-4">
+                <div>
+                  <label htmlFor="otpCode" className="block text-gray-700">
+                    کد OTP
+                  </label>
+                  <input
+                    id="otpCode"
+                    type="text"
+                    name="otpCode"
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="newPassword" className="block text-gray-700">
+                    رمز عبور جدید
+                  </label>
+                  <input
+                    id="newPassword"
+                    type="password"
+                    name="newPassword"
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="confirmNewPassword"
+                    className="block text-gray-700"
+                  >
+                    تأیید رمز عبور جدید
+                  </label>
+                  <input
+                    id="confirmNewPassword"
+                    type="password"
+                    name="confirmNewPassword"
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div className="flex justify-end">
+                  <Button
+                    type="submit"
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  >
+                    تغییر رمز عبور
+                  </Button>
+                </div>
+              </form>
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor="newPassword"
-                className="block text-gray-700 text-right mb-2"
-              >
-                رمز جدید
-              </label>
-              <TextField
-                type="password"
-                placeholder="رمز جدید"
-                {...register("newPassword")}
-              />
-            </div>
-            <Button type="submit">تایید</Button>
-          </form>
-        </Modal>
+          </div>
+        </div>
       )}
     </div>
   );

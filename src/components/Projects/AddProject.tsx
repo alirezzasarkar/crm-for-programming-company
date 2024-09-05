@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import Button from "../Common/Button";
-import { FaSave } from "react-icons/fa";
+import { FaSave, FaTimes } from "react-icons/fa";
 import Title from "../Common/Title";
 import { ProjectFormInputs, Employee } from "../../pages/AddProjectPage";
 import { UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form";
 import InputField from "./InputField";
 import DatePickerField from "./DatePickerField";
-import DropdownField from "./DropdownField";
 import FileUploadField from "./FileUploadField";
+import DropdownField from "./DropdownField";
 
 interface AddProjectProps {
   register: UseFormRegister<ProjectFormInputs>;
@@ -19,10 +19,17 @@ interface AddProjectProps {
   ) => void;
   employees: Employee[];
   onTeamMemberSelect: (id: number) => void;
-  selectedTeamMembers: number[];
+  onClearSelection: () => void;
+  selectedTeamMembers: { id: number; last_name: string }[];
   selectedResponsiblePerson: number;
   onResponsiblePersonSelect: (id: number) => void;
 }
+
+const projectStatusOptions = [
+  { value: "not_started", label: "شروع نشده" },
+  { value: "in_progress", label: "در حال انجام" },
+  { value: "completed", label: "انجام شده" },
+];
 
 const AddProject: React.FC<AddProjectProps> = ({
   register,
@@ -31,6 +38,7 @@ const AddProject: React.FC<AddProjectProps> = ({
   handleFileChange,
   employees,
   onTeamMemberSelect,
+  onClearSelection,
   selectedTeamMembers,
   selectedResponsiblePerson,
   onResponsiblePersonSelect,
@@ -52,11 +60,17 @@ const AddProject: React.FC<AddProjectProps> = ({
     setManagerDropdownOpen(false);
   };
 
+  const handleRemove = (id: number) => {
+    onClearSelection(); // پاک کردن اعضای تیم از حالت انتخاب
+    // برای حذف دقیق‌تر می‌توانید از روش‌های دیگر نیز استفاده کنید
+  };
+
   const selectedResponsiblePersonName =
     employees.find((emp) => emp.id === selectedResponsiblePerson)?.last_name ||
     "";
+
   const selectedTeamMembersNames = selectedTeamMembers
-    .map((id) => employees.find((emp) => emp.id === id)?.last_name || "")
+    .map((member) => member.last_name)
     .join(", ");
 
   return (
@@ -96,18 +110,6 @@ const AddProject: React.FC<AddProjectProps> = ({
           errors={errors}
         />
         <DropdownField
-          id="responsible_person"
-          label="مدیر پروژه"
-          placeholder="مدیر پروژه"
-          employees={employees}
-          selectedItems={[selectedResponsiblePerson]}
-          dropdownOpen={managerDropdownOpen}
-          handleToggle={handleManagerDropdownToggle}
-          handleSelect={handleManagerClick}
-          value={selectedResponsiblePersonName}
-          errors={errors}
-        />
-        <DropdownField
           id="team_members"
           label="اعضای تیم"
           placeholder="اعضای تیم"
@@ -116,17 +118,58 @@ const AddProject: React.FC<AddProjectProps> = ({
           dropdownOpen={dropdownOpen}
           handleToggle={handleDropdownToggle}
           handleSelect={handleEmployeeClick}
+          handleRemove={handleRemove} // اضافه کردن تابع حذف
           value={selectedTeamMembersNames}
           errors={errors}
         />
-        <InputField
-          id="status"
-          label="وضعیت پروژه"
-          type="text"
-          placeholder="وضعیت پروژه"
-          register={register}
+
+        <DropdownField
+          id="responsible_person"
+          label="مسئول پروژه"
+          placeholder="مسئول پروژه"
+          employees={employees}
+          selectedItems={[
+            {
+              id: selectedResponsiblePerson,
+              last_name: selectedResponsiblePersonName,
+            },
+          ]}
+          dropdownOpen={managerDropdownOpen}
+          handleToggle={handleManagerDropdownToggle}
+          handleSelect={handleManagerClick}
+          value={selectedResponsiblePersonName}
           errors={errors}
         />
+        <div className="col-span-2 md:col-span-1 flex items-center mt-2">
+          <label
+            htmlFor="status"
+            className="w-1/5 ml-5 text-gray-700 text-right"
+          >
+            وضعیت پروژه
+          </label>
+          <div className="w-2/3 flex">
+            <select
+              id="status"
+              {...register("status", { required: "وضعیت پروژه الزامی است" })}
+              className="w-full p-3 py-2 border border-gray-200 bg-white rounded-xl text-gray-400"
+              onChange={(e) => setValue("status", e.target.value)}
+            >
+              <option value="" disabled>
+                انتخاب وضعیت پروژه
+              </option>
+              {projectStatusOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {errors.status && (
+              <p className="text-red-500 text-xs pt-1">
+                {errors.status.message}
+              </p>
+            )}
+          </div>
+        </div>
         <DatePickerField
           id="domain_end_date"
           label="تاریخ اتمام دامین"

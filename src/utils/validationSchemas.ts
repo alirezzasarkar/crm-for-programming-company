@@ -39,15 +39,19 @@ export const forgotPasswordSchema = yup.object().shape({
 
 // Updated profile schema
 export const profileSchema = yup.object().shape({
-  fullName: yup
+  name:yup
     .string()
-    .matches(/^[\u0600-\u06FF\s]+$/, "نام و نام خانوادگی باید فارسی باشد")
-    .required("نام و نام خانوادگی الزامی است"),
-  nationalId: yup
+    .matches(/^[\u0600-\u06FF\s]+$/, "نام")
+    .required("نام الزامی است"),
+  last_name:yup
+    .string()
+    .matches(/^[\u0600-\u06FF\s]+$/, "نام خانوادگی باید فارسی باشد")
+    .required("نام خانوادگی الزامی است"),
+  post_code: yup
     .string()
     .matches(/^\d{10}$/, "کد ملی باید عدد و 10 رقم باشد")
     .required("کد ملی الزامی است"),
-  phone: yup
+  phone_number: yup
     .string()
     .matches(/^\d{11}$/, "شماره تماس باید 11 رقم باشد")
     .required("شماره تماس الزامی است"),
@@ -55,7 +59,6 @@ export const profileSchema = yup.object().shape({
     .string()
     .email("ایمیل معتبر نیست")
     .required("ایمیل الزامی است"),
-  jobTitle: yup.string().required("سمت شغلی الزامی است"),
-  birthDate: yup.string().required("تاریخ تولد الزامی است"),
-  profileImage: yup.mixed().nullable(), // Adjusted for file upload
+  work_position: yup.string().required("سمت شغلی الزامی است"),
+  date_of_birth: yup.string().required("تاریخ تولد الزامی است"),
 });

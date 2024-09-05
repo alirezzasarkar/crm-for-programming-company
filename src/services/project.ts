@@ -17,7 +17,6 @@ export const getEmployees = async () => {
 export const createProject = async (projectData: ProjectFormInputs) => {
   try {
     const response = await apiClient.post('/projects/projects/', projectData);
-    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);
@@ -40,6 +39,17 @@ export const fetchProjects = async () => {
 export const fetchProjectDetails = async (projectId: number) => {
   try {
     const response = await apiClient.get(`/projects/${projectId}`);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
+// حذف پروژه
+export const deleteProject = async (projectId: number) => {
+  try {
+    const response = await apiClient.delete(`/projects/projects/${projectId}`);
     return response.data;
   } catch (error) {
     handleApiError(error);

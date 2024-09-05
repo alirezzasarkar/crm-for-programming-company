@@ -26,7 +26,7 @@ export const getEmployeeById = async (id: number) => {
 // حذف کارمند بر اساس شناسه
 export const deleteEmployee = async (id: number) => {
   try {
-    await apiClient.delete(`/employees/${id}`);
+    await apiClient.delete(`/users/${id}/delete/`);
   } catch (error) {
     handleApiError(error);
     throw error;

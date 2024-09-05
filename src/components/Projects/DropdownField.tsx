@@ -6,10 +6,11 @@ interface DropdownFieldProps {
   label: string;
   placeholder: string;
   employees: { id: number; last_name: string }[];
-  selectedItems: number[];
+  selectedItems: { id: number; last_name: string }[];
   dropdownOpen: boolean;
   handleToggle: () => void;
   handleSelect: (id: number) => void;
+  handleRemove?: (id: number) => void; // تغییر از required به optional
   value: string;
   errors: FieldErrors<any>;
 }
@@ -23,6 +24,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
   dropdownOpen,
   handleToggle,
   handleSelect,
+  handleRemove = () => {}, // مقدار پیش‌فرض برای handleRemove
   value,
   errors,
 }) => (
@@ -44,10 +46,36 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
           {employees.map((employee) => (
             <div
               key={employee.id}
-              onClick={() => handleSelect(employee.id)}
-              className="p-2 hover:bg-gray-200 cursor-pointer"
+              onClick={() => {
+                handleSelect(employee.id);
+                handleToggle(); // بستن دراپ‌دان پس از انتخاب
+              }}
+              className="p-2 hover:bg-gray-200 cursor-pointer flex justify-between items-center"
             >
               {employee.last_name}
+              {selectedItems.find((item) => item.id === employee.id) && (
+                <span className="text-red-500 text-xs ml-2">(انتخاب شده)</span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {selectedItems.length > 0 && (
+        <div className="mt-2">
+          {selectedItems.map((item) => (
+            <div
+              key={item.id}
+              className="flex justify-between items-center bg-gray-100 p-2 rounded-lg mt-1"
+            >
+              <span>{item.last_name}</span>
+              {handleRemove && ( // اضافه کردن شرط برای نمایش دکمه حذف فقط اگر handleRemove تعریف شده باشد
+                <button
+                  onClick={() => handleRemove(item.id)}
+                  className="text-red-500 text-xs"
+                >
+                  حذف
+                </button>
+              )}
             </div>
           ))}
         </div>

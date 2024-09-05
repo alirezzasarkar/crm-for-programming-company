@@ -1,57 +1,55 @@
-import { useState, useEffect } from "react";
-import ProjectList from "./../components/Projects/ProjectList";
-import { fetchProjects } from "../services/project";
+import { useState } from "react";
+import ProjectList from "../components/Projects/ProjectList";
 import SearchBox from "../components/Common/Search";
 import Filter from "../components/Projects/ProjectFilter";
 import Title from "../components/Common/Title";
 import { useNavigate } from "react-router-dom";
 import { filterProjectsByDate } from "../components/Common/DateFilter";
 import LoadingSpinner from "../components/Common/Loading";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { fetchProjects, deleteProject } from "../services/project";
+import Swal from "sweetalert2";
 
-// تعریف نوع پروژه
 interface Project {
-  index: number;
-  projectName: string;
+  id: number;
+  project_name: string;
   domain: string;
-  manager: string;
-  endDate: string;
+  manager_full_name: string;
+  end_date: string;
   status: string;
 }
 
-// وضعیت فیلترها و جستجو
 const statusOptions = ["تمام پروژه‌ها", "درحال انجام", "انجام شده"];
 const dateOptions = ["تمام پروژه‌ها", "این هفته", "این ماه", "این سال"];
 
 const ProjectListPage = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("تمام پروژه‌ها");
   const [dateFilter, setDateFilter] = useState<string>("تمام پروژه‌ها");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  // بارگذاری داده‌ها از API
-  useEffect(() => {
-    const loadProjects = async () => {
-      try {
-        const fetchedProjects = await fetchProjects();
-        setProjects(fetchedProjects);
-      } catch (error) {
-        setError("خطا در بارگذاری پروژه‌ها");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Fetch Projects using React Query
+  const {
+    data: projects,
+    isLoading,
+    error,
+  } = useQuery<Project[]>("projects", fetchProjects);
 
-    loadProjects();
-  }, []);
+  const mutation = useMutation(deleteProject, {
+    onSuccess: () => {
+      // Invalidate and refetch projects after deletion
+      queryClient.invalidateQueries("projects");
+    },
+  });
 
-  // فیلتر کردن پروژه‌ها
-  let filteredProjects = projects.filter((project) => {
+  if (isLoading) return <LoadingSpinner />;
+
+  // Filter projects based on status, date, and search query
+  let filteredProjects = (projects || []).filter((project) => {
     const matchesStatus =
       statusFilter === "تمام پروژه‌ها" || project.status === statusFilter;
-    const matchesSearch = project.projectName
+    const matchesSearch = project.project_name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     return matchesStatus && matchesSearch;
@@ -63,7 +61,23 @@ const ProjectListPage = () => {
     navigate(`/projects/detail/${projectId}`);
   };
 
-  if (loading) return <LoadingSpinner />;
+  const handleDeleteProject = (projectId: number) => {
+    Swal.fire({
+      title: "آیا مطمئن هستید؟",
+      text: "این عملیات قابل بازگشت نیست!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "بله، حذف کن",
+      cancelButtonText: "لغو",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutation.mutate(projectId);
+        Swal.fire("حذف شد!", "پروژه با موفقیت حذف شد.", "success");
+      }
+    });
+  };
 
   return (
     <>
@@ -85,8 +99,9 @@ const ProjectListPage = () => {
       <div className="bg-white p-6 rounded-lg shadow-md rtl">
         <Title title="لیست پروژه های من" />
         <ProjectList
-          projects={filteredProjects}
+          projects={filteredProjects} // مطمئن می‌شویم که همیشه یک آرایه ارسال می‌شود
           onProjectClick={handleProjectClick}
+          onDeleteProject={handleDeleteProject}
         />
       </div>
     </>
