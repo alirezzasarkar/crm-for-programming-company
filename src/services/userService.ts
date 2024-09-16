@@ -23,3 +23,30 @@ export const register = async (userData: { first_name: string; last_name: string
     throw error;
   }
 };
+
+// ارسال کد برای فراموشی رمز عبور همراه با رمز عبور جدید
+export const requestResetPassword = async (phone_number: string, newPassword: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/account/reset-password/`, { 
+      phone_number, 
+      new_password: newPassword 
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
+// تأیید کد و ثبت رمز عبور جدید
+export const verifyResetPassword = async (otpCode: string, token: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/account/reset-password/verify/${token}/`, {
+      otp_code: otpCode,
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};

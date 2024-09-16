@@ -41,7 +41,7 @@ export const forgotPasswordSchema = yup.object().shape({
 export const profileSchema = yup.object().shape({
   name:yup
     .string()
-    .matches(/^[\u0600-\u06FF\s]+$/, "نام")
+    .matches(/^[\u0600-\u06FF\s]+$/, "نام باید فارسی باشد")
     .required("نام الزامی است"),
   last_name:yup
     .string()

@@ -7,8 +7,8 @@ import PersianDatePicker from "../Common/PersianDatePicker";
 import Button from "../../components/Common/Button";
 import TextField from "../../components/Common/TextField";
 import { FaSave, FaUpload } from "react-icons/fa";
-import { MdClose } from "react-icons/md";
 import Title from "../Common/Title";
+import Modal from "../Common/Modal"; // Import the Modal component
 
 interface ProfileFormInputs {
   email: string;
@@ -26,20 +26,10 @@ interface ProfileFormInputs {
 
 interface ProfileProps {
   userProfile: (data: ProfileFormInputs) => Promise<void>;
-  handlePasswordChange: React.FormEventHandler<HTMLFormElement>;
-  sendOtpCode: () => Promise<void>;
-  isPasswordModalOpen: boolean;
-  setIsPasswordModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   userProfileData: ProfileFormInputs;
 }
 
-const Profile: React.FC<ProfileProps> = ({
-  userProfile,
-  handlePasswordChange,
-  isPasswordModalOpen,
-  setIsPasswordModalOpen,
-  userProfileData,
-}) => {
+const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
   const {
     register,
     handleSubmit,
@@ -49,6 +39,8 @@ const Profile: React.FC<ProfileProps> = ({
     resolver: yupResolver(profileSchema),
     defaultValues: userProfileData,
   });
+
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   useEffect(() => {
     if (userProfileData) {
@@ -257,82 +249,56 @@ const Profile: React.FC<ProfileProps> = ({
             <FaSave className="mr-3" />
           </Button>
         </div>
+        <div className="col-span-2 flex mt-2 justify-around w-1/4 mx-auto">
+          <Button
+            type="button"
+            className="bg-orange-500 w-2/4 flex items-center justify-center"
+            hoverClass="hover:bg-orange-600"
+            onClick={() => setIsPasswordModalOpen(true)} // Open modal on click
+          >
+            تغییر رمز عبور
+          </Button>
+        </div>
       </form>
 
-      <div className="mt-10 w-1/4 mx-auto">
-        <Button
-          type="button"
-          className="bg-orange-500 w-full flex items-center justify-center"
-          hoverClass="hover:bg-orange-600"
-        >
-          تغییر رمز عبور
-        </Button>
-      </div>
-
       {isPasswordModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg overflow-hidden shadow-lg w-11/12 md:w-1/3 relative">
+        <Modal onClose={() => setIsPasswordModalOpen(false)}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              // Handle password change here
+              setIsPasswordModalOpen(false); // Close the modal after submission
+            }}
+          >
+            <input
+              type="text"
+              placeholder="شماره تماس خود را وارد کنید"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 text-gray-700"
+            />
+            <input
+              type="password"
+              placeholder="رمز جدید را وارد کنید"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 text-gray-700 mt-4"
+            />
             <button
-              onClick={() => setIsPasswordModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-900"
-              aria-label="Close modal"
+              className="w-full bg-blue-400 text-white py-2 rounded-md hover:bg-blue-500 mt-4"
+              type="button"
             >
-              <MdClose className="h-6 w-6" />
+              ارسال کد
             </button>
-            <div className="p-6">
-              <h2 className="text-xl font-bold mb-4">تغییر رمز عبور</h2>
-              <form onSubmit={handlePasswordChange} className="space-y-4">
-                <div>
-                  <label htmlFor="otpCode" className="block text-gray-700">
-                    کد OTP
-                  </label>
-                  <input
-                    id="otpCode"
-                    type="text"
-                    name="otpCode"
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="newPassword" className="block text-gray-700">
-                    رمز عبور جدید
-                  </label>
-                  <input
-                    id="newPassword"
-                    type="password"
-                    name="newPassword"
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="confirmNewPassword"
-                    className="block text-gray-700"
-                  >
-                    تأیید رمز عبور جدید
-                  </label>
-                  <input
-                    id="confirmNewPassword"
-                    type="password"
-                    name="confirmNewPassword"
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                <div className="flex justify-end">
-                  <Button
-                    type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                  >
-                    تغییر رمز عبور
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+            <input
+              type="text"
+              placeholder="کد ارسال شده را وارد کنید"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 text-gray-700 mt-4"
+            />
+            <button
+              type="submit"
+              className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 mt-4"
+            >
+              ثبت اطلاعات
+            </button>
+          </form>
+        </Modal>
       )}
     </div>
   );

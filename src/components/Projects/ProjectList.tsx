@@ -16,6 +16,19 @@ interface ProjectListProps {
   onDeleteProject: (projectId: number) => void;
 }
 
+const translateStatus = (status: string): string => {
+  switch (status) {
+    case "not_started":
+      return "شروع نشده";
+    case "in_progress":
+      return "در حال انجام";
+    case "completed":
+      return "انجام شده";
+    default:
+      return status;
+  }
+};
+
 const ProjectList: React.FC<ProjectListProps> = ({
   projects,
   onProjectClick,
@@ -66,14 +79,8 @@ const ProjectList: React.FC<ProjectListProps> = ({
               <td className="py-3 text-sm text-center text-yellow-500">
                 {project.end_date}
               </td>
-              <td
-                className={`py-3 text-sm text-center ${
-                  project.status === "درحال انجام"
-                    ? "text-orange-500"
-                    : "text-green-500"
-                }`}
-              >
-                {project.status}
+              <td className="py-3 text-sm text-center">
+                {translateStatus(project.status)}
               </td>
               <td className="py-3 text-sm text-center">
                 <FaEllipsisV className="text-gray-500 mx-auto" />

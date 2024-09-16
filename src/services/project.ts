@@ -38,7 +38,7 @@ export const fetchProjects = async () => {
 // دریافت جزئیات پروژه
 export const fetchProjectDetails = async (projectId: number) => {
   try {
-    const response = await apiClient.get(`/projects/${projectId}`);
+    const response = await apiClient.get(`/projects/projects/${projectId}`);
     return response.data;
   } catch (error) {
     handleApiError(error);
