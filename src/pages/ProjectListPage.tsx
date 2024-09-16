@@ -58,7 +58,7 @@ const ProjectListPage = () => {
   filteredProjects = filterProjectsByDate(filteredProjects, dateFilter);
 
   const handleProjectClick = (projectId: number) => {
-    navigate(`/projects/detail/${projectId}`);
+    navigate(`/dashboard/projects/detail/${projectId}`);
   };
 
   const handleDeleteProject = (projectId: number) => {

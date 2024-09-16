@@ -1,53 +1,82 @@
 import React from "react";
-import Title from "../Common/Title";
+import { FaTrash } from "react-icons/fa";
+import moment from "jalali-moment"; // کتابخانه برای تبدیل تاریخ
 
 interface ProjectDetailsProps {
-  projectName: string;
-  projectManager: string;
-  domain: string;
-  startDate: string;
-  endDate: string;
-  completionDate: string; // تاریخ اتمام پروژه
-  hostingEndDate: string; // تاریخ اتمام هاست
-  platform: string; // پلتفرم
-  clientName: string; // نام کارفرما
-  clientContact: string; // شماره تماس کارفرما
-  projectStatus: string; // وضعیت پروژه
-  teamMembers: string; // اعضای تیم
-  designFilesLink: string; // لینک فایل‌های دیزاین
-  contractFile: string; // لینک فایل‌های قرارداد
-  description: string; // توضیحات
+  project: {
+    id: number;
+    project_name: string;
+    domain: string;
+    manager_full_name: string;
+    phone_number: string;
+    description: string;
+    start_date: string;
+    end_date: string;
+    status: string;
+    design_files: string;
+    domain_end_date: string;
+    host_end_date: string;
+    contract_files: string;
+    team_members: number[];
+  };
+  onDeleteProject: (projectId: number) => void;
 }
 
+// تابع تبدیل تاریخ به شمسی
+const convertToJalali = (date: string) => {
+  return moment(date, "YYYY-MM-DD").locale("fa").format("jYYYY/jMM/jDD");
+};
+
 const ProjectDetails: React.FC<ProjectDetailsProps> = ({
-  projectName,
-  projectManager,
-  domain,
-  startDate,
-  endDate,
-  completionDate,
-  hostingEndDate,
-  platform,
-  clientName,
-  clientContact,
-  projectStatus,
-  teamMembers,
-  designFilesLink,
-  contractFile,
-  description,
+  project,
+  onDeleteProject,
 }) => {
+  const {
+    id,
+    project_name,
+    domain,
+    manager_full_name,
+    phone_number,
+    description,
+    start_date,
+    end_date,
+    status,
+    design_files,
+    domain_end_date,
+    host_end_date,
+    contract_files,
+    team_members,
+  } = project;
+
+  // تابع ترجمه وضعیت پروژه به فارسی
+  const translateStatus = (status: string) => {
+    switch (status) {
+      case "not_started":
+        return "شروع نشده";
+      case "in_progress":
+        return "در حال انجام";
+      case "completed":
+        return "انجام شده";
+      default:
+        return status;
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md rtl">
-      <Title title="جزئیات پروژه" />
       <table className="min-w-full bg-white mt-4">
         <tbody>
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">نام پروژه:</td>
-            <td className="px-4 py-3 text-gray-500">{projectName}</td>
+            <td className="px-4 py-3 text-gray-500">{project_name}</td>
           </tr>
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">مدیر پروژه:</td>
-            <td className="px-4 py-3 text-gray-500">{projectManager}</td>
+            <td className="px-4 py-3 text-gray-500">{manager_full_name}</td>
+          </tr>
+          <tr className="w-full border-b border-gray-200">
+            <td className="px-4 py-3 text-gray-700">شماره تماس:</td>
+            <td className="px-4 py-3 text-gray-500">{phone_number}</td>
           </tr>
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">دامنه:</td>
@@ -55,45 +84,40 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
           </tr>
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">تاریخ شروع:</td>
-            <td className="px-4 py-3 text-gray-500">{startDate}</td>
+            <td className="px-4 py-3 text-gray-500">
+              {convertToJalali(start_date)} {/* تاریخ شروع به شمسی */}
+            </td>
           </tr>
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">تاریخ پایان:</td>
-            <td className="px-4 py-3 text-gray-500">{endDate}</td>
-          </tr>
-          <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">تاریخ اتمام پروژه:</td>
-            <td className="px-4 py-3 text-gray-500">{completionDate}</td>
-          </tr>
-          <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">تاریخ اتمام هاست:</td>
-            <td className="px-4 py-3 text-gray-500">{hostingEndDate}</td>
-          </tr>
-          <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">پلتفرم:</td>
-            <td className="px-4 py-3 text-gray-500">{platform}</td>
-          </tr>
-          <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">نام کارفرما:</td>
-            <td className="px-4 py-3 text-gray-500">{clientName}</td>
-          </tr>
-          <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">شماره تماس کارفرما:</td>
-            <td className="px-4 py-3 text-gray-500">{clientContact}</td>
+            <td className="px-4 py-3 text-gray-500">
+              {convertToJalali(end_date)} {/* تاریخ پایان به شمسی */}
+            </td>
           </tr>
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">وضعیت پروژه:</td>
-            <td className="px-4 py-3 text-gray-500">{projectStatus}</td>
+            <td className="px-4 py-3 text-gray-500">
+              {translateStatus(status)}
+            </td>
           </tr>
           <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">اعضای تیم:</td>
-            <td className="px-4 py-3 text-gray-500">{teamMembers}</td>
+            <td className="px-4 py-3 text-gray-700">تاریخ پایان دامنه:</td>
+            <td className="px-4 py-3 text-gray-500">
+              {convertToJalali(domain_end_date)}{" "}
+              {/* تاریخ پایان دامنه به شمسی */}
+            </td>
+          </tr>
+          <tr className="w-full border-b border-gray-200">
+            <td className="px-4 py-3 text-gray-700">تاریخ پایان هاست:</td>
+            <td className="px-4 py-3 text-gray-500">
+              {convertToJalali(host_end_date)} {/* تاریخ پایان هاست به شمسی */}
+            </td>
           </tr>
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">فایل‌های دیزاین:</td>
             <td className="px-4 py-3 text-gray-500">
               <a
-                href={designFilesLink}
+                href={design_files}
                 className="text-blue-500 hover:text-blue-700"
                 download
               >
@@ -105,7 +129,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             <td className="px-4 py-3 text-gray-700">فایل‌های قرارداد:</td>
             <td className="px-4 py-3 text-gray-500">
               <a
-                href={contractFile}
+                href={contract_files}
                 className="text-blue-500 hover:text-blue-700"
                 download
               >
@@ -114,11 +138,26 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             </td>
           </tr>
           <tr className="w-full border-b border-gray-200">
+            <td className="px-4 py-3 text-gray-700">اعضای تیم:</td>
+            <td className="px-4 py-3 text-gray-500">
+              {team_members.join(", ")}
+            </td>
+          </tr>
+          <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">توضیحات:</td>
             <td className="px-4 py-3 text-gray-500">{description}</td>
           </tr>
         </tbody>
       </table>
+      <div className="flex justify-end mt-6">
+        <button
+          className="flex items-center px-4 py-2 bg-red-500 text-white rounded-lg"
+          onClick={() => onDeleteProject(id)}
+        >
+          <FaTrash className="mr-2" />
+          حذف پروژه
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from "react";
 import { FaEllipsisV, FaTrash } from "react-icons/fa";
+import moment from "jalali-moment"; // اضافه کردن کتابخانه برای تبدیل تاریخ
 
 interface Project {
   id: number;
@@ -16,6 +17,12 @@ interface ProjectListProps {
   onDeleteProject: (projectId: number) => void;
 }
 
+// تابع تبدیل تاریخ به شمسی
+const convertToJalali = (date: string) => {
+  return moment(date, "YYYY-MM-DD").locale("fa").format("jYYYY/jMM/jDD");
+};
+
+// تابع ترجمه وضعیت پروژه به فارسی
 const translateStatus = (status: string): string => {
   switch (status) {
     case "not_started":
@@ -77,7 +84,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
                 {project.manager_full_name}
               </td>
               <td className="py-3 text-sm text-center text-yellow-500">
-                {project.end_date}
+                {convertToJalali(project.end_date)} {/* تبدیل تاریخ به شمسی */}
               </td>
               <td className="py-3 text-sm text-center">
                 {translateStatus(project.status)}
