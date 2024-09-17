@@ -61,6 +61,10 @@ const ProjectListPage = () => {
     navigate(`/dashboard/projects/detail/${projectId}`);
   };
 
+  const handleEditProject = (projectId: number) => {
+    navigate(`/dashboard/projects/edit/${projectId}`); // صفحه ویرایش پروژه
+  };
+
   const handleDeleteProject = (projectId: number) => {
     Swal.fire({
       title: "آیا مطمئن هستید؟",
@@ -101,6 +105,7 @@ const ProjectListPage = () => {
         <ProjectList
           projects={filteredProjects} // مطمئن می‌شویم که همیشه یک آرایه ارسال می‌شود
           onProjectClick={handleProjectClick}
+          onEditProject={handleEditProject} // ارسال تابع ویرایش
           onDeleteProject={handleDeleteProject}
         />
       </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaEllipsisV, FaTrash } from "react-icons/fa";
+import { FaEllipsisV, FaTrash, FaEdit } from "react-icons/fa";
 import moment from "jalali-moment"; // اضافه کردن کتابخانه برای تبدیل تاریخ
 
 interface Project {
@@ -15,6 +15,7 @@ interface ProjectListProps {
   projects: Project[];
   onProjectClick: (projectId: number) => void;
   onDeleteProject: (projectId: number) => void;
+  onEditProject: (projectId: number) => void; // تابع جدید برای ویرایش
 }
 
 // تابع تبدیل تاریخ به شمسی
@@ -40,6 +41,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
   projects,
   onProjectClick,
   onDeleteProject,
+  onEditProject, // اضافه کردن تابع جدید
 }) => {
   return (
     <div className="bg-white p-6 rounded-lg rtl">
@@ -61,6 +63,9 @@ const ProjectList: React.FC<ProjectListProps> = ({
             </th>
             <th className="py-2 text-center text-sm font-medium pb-5">
               نمایش جزئیات
+            </th>
+            <th className="py-2 text-center text-sm font-medium pb-5">
+              ویرایش
             </th>
             <th className="py-2 text-center text-sm font-medium pb-5">
               حذف پروژه
@@ -93,11 +98,20 @@ const ProjectList: React.FC<ProjectListProps> = ({
                 <FaEllipsisV className="text-gray-500 mx-auto" />
               </td>
               <td className="py-3 text-sm text-center">
+                <FaEdit
+                  className="text-blue-500 mx-auto cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation(); // جلوگیری از کلیک روی ردیف
+                    onEditProject(project.id); // ارسال id به تابع onEditProject
+                  }}
+                />
+              </td>
+              <td className="py-3 text-sm text-center">
                 <FaTrash
                   className="text-red-500 mx-auto cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation(); // جلوگیری از کلیک روی ردیف
-                    onDeleteProject(project.id); // ارسال index به تابع onDeleteProject
+                    onDeleteProject(project.id); // ارسال id به تابع onDeleteProject
                   }}
                 />
               </td>

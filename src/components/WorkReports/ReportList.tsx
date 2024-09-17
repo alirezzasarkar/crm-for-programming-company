@@ -73,7 +73,6 @@ const ReportList: React.FC<ReportListProps> = ({
               <th className="py-2 text-center text-sm font-medium pb-5">
                 نام و نام خانوادگی
               </th>
-              <th className="py-2 text-center text-sm font-medium pb-5">تیم</th>
               <th className="py-2 text-center text-sm font-medium pb-5">
                 وضعیت
               </th>
@@ -89,7 +88,6 @@ const ReportList: React.FC<ReportListProps> = ({
             {filteredReports.map((report, index) => (
               <tr key={index} className="bg-gray-100 hover:bg-gray-200">
                 <td className="py-3 text-sm text-center">{report.name}</td>
-                <td className="py-3 text-sm text-center">{report.team}</td>
                 <td
                   className={`py-3 text-sm text-center ${
                     report.status === "بررسی شده"

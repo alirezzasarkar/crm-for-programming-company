@@ -4,6 +4,7 @@ import Title from "../Common/Title";
 import { getWeekDates, getStartOfWeek } from "../../utils/dateUtils";
 import moment from "jalali-moment";
 import Swal from "sweetalert2";
+import { createReport } from "../../services/report"; // Adjust the path as needed
 
 const WorkReportForm: React.FC = () => {
   const [description, setDescription] = useState("");
@@ -31,9 +32,11 @@ const WorkReportForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simulate a form submission or any processing here
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
+      await createReport({
+        description,
+        date: weekDays[activeDayIndex].date,
+      });
 
       Swal.fire({
         title: "موفقیت",
@@ -64,7 +67,7 @@ const WorkReportForm: React.FC = () => {
       <Title title="ارسال گزارش کار" />
       <WeekDaysSlider
         days={weekDays}
-        activeIndex={activeDayIndex}
+        activeDate={weekDays[activeDayIndex].date}
         onDayClick={handleDayClick}
       />
       <form onSubmit={handleSubmit}>

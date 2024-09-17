@@ -47,6 +47,17 @@ export const fetchProjectDetails = async (projectId: number) => {
   }
 };
 
+// ویرایش پروژه
+export const updateProject = async (projectId: number, projectData: ProjectFormInputs) => {
+  try {
+    const response = await apiClient.put(`/projects/projects/${projectId}`, projectData);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
 // حذف پروژه
 export const deleteProject = async (projectId: number) => {
   try {

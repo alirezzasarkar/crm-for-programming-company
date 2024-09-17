@@ -1,34 +1,104 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Title from "../Common/Title";
 import { FaUpload } from "react-icons/fa";
 import MyDatePicker from "../Common/PersianDatePicker";
 import Swal from "sweetalert2";
 import { DateObject } from "react-multi-date-picker";
+import { getEmployees, createTask } from "../../services/task";
+import { jwtDecode } from "jwt-decode"; // برای دیکود کردن JWT
+
+interface Employee {
+  id: number;
+  last_name: string;
+}
+
+interface JwtPayload {
+  user_id: number;
+}
 
 const AddTask: React.FC = () => {
   const [title, setTitle] = useState("");
-  const [assignedTo, setAssignedTo] = useState("");
+  const [assignedTo, setAssignedTo] = useState<number | "">("");
   const [dueDate, setDueDate] = useState<DateObject | null>(null);
   const [details, setDetails] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [senderId, setSenderId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      try {
+        const decoded: JwtPayload = jwtDecode(token);
+        setSenderId(decoded.user_id);
+      } catch (error) {
+        console.error("خطا در دیکود کردن JWT:", error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const employeesData = await getEmployees();
+        setEmployees(employeesData);
+      } catch (error) {
+        console.error("خطا در دریافت لیست کارمندان", error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setFile(event.target.files[0]);
+      const selectedFile = event.target.files[0];
+      if (selectedFile.size > 10 * 1024 * 1024) {
+        // 10 MB check
+        Swal.fire({
+          icon: "error",
+          title: "فایل بیش از حد بزرگ است",
+          text: "اندازه فایل باید کمتر از 10 مگابایت باشد.",
+        });
+        return;
+      }
+      setFile(selectedFile);
     }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // Handle form submission logic
+
+    if (!senderId) {
+      Swal.fire({
+        icon: "error",
+        title: "خطا",
+        text: "شناسه فرستنده موجود نیست.",
+      });
+      return;
+    }
+
+    const fileUrl = file
+      ? `https://adklay-crm.liara.run/media/task_files/${file.name}`
+      : null;
+
+    const taskData = {
+      title,
+      description: details,
+      due_date: dueDate ? dueDate.toDate().toISOString() : null,
+      file: fileUrl, // Use the correct file URL format
+      receiver: assignedTo,
+      sender: senderId,
+      status: "undone",
+    };
 
     try {
+      await createTask(taskData);
       await Swal.fire({
         icon: "success",
         title: "تسک با موفقیت ثبت شد",
         text: "تسک شما با موفقیت ارسال شد.",
       });
-      // Reset form fields after successful submission
       setTitle("");
       setAssignedTo("");
       setDueDate(null);
@@ -55,7 +125,6 @@ const AddTask: React.FC = () => {
       cancelButtonText: "انصراف",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Reset form fields
         setTitle("");
         setAssignedTo("");
         setDueDate(null);
@@ -64,13 +133,6 @@ const AddTask: React.FC = () => {
       }
     });
   };
-
-  const companyMembers = [
-    "عضو ۱",
-    "عضو ۲",
-    "عضو ۳",
-    // نام اعضای شرکت خود را اینجا اضافه کنید
-  ];
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md rtl">
@@ -89,15 +151,15 @@ const AddTask: React.FC = () => {
           <div>
             <select
               value={assignedTo}
-              onChange={(e) => setAssignedTo(e.target.value)}
+              onChange={(e) => setAssignedTo(parseInt(e.target.value))}
               className="w-full p-2 border rounded-xl bg-white text-gray-400"
             >
               <option value="" disabled>
                 ارسال به
               </option>
-              {companyMembers.map((member) => (
-                <option key={member} value={member}>
-                  {member}
+              {employees.map((employee) => (
+                <option key={employee.id} value={employee.id}>
+                  {employee.last_name}
                 </option>
               ))}
             </select>

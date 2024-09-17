@@ -1,60 +1,62 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import Title from "../Common/Title";
 
 interface TaskDetailsProps {
   sender: string;
   team: string;
-  deliveryDate: string;
+  due_date: string;
   status: string;
   title: string;
-  details: string;
+  description: string;
+  onComplete: () => void; // تابع برای به روز رسانی وضعیت
+  showCompleteButton: boolean; // prop برای کنترل نمایش دکمه
 }
 
 const TaskDetails: React.FC<TaskDetailsProps> = ({
   sender,
   team,
-  deliveryDate,
-  status: initialStatus,
+  due_date,
+  status, // دریافت مستقیم status از props
   title,
-  details,
+  description,
+  onComplete,
+  showCompleteButton,
 }) => {
-  const [status, setStatus] = useState(initialStatus);
-
-  const handleCompleteTask = () => {
-    setStatus("انجام شده");
-    // می‌توانید اینجا کدهای مربوط به بروزرسانی وضعیت تسک در سرور یا هر پردازش دیگری را اضافه کنید
+  // تابع برای تبدیل وضعیت به متن فارسی
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "done":
+        return "انجام شده";
+      case "undone":
+        return "انجام نشده";
+      default:
+        return status; // اگر وضعیت نامشخص باشد
+    }
   };
 
   return (
     <div className="flex justify-around">
       <div className="bg-white p-6 rounded-lg shadow-md rtl w-1/4 h-1/3">
-        <h2 className="text-blue-600 text-md font-bold">
-          ارسال شده از {sender}
-          <div className="border-t border-gray-300 w-full mt-4"></div>
-        </h2>
-        <div className=" p-3 rounded-md mt-3">
+        <div className="p-3 rounded-md mt-3">
           <div className="mb-2">
-            <span className="font-bold ml-3">تیم:</span> {team}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold ml-3">تاریخ تحویل:</span> {deliveryDate}
+            <span className="font-bold ml-3">تاریخ تحویل:</span> {due_date}
           </div>
           <div className="mb-2 flex items-center">
             <span className="font-bold ml-3">وضعیت:</span>
-            {status === "انجام شده" ? (
+            {status === "done" ? (
               <>
-                <span>انجام شده</span>
+                <span>{getStatusText(status)}</span>
                 <FaCheckCircle className="text-green-500 ml-2" />
               </>
             ) : (
-              <span className="ml-2 text-red-500">{status}</span>
+              <span className="ml-2 text-red-500">{getStatusText(status)}</span>
             )}
           </div>
         </div>
-        {status !== "انجام شده" && (
+        {showCompleteButton && status !== "done" && (
           <button
-            onClick={handleCompleteTask}
+            onClick={onComplete}
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-xl w-full hover:bg-blue-600"
           >
             انجام شد
@@ -70,7 +72,7 @@ const TaskDetails: React.FC<TaskDetailsProps> = ({
           </div>
           <div className="mt-7">
             <span className="font-bold text-gray-700 text-sm">جزئیات</span>
-            <div className="bg-gray-100 p-3 rounded-md mt-2">{details}</div>
+            <div className="bg-gray-100 p-3 rounded-md mt-2">{description}</div>
           </div>
         </div>
         <div className="mt-10">
