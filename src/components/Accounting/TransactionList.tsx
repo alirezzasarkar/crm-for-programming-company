@@ -1,76 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaInfoCircle, FaFileInvoice } from "react-icons/fa";
 import Title from "../Common/Title";
+import { fetchTransactions } from "../../services/Accounting"; // Import API
+import moment from "jalali-moment"; // Import the jalaali-moment library
 
 interface Transaction {
   id: number;
-  name: string;
-  date: string;
+  date: string; // تاریخ در فرمت میلادی
   amount: string;
   description: string;
-  invoiceImage: string;
+  file: string; // فاکتور
+  transaction_type: "income" | "expense"; // نوع تراکنش
 }
 
-const depositTransactions: Transaction[] = [
-  {
-    id: 1,
-    name: "علیرضا سرکار",
-    date: "1403/03/02",
-    amount: "100,000,000 تومان",
-    description: "این تراکنش مربوط به تسویه حساب ماهانه است.",
-    invoiceImage: "/path/to/invoice1.jpg", // Replace with actual image path
-  },
-  // Additional transactions...
-];
-
-const withdrawalTransactions: Transaction[] = [
-  {
-    id: 1,
-    name: "حمیدرضا کریمی",
-    date: "1403/03/03",
-    amount: "50,000,000 تومان",
-    description: "این تراکنش مربوط به برداشت از حساب شخصی است.",
-    invoiceImage: "/path/to/invoice2.jpg", // Replace with actual image path
-  },
-  // Additional transactions...
-];
-
-const EmployeeSalaries: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"deposit" | "withdrawal">(
-    "deposit"
-  );
+const TransactionList: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<"income" | "expense">("income");
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [hoveredTransaction, setHoveredTransaction] = useState<number | null>(
     null
   );
-  const [hoveredInvoice, setHoveredInvoice] = useState<number | null>(null);
 
-  const renderTransactionTable = (transactions: Transaction[]) => (
+  // Fetch transactions from the API
+  useEffect(() => {
+    const getTransactions = async () => {
+      try {
+        const data = await fetchTransactions();
+        setTransactions(data);
+      } catch (error) {
+        console.error("خطا در دریافت تراکنش‌ها:", error);
+      }
+    };
+
+    getTransactions();
+  }, []);
+
+  const renderTransactionTable = (filteredTransactions: Transaction[]) => (
     <table className="min-w-full bg-white mt-4 border-separate border-spacing-y-3">
       <thead>
         <tr>
           <th className="py-2 text-center text-sm font-medium">ردیف</th>
-          <th className="py-2 text-center text-sm font-medium">
-            نام و نام خانوادگی
-          </th>
           <th className="py-2 text-center text-sm font-medium">تاریخ</th>
           <th className="py-2 text-center text-sm font-medium">مبلغ</th>
           <th className="py-2 text-center text-sm font-medium text-blue-500">
             توضیحات
           </th>
           <th className="py-2 text-center text-sm font-medium text-green-500">
-            نمایش فاکتور
+            فاکتور
           </th>
         </tr>
       </thead>
       <tbody>
-        {transactions.map((transaction, index) => (
+        {filteredTransactions.map((transaction, index) => (
           <tr
             key={transaction.id}
             className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
           >
             <td className="py-3 text-sm text-center">{index + 1}</td>
-            <td className="py-3 text-sm text-center">{transaction.name}</td>
-            <td className="py-3 text-sm text-center">{transaction.date}</td>
+            <td className="py-3 text-sm text-center">
+              {moment(transaction.date).locale("fa").format("jYYYY/jMM/jDD")}{" "}
+              {/* Convert to Shamsi */}
+            </td>
             <td className="py-3 text-sm text-center">{transaction.amount}</td>
             <td className="py-3 text-center text-blue-500 relative">
               <div
@@ -88,28 +77,26 @@ const EmployeeSalaries: React.FC = () => {
                 )}
               </div>
             </td>
-            <td className="py-3 text-center text-green-500 relative">
-              <div
-                onMouseEnter={() => setHoveredInvoice(transaction.id)}
-                onMouseLeave={() => setHoveredInvoice(null)}
-                className="inline-block"
-              >
-                <FaFileInvoice className="cursor-pointer" />
-                {hoveredInvoice === transaction.id && (
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-48 p-2 bg-white border rounded-lg shadow-lg z-10">
-                    <img
-                      src={transaction.invoiceImage}
-                      alt="Invoice"
-                      className="w-full h-auto"
-                    />
-                  </div>
-                )}
+            <td className="py-3 text-center text-green-500">
+              <div className="inline-block">
+                <a
+                  href={transaction.file}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaFileInvoice className="cursor-pointer" />
+                </a>
               </div>
             </td>
           </tr>
         ))}
       </tbody>
     </table>
+  );
+
+  // Filter transactions based on the active tab
+  const filteredTransactions = transactions.filter(
+    (transaction) => transaction.transaction_type === activeTab
   );
 
   return (
@@ -120,33 +107,30 @@ const EmployeeSalaries: React.FC = () => {
           <div className="flex justify-center mb-5 mt-4">
             <button
               className={`px-4 py-2 ${
-                activeTab === "deposit"
+                activeTab === "income"
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200 text-black"
               } rounded`}
-              onClick={() => setActiveTab("deposit")}
+              onClick={() => setActiveTab("income")}
             >
               تراکنش‌های واریزی
             </button>
             <button
               className={`px-4 py-2 ${
-                activeTab === "withdrawal"
+                activeTab === "expense"
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200 text-black"
               } rounded`}
-              onClick={() => setActiveTab("withdrawal")}
+              onClick={() => setActiveTab("expense")}
             >
               تراکنش‌های برداشتی
             </button>
           </div>
-          {activeTab === "deposit" &&
-            renderTransactionTable(depositTransactions)}
-          {activeTab === "withdrawal" &&
-            renderTransactionTable(withdrawalTransactions)}
+          {renderTransactionTable(filteredTransactions)}
         </div>
       </div>
     </div>
   );
 };
 
-export default EmployeeSalaries;
+export default TransactionList;

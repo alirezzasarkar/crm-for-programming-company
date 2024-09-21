@@ -23,4 +23,16 @@ export const fetchSalaries = async () => {
       handleApiError(error);
       throw error;
     }
-  };
+};
+
+
+// دریافت لیست تراکنش‌های واریزی و برداشتی
+export const fetchTransactions = async () => {
+    try {
+      const response = await apiClient.get('/accounting/transactions/');
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error;
+    }
+};
