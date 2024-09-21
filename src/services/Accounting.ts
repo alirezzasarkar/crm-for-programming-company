@@ -11,3 +11,15 @@ export const createTransaction = async (transactionData: any) => {
     throw error;
   }
 };
+
+
+// دریافت لیست حقوق کارمندان
+export const fetchSalaries = async () => {
+    try {
+      const response = await apiClient.get('/accounting/salaries/');
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error;
+    }
+  };

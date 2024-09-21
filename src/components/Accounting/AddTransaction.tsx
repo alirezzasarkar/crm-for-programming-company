@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
+import { createTransaction } from "../../services/Accounting"; // API service for transaction
 
 const TransactionEntry: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -11,26 +12,30 @@ const TransactionEntry: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const transactionType = (
-      event.currentTarget.elements.namedItem(
-        "transactionType"
-      ) as HTMLSelectElement
-    ).value;
-    const amount = (
-      event.currentTarget.elements.namedItem("amount") as HTMLInputElement
-    ).value;
-    const description = (
-      event.currentTarget.elements.namedItem(
-        "description"
-      ) as HTMLTextAreaElement
-    ).value;
+    const form = event.currentTarget;
+    const transactionType = form.transactionType.value;
+    const amount = form.amount.value;
+    const description = form.description.value;
 
+    // Check if a file is selected
     if (selectedFile) {
+      const fileName = selectedFile.name;
+      const fileUrl = `https://adklay-crm.liara.run/media/invoices/${fileName}`;
+
+      // Prepare transaction data to send
+      const transactionData = {
+        transaction_type: transactionType,
+        amount: parseFloat(amount),
+        description: description,
+        file: fileUrl, // Use the constructed file URL
+      };
+
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
+        // Call the API to create a new transaction
+        await createTransaction(transactionData);
 
         Swal.fire({
           title: "موفقیت",
@@ -38,6 +43,10 @@ const TransactionEntry: React.FC = () => {
           icon: "success",
           confirmButtonText: "باشه",
         });
+
+        // Reset form fields
+        form.reset();
+        setSelectedFile(null);
       } catch (error) {
         Swal.fire({
           title: "خطا",
@@ -68,14 +77,14 @@ const TransactionEntry: React.FC = () => {
               name="transactionType"
               className="w-full px-3 py-2 border rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 rtl text-gray-700"
             >
-              <option value="wage">واریز حقوق</option>
-              <option value="deposit">واریز</option>
-              <option value="withdraw">برداشت</option>
+              <option value="income">واریز</option>
+              <option value="expense">برداشت</option>
+              <option value="salary">واریز حقوق</option>
             </select>
           </div>
           <div className="mb-4">
             <label className="block text-right text-gray-600 mb-2 text-sm">
-              مقدار تراکنش
+              (به تومان) مقدار تراکنش
             </label>
             <input
               type="text"
