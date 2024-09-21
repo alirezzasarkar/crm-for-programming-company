@@ -1,33 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaInfoCircle, FaFileInvoice } from "react-icons/fa";
 import Title from "../Common/Title";
+import { fetchSalaries } from "../../services/Accounting"; // ایمپورت API
+import moment from "jalali-moment"; // برای تبدیل تاریخ به شمسی
 
 interface Transaction {
   id: number;
-  name: string;
   date: string;
   amount: string;
   description?: string; // Optional for details
-  invoiceImage?: string; // Optional for invoice display
+  file?: string; // Optional for invoice display
 }
 
-const transactionList: Transaction[] = [
-  {
-    id: 1,
-    name: "علیرضا سرکار",
-    date: "1403/03/02",
-    amount: "100,000,000 تومان",
-    description: "این تراکنش مربوط به پرداخت حقوق ماهانه است.",
-    invoiceImage: "/path/to/invoice1.jpg",
-  },
-  // Add more transactions as needed
-];
-
 const TransactionList: React.FC = () => {
+  const [transactionList, setTransactionList] = useState<Transaction[]>([]);
   const [hoveredTransaction, setHoveredTransaction] = useState<number | null>(
     null
   );
-  const [hoveredInvoice, setHoveredInvoice] = useState<number | null>(null);
+
+  // دریافت داده‌های API
+  useEffect(() => {
+    const getSalaries = async () => {
+      try {
+        const data = await fetchSalaries();
+        setTransactionList(data);
+      } catch (error) {
+        console.error("خطا در دریافت لیست حقوق:", error);
+      }
+    };
+
+    getSalaries();
+  }, []);
+
+  const handleInvoiceClick = (file: string | undefined) => {
+    if (file) {
+      window.open(file, "_blank"); // باز کردن تصویر در یک تب جدید
+    }
+  };
 
   return (
     <div className="p-6 bg-white rounded shadow-md rtl">
@@ -37,9 +46,6 @@ const TransactionList: React.FC = () => {
           <thead>
             <tr>
               <th className="py-2 text-center text-sm font-medium">ردیف</th>
-              <th className="py-2 text-center text-sm font-medium">
-                نام و نام خانوادگی
-              </th>
               <th className="py-2 text-center text-sm font-medium">تاریخ</th>
               <th className="py-2 text-center text-sm font-medium">مبلغ</th>
               <th className="py-2 text-center text-sm font-medium text-blue-500">
@@ -57,10 +63,14 @@ const TransactionList: React.FC = () => {
                 className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
               >
                 <td className="py-3 text-sm text-center">{index + 1}</td>
-                <td className="py-3 text-sm text-center">{transaction.name}</td>
-                <td className="py-3 text-sm text-center">{transaction.date}</td>
                 <td className="py-3 text-sm text-center">
-                  {transaction.amount}
+                  {moment(transaction.date)
+                    .locale("fa")
+                    .format("jYYYY/jMM/jDD")}{" "}
+                  {/* تبدیل تاریخ به شمسی */}
+                </td>
+                <td className="py-3 text-sm text-center">
+                  {transaction.amount} تومان
                 </td>
                 <td className="py-3 text-center text-blue-500 relative">
                   <div
@@ -79,23 +89,12 @@ const TransactionList: React.FC = () => {
                       )}
                   </div>
                 </td>
-                <td className="py-3 text-center text-green-500 relative">
-                  <div
-                    onMouseEnter={() => setHoveredInvoice(transaction.id)}
-                    onMouseLeave={() => setHoveredInvoice(null)}
-                    className="inline-block"
-                  >
-                    <FaFileInvoice className="cursor-pointer" />
-                    {hoveredInvoice === transaction.id &&
-                      transaction.invoiceImage && (
-                        <div className="absolute left-1/2 transform -translate-x-1/2 w-48 p-2 bg-white border rounded-lg shadow-lg z-10">
-                          <img
-                            src={transaction.invoiceImage}
-                            alt="Invoice"
-                            className="w-full h-auto"
-                          />
-                        </div>
-                      )}
+                <td className="py-3 text-center relative text-green-500">
+                  <div className="inline-block">
+                    <FaFileInvoice
+                      className="cursor-pointer"
+                      onClick={() => handleInvoiceClick(transaction.file)} // باز کردن فاکتور در تب جدید
+                    />
                   </div>
                 </td>
               </tr>

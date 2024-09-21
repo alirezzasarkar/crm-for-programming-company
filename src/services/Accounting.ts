@@ -17,6 +17,7 @@ export const createTransaction = async (transactionData: any) => {
 export const fetchSalaries = async () => {
     try {
       const response = await apiClient.get('/accounting/salaries/');
+      console.log(response.data)
       return response.data;
     } catch (error) {
       handleApiError(error);
