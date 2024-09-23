@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaInfoCircle, FaFileInvoice } from "react-icons/fa";
 import Title from "../Common/Title";
-import { fetchTransactions } from "../../services/Accounting"; // Import API
+import { fetchTransactions } from "../../services/accounting"; // Import API
 import moment from "jalali-moment"; // Import the jalaali-moment library
 
 interface Transaction {

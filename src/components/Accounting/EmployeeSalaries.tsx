@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaInfoCircle, FaFileInvoice } from "react-icons/fa";
 import Title from "../Common/Title";
-import { fetchSalaries } from "../../services/Accounting"; // ایمپورت API
+import { fetchSalaries } from "../../services/accounting"; // ایمپورت API
 import moment from "jalali-moment"; // برای تبدیل تاریخ به شمسی
 
 interface Transaction {

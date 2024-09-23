@@ -1,25 +1,24 @@
 import React from "react";
 import { FaEllipsisV } from "react-icons/fa";
+import moment from "jalali-moment";
 import Title from "../Common/Title";
 import ReportFilter from "./ReportFilter";
 import Search from "../Common/Search";
 
 interface Report {
-  index: number;
-  name: string;
+  id: number;
+  user: number;
+  last_name: string;
   team: string;
-  status: string;
+  is_approved: boolean;
   date: string;
 }
 
 interface ReportListProps {
   reports: Report[];
-  teamFilter: string;
   dateFilter: string;
   searchQuery: string;
-  teamOptions: string[];
   dateOptions: string[];
-  onTeamFilterChange: (team: string) => void;
   onDateFilterChange: (date: string) => void;
   onSearchChange: (query: string) => void;
   onReportClick: (report: Report) => void;
@@ -27,42 +26,36 @@ interface ReportListProps {
 
 const ReportList: React.FC<ReportListProps> = ({
   reports,
-  teamFilter,
   dateFilter,
   searchQuery,
-  teamOptions,
   dateOptions,
-  onTeamFilterChange,
   onDateFilterChange,
   onSearchChange,
   onReportClick,
 }) => {
+  // اضافه کردن فیلتر جستجو و تاریخ
   const filteredReports = reports.filter((report) => {
-    const teamMatches =
-      teamFilter === "همه تیم‌ها" || report.team === teamFilter;
     const dateMatches =
       dateFilter === "همه زمان‌ها" || report.date === dateFilter;
-    return teamMatches && dateMatches;
+
+    const searchMatches =
+      searchQuery === "" ||
+      report.last_name.toLowerCase().includes(searchQuery.toLowerCase()); // فیلتر بر اساس نام خانوادگی
+
+    return dateMatches && searchMatches; // فیلتر تاریخ و جستجو
   });
 
   return (
     <>
       <div className="flex rtl mb-5">
         <Search searchQuery={searchQuery} onSearchChange={onSearchChange} />
-
-        <ReportFilter
-          filter={teamFilter}
-          options={teamOptions}
-          label="فیلتر بر اساس تیم"
-          onFilterChange={onTeamFilterChange}
-        />
         <div className="mr-5"></div>
-        <ReportFilter
+        {/* <ReportFilter
           filter={dateFilter}
           options={dateOptions}
           label="فیلتر بر اساس تاریخ"
           onFilterChange={onDateFilterChange}
-        />
+        /> */}
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md rtl">
@@ -85,19 +78,20 @@ const ReportList: React.FC<ReportListProps> = ({
             </tr>
           </thead>
           <tbody>
-            {filteredReports.map((report, index) => (
-              <tr key={index} className="bg-gray-100 hover:bg-gray-200">
-                <td className="py-3 text-sm text-center">{report.name}</td>
+            {filteredReports.map((report, id) => (
+              <tr key={id} className="bg-gray-100 hover:bg-gray-200">
+                <td className="py-3 text-sm text-center">{report.last_name}</td>
                 <td
                   className={`py-3 text-sm text-center ${
-                    report.status === "بررسی شده"
-                      ? "text-green-500"
-                      : "text-red-500"
+                    report.is_approved ? "text-green-500" : "text-red-500"
                   }`}
                 >
-                  {report.status}
+                  {report.is_approved ? "بررسی شده" : "بررسی نشده"}
                 </td>
-                <td className="py-3 text-sm text-center">{report.date}</td>
+                <td className="py-3 text-sm text-center">
+                  {moment(report.date).format("jYYYY/jMM/jDD")}{" "}
+                  {/* Convert to Jalali */}
+                </td>
                 <td className="py-3 text-sm flex justify-center items-center">
                   <FaEllipsisV
                     className="text-gray-500 cursor-pointer"

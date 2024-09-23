@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
-import { createTransaction } from "../../services/Accounting"; // API service for transaction
+import { createTransaction } from "../../services/accounting"; // API service for transaction
 
 const TransactionEntry: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
