@@ -13,15 +13,20 @@ export const getUserProfile = async () => {
 };
 
 // به‌روزرسانی اطلاعات پروفایل کاربر
-export const updateUserProfile = async (profileData: any) => {
+export const updateUserProfile = async (profileData: FormData) => {
   try {
-    const response = await apiClient.put('/users/self/profile/', profileData);  // آدرس درست
+    const response = await apiClient.put('/users/self/profile/', profileData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // تعیین نوع محتوا
+      },
+    });
     return response.data;
   } catch (error) {
     handleApiError(error);
     throw error;
   }
 };
+
 
 // ارسال کد OTP برای تغییر رمز عبور
 export const sendOtpCode = async () => {

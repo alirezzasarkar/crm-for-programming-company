@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import SidebarItem from "./SidebarItem";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { GoProjectRoadmap } from "react-icons/go";
@@ -9,12 +9,16 @@ import { IoIosInformationCircleOutline } from "react-icons/io";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { TbReport } from "react-icons/tb";
 import { FaRegUser } from "react-icons/fa";
+import { useAuth } from "../Authentication/AuthContext"; // Import the AuthContext
+import ProtectedRoute from "./../Authentication/ProtectedRoutes";
 
 interface SidebarProps {
   isOpen: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
+  const { user } = useAuth(); // Get the user from AuthContext
+
   return (
     <div
       className={`bg-blue-100 transition-width duration-300 gradient-sidebar shadow-md h-auto ${
@@ -111,37 +115,39 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           label="اطلاعات کارمندان"
           isOpen={isOpen}
         />
-        <SidebarItem
-          to="/dashboard/accounting"
-          icon={<MdOutlineAccountBalanceWallet />}
-          label="حسابداری"
-          isOpen={isOpen}
-        >
+        <ProtectedRoute allowedRoles={["manager"]}>
           <SidebarItem
-            to="/dashboard/accounting/dashboard"
+            to="/dashboard/accounting"
             icon={<MdOutlineAccountBalanceWallet />}
-            label="داشبورد حسابداری"
+            label="حسابداری"
             isOpen={isOpen}
-          />
-          <SidebarItem
-            to="/dashboard/accounting/add-transaction"
-            icon={<MdOutlineAccountBalanceWallet />}
-            label="وارد کردن تراکنش"
-            isOpen={isOpen}
-          />
-          <SidebarItem
-            to="/dashboard/accounting/employee-salaries"
-            icon={<MdOutlineAccountBalanceWallet />}
-            label="حقوق کارمندان"
-            isOpen={isOpen}
-          />
-          <SidebarItem
-            to="/dashboard/accounting/transaction-list"
-            icon={<MdOutlineAccountBalanceWallet />}
-            label="تراکنش های واریزی و برداشتی"
-            isOpen={isOpen}
-          />
-        </SidebarItem>
+          >
+            <SidebarItem
+              to="/dashboard/accounting/dashboard"
+              icon={<MdOutlineAccountBalanceWallet />}
+              label="داشبورد حسابداری"
+              isOpen={isOpen}
+            />
+            <SidebarItem
+              to="/dashboard/accounting/add-transaction"
+              icon={<MdOutlineAccountBalanceWallet />}
+              label="وارد کردن تراکنش"
+              isOpen={isOpen}
+            />
+            <SidebarItem
+              to="/dashboard/accounting/employee-salaries"
+              icon={<MdOutlineAccountBalanceWallet />}
+              label="حقوق کارمندان"
+              isOpen={isOpen}
+            />
+            <SidebarItem
+              to="/dashboard/accounting/transaction-list"
+              icon={<MdOutlineAccountBalanceWallet />}
+              label="تراکنش های واریزی و برداشتی"
+              isOpen={isOpen}
+            />
+          </SidebarItem>
+        </ProtectedRoute>
         <SidebarItem
           to="/dashboard/reports"
           icon={<TbReport />}

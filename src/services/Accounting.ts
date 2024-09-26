@@ -31,6 +31,19 @@ export const createTransaction = async (transactionData: any, selectedFile: File
 };
 
 
+// دریافت اطلاعات داشبورد
+export const dashboardInfo = async () => {
+  try {
+    const response = await apiClient.get('/accounting/accounting-overview/');
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
+
 
 // دریافت لیست حقوق کارمندان
 export const fetchSalaries = async () => {

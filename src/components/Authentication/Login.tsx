@@ -24,23 +24,36 @@ const LoginPage: React.FC = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const { login } = useAuth();
+  const { login, user } = useAuth(); // Get login and user state from AuthContext
   const navigate = useNavigate();
 
   const onSubmit = async (data: LoginFormData) => {
     try {
       // Attempt to log in the user
       await login(data);
-      // If login is successful, show success message and navigate
-      Swal.fire({
-        title: "ورود موفقیت‌آمیز",
-        text: "شما با موفقیت وارد شدید",
-        icon: "success",
-        confirmButtonText: "باشه",
-        confirmButtonColor: "#3b82f6",
-      }).then(() => {
-        navigate("/dashboard");
-      });
+
+      // Navigate to dashboard if the user is a manager or employee
+      if (user?.role === "manager" || user?.role === "employee") {
+        // Show success message
+        Swal.fire({
+          title: "ورود موفقیت‌آمیز",
+          text: "شما با موفقیت وارد شدید",
+          icon: "success",
+          confirmButtonText: "باشه",
+          confirmButtonColor: "#3b82f6",
+        }).then(() => {
+          navigate("/dashboard");
+        });
+      } else {
+        // Handle cases for other roles if necessary
+        Swal.fire({
+          title: "ورود ناموفق",
+          text: "شما به عنوان کاربر غیرمجاز وارد شدید.",
+          icon: "warning",
+          confirmButtonText: "باشه",
+          confirmButtonColor: "#f87171",
+        });
+      }
     } catch (error) {
       // If an error occurs, show error message
       Swal.fire({

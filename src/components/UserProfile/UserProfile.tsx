@@ -25,7 +25,7 @@ interface ProfileFormInputs {
 }
 
 interface ProfileProps {
-  userProfile: (data: ProfileFormInputs) => Promise<void>;
+  userProfile: (data: FormData) => Promise<void>; // تغییر نوع ورودی
   userProfileData: ProfileFormInputs;
 }
 
@@ -74,7 +74,23 @@ const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
 
   const onSubmit: SubmitHandler<ProfileFormInputs> = async (data) => {
     try {
-      await userProfile(data);
+      const formData = new FormData();
+
+      // افزودن داده‌ها به FormData
+      formData.append("email", data.email);
+      formData.append("name", data.name);
+      formData.append("last_name", data.last_name);
+      formData.append("post_code", data.post_code);
+      formData.append("work_position", data.work_position);
+      formData.append("date_of_birth", data.date_of_birth);
+      formData.append("phone_number", data.phone_number);
+
+      // اگر تصویری انتخاب شده باشد، آن را به FormData اضافه کن
+      if (data.picture && data.picture.length > 0) {
+        formData.append("picture", data.picture[0]); // فقط اولین تصویر را اضافه می‌کنیم
+      }
+
+      await userProfile(formData);
       showSuccessAlert("اطلاعات کاربری با موفقیت ذخیره شد.");
     } catch (error) {
       showErrorAlert("مشکلی در ذخیره اطلاعات کاربری پیش آمد.");
