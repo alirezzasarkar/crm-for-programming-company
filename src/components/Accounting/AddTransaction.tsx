@@ -20,45 +20,44 @@ const TransactionEntry: React.FC = () => {
     const amount = form.amount.value;
     const description = form.description.value;
 
-    // Check if a file is selected
-    if (selectedFile) {
-      const fileName = selectedFile.name;
-      const fileUrl = `https://adklay-crm.liara.run/media/invoices/${fileName}`;
+    // Check if all required data is provided
+    if (!transactionType || !amount || !description) {
+      Swal.fire({
+        title: "خطا",
+        text: "لطفاً تمام فیلدها را پر کنید.",
+        icon: "error",
+        confirmButtonText: "باشه",
+      });
+      return;
+    }
 
+    try {
       // Prepare transaction data to send
       const transactionData = {
         transaction_type: transactionType,
         amount: parseFloat(amount),
         description: description,
-        file: fileUrl, // Use the constructed file URL
       };
 
-      try {
-        // Call the API to create a new transaction
-        await createTransaction(transactionData);
+      // Call the API to create a new transaction with selected file
+      await createTransaction(transactionData, selectedFile);
 
-        Swal.fire({
-          title: "موفقیت",
-          text: `تراکنش با موفقیت ذخیره شد. فایل پیوست شده: ${selectedFile.name}`,
-          icon: "success",
-          confirmButtonText: "باشه",
-        });
+      Swal.fire({
+        title: "موفقیت",
+        text: `تراکنش با موفقیت ذخیره شد. ${
+          selectedFile ? `فایل پیوست شده: ${selectedFile.name}` : ""
+        }`,
+        icon: "success",
+        confirmButtonText: "باشه",
+      });
 
-        // Reset form fields
-        form.reset();
-        setSelectedFile(null);
-      } catch (error) {
-        Swal.fire({
-          title: "خطا",
-          text: "مشکلی در ذخیره تراکنش پیش آمد.",
-          icon: "error",
-          confirmButtonText: "باشه",
-        });
-      }
-    } else {
+      // Reset form fields
+      form.reset();
+      setSelectedFile(null);
+    } catch (error) {
       Swal.fire({
         title: "خطا",
-        text: "لطفاً یک فایل پیوست کنید.",
+        text: "مشکلی در ذخیره تراکنش پیش آمد.",
         icon: "error",
         confirmButtonText: "باشه",
       });

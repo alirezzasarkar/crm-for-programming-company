@@ -20,24 +20,35 @@ export const handleApiError = (error: unknown) => {
       switch (axiosError.response.status) {
         case 400:
           title = 'خطای درخواست';
-          message = axiosError.response.data?.message || 'درخواست شما نادرست است.';
+          
+          // بررسی پیام خطای خاص "You have already submitted a report for today."
+          if (axiosError.response.data?.message === "You have already submitted a report for today.") {
+            message = 'شما گزارش کار امروز را ارسال کرده‌اید.';
+          } else {
+            message = axiosError.response.data?.message || 'درخواست شما نادرست است.';
+          }
           break;
+
         case 401:
           title = 'عدم مجوز';
           message = axiosError.response.data?.message || 'شما مجاز به انجام این عملیات نیستید.';
           break;
+
         case 403:
           title = 'دسترسی ممنوع';
           message = axiosError.response.data?.message || 'دسترسی شما به این منبع مسدود شده است.';
           break;
+
         case 404:
           title = 'یافت نشد';
           message = axiosError.response.data?.message || 'منبع درخواستی یافت نشد.';
           break;
+
         case 500:
           title = 'خطای سرور';
           message = axiosError.response.data?.message || 'مشکلی در سرور رخ داده است.';
           break;
+
         default:
           title = 'خطا';
           message = axiosError.response.data?.message || 'یک خطا رخ داده است.';

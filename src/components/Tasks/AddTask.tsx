@@ -54,7 +54,6 @@ const AddTask: React.FC = () => {
     if (event.target.files) {
       const selectedFile = event.target.files[0];
       if (selectedFile.size > 10 * 1024 * 1024) {
-        // 10 MB check
         Swal.fire({
           icon: "error",
           title: "فایل بیش از حد بزرگ است",
@@ -78,27 +77,29 @@ const AddTask: React.FC = () => {
       return;
     }
 
-    const fileUrl = file
-      ? `https://adklay-crm.liara.run/media/task_files/${file.name}`
-      : null;
-
-    const taskData = {
-      title,
-      description: details,
-      due_date: dueDate ? dueDate.toDate().toISOString() : null,
-      file: fileUrl, // Use the correct file URL format
-      receiver: assignedTo,
-      sender: senderId,
-      status: "undone",
-    };
-
     try {
-      await createTask(taskData);
+      // ایجاد FormData برای ارسال فایل و داده‌ها
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", details);
+      if (dueDate) {
+        formData.append("due_date", dueDate.toDate().toISOString());
+      }
+      if (file) {
+        formData.append("file", file); // اضافه کردن فایل به فرم دیتا
+      }
+      formData.append("receiver", assignedTo.toString());
+      formData.append("sender", senderId.toString());
+      formData.append("status", "undone");
+
+      await createTask(formData);
+
       await Swal.fire({
         icon: "success",
         title: "تسک با موفقیت ثبت شد",
         text: "تسک شما با موفقیت ارسال شد.",
       });
+
       setTitle("");
       setAssignedTo("");
       setDueDate(null);

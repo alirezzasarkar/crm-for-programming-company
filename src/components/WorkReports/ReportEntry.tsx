@@ -1,32 +1,17 @@
 import React, { useState, useEffect } from "react";
-import WeekDaysSlider from "../Common/WeekDays";
 import Title from "../Common/Title";
-import { getWeekDates, getStartOfWeek } from "../../utils/dateUtils";
 import moment from "jalali-moment";
 import Swal from "sweetalert2";
 import { createReport } from "../../services/report"; // Adjust the path as needed
 
 const WorkReportForm: React.FC = () => {
-  const [description, setDescription] = useState("");
-  const [activeDayIndex, setActiveDayIndex] = useState(0);
-  const [weekDays, setWeekDays] = useState<{ name: string; date: string }[]>(
-    []
-  );
+  const [content, setContent] = useState("");
+  const [todayDate, setTodayDate] = useState<string>("");
 
+  // تنظیم تاریخ امروز در فرمت شمسی برای نمایش
   useEffect(() => {
-    const today = moment();
-    const startOfWeek = getStartOfWeek(today);
-    setWeekDays(getWeekDates(startOfWeek));
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const today = moment();
-      const startOfWeek = getStartOfWeek(today);
-      setWeekDays(getWeekDates(startOfWeek));
-    }, 24 * 60 * 60 * 1000); // Every 24 hours
-
-    return () => clearInterval(interval);
+    const today = moment().format("jYYYY/jMM/jDD"); // تاریخ امروز به صورت شمسی
+    setTodayDate(today);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,8 +19,7 @@ const WorkReportForm: React.FC = () => {
 
     try {
       await createReport({
-        description,
-        date: weekDays[activeDayIndex].date,
+        content, // فقط فیلد content ارسال می‌شود
       });
 
       Swal.fire({
@@ -45,9 +29,8 @@ const WorkReportForm: React.FC = () => {
         confirmButtonText: "باشه",
       });
 
-      // Optionally reset the form
-      setDescription("");
-      setActiveDayIndex(0);
+      // پاکسازی فرم بعد از ارسال موفق
+      setContent("");
     } catch (error) {
       Swal.fire({
         title: "خطا",
@@ -58,23 +41,17 @@ const WorkReportForm: React.FC = () => {
     }
   };
 
-  const handleDayClick = (index: number) => {
-    setActiveDayIndex(index);
-  };
-
   return (
     <div className="p-4 bg-white rounded shadow-md rtl">
       <Title title="ارسال گزارش کار" />
-      <WeekDaysSlider
-        days={weekDays}
-        activeDate={weekDays[activeDayIndex].date}
-        onDayClick={handleDayClick}
-      />
+      <div className="text-right my-4 text-gray-500 text-xs">
+        تاریخ امروز: {todayDate} {/* نمایش تاریخ شمسی */}
+      </div>
       <form onSubmit={handleSubmit}>
         <textarea
           className="w-full h-40 p-2 border rounded mb-4"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
           placeholder="توضیحات"
         ></textarea>
         <button

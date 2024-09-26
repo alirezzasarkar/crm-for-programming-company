@@ -10,34 +10,32 @@ import { jwtDecode } from "jwt-decode"; // برای دیکود کردن JWT
 interface Task {
   id: number;
   sender: string;
-  receiver: number; // اضافه کردن receiver به مدل
+  receiver: number;
   team: string;
   title: string;
   due_date: string;
   status: string;
   details: string;
-  type: "sent" | "received"; // نوع تسک
+  type: "sent" | "received";
 }
 
 interface JwtPayload {
-  user_id: number; // فرض اینکه id در توکن موجود است
-  // می‌توانید فیلدهای بیشتری اضافه کنید که در JWT شما موجود هستند
+  user_id: number;
 }
 
 const TaskListPage: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [usid, setUsId] = useState<number | null>(null); // ذخیره ID فرستنده
+  const [usid, setUsId] = useState<number | null>(null);
   const [filter, setFilter] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); // برای ذخیره عبارت جستجو
   const navigate = useNavigate();
 
-  // دریافت JWT Token از localStorage و دیکود کردن آن
   useEffect(() => {
-    const token = localStorage.getItem("authToken"); // گرفتن JWT از localStorage
+    const token = localStorage.getItem("authToken");
     if (token) {
       try {
-        const decoded: JwtPayload = jwtDecode(token); // دیکود کردن JWT
-        setUsId(decoded.user_id); // ذخیره ID فرستنده
+        const decoded: JwtPayload = jwtDecode(token);
+        setUsId(decoded.user_id);
       } catch (error) {
         console.error("خطا در دیکود کردن JWT:", error);
       }
@@ -49,24 +47,21 @@ const TaskListPage: React.FC = () => {
       try {
         const data = await fetchTasks();
 
-        // دریافت نام خانوادگی بر اساس id و جایگزینی آن با sender
         const updatedTasks = await Promise.all(
           data.map(async (task: any) => {
             const userProfile = await getUserProfile(task.sender);
 
-            // تبدیل تاریخ میلادی به شمسی
             const persianDueDate = moment(task.due_date)
               .locale("fa")
               .format("YYYY/MM/DD");
 
-            // تعیین نوع تسک
             const type = task.receiver === usid ? "received" : "sent";
 
             return {
               ...task,
-              sender: userProfile.last_name,
+              sender: userProfile.last_name, // استفاده از نام خانوادگی
               due_date: persianDueDate,
-              type: type, // تعیین نوع تسک
+              type: type,
             };
           })
         );
@@ -80,11 +75,15 @@ const TaskListPage: React.FC = () => {
     getTasks();
   }, [usid]);
 
-  // فیلتر کردن تسک‌ها براساس نوع آن‌ها
+  // فیلتر کردن تسک‌ها بر اساس نوع آنها
   const filteredTasks =
     filter === "all" ? tasks : tasks.filter((task) => task.type === filter);
 
-  // تابع کلیک بر روی تسک
+  // جستجوی تسک‌ها بر اساس نام خانوادگی فرستنده
+  const searchedTasks = filteredTasks.filter((task) =>
+    task.sender.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const handleTaskClick = (id: number) => {
     navigate(`/dashboard/tasks/detail/${id}`);
   };
@@ -92,10 +91,12 @@ const TaskListPage: React.FC = () => {
   return (
     <>
       <div className="flex justify-start mb-4 rtl">
-        <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />{" "}
+        {/* جستجو */}
         <TaskFilter filter={filter} onFilterChange={setFilter} />
       </div>
-      <TaskList tasks={filteredTasks} onTaskClick={handleTaskClick} />
+      <TaskList tasks={searchedTasks} onTaskClick={handleTaskClick} />{" "}
+      {/* استفاده از تسک‌های فیلتر شده */}
     </>
   );
 };

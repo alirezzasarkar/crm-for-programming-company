@@ -9,17 +9,19 @@ interface TaskDetailsProps {
   status: string;
   title: string;
   description: string;
-  onComplete: () => void; // تابع برای به روز رسانی وضعیت
-  showCompleteButton: boolean; // prop برای کنترل نمایش دکمه
+  fileUrl?: string; // لینک فایل اضافه شده
+  onComplete: () => void;
+  showCompleteButton: boolean;
 }
 
 const TaskDetails: React.FC<TaskDetailsProps> = ({
   sender,
   team,
   due_date,
-  status, // دریافت مستقیم status از props
+  status,
   title,
   description,
+  fileUrl, // لینک فایل دریافت شده
   onComplete,
   showCompleteButton,
 }) => {
@@ -31,7 +33,7 @@ const TaskDetails: React.FC<TaskDetailsProps> = ({
       case "undone":
         return "انجام نشده";
       default:
-        return status; // اگر وضعیت نامشخص باشد
+        return status;
     }
   };
 
@@ -76,9 +78,17 @@ const TaskDetails: React.FC<TaskDetailsProps> = ({
           </div>
         </div>
         <div className="mt-10">
-          <button className="px-10 py-2 bg-gray-200 text-blue-700 rounded-xl">
-            باز کردن فایل ارسال شده
-          </button>
+          {fileUrl ? (
+            <a
+              href={fileUrl}
+              download
+              className="px-10 py-2 bg-gray-200 text-blue-700 rounded-xl"
+            >
+              باز کردن فایل ارسال شده
+            </a>
+          ) : (
+            <p className="text-gray-500">فایلی ارسال نشده است</p>
+          )}
         </div>
       </div>
     </div>

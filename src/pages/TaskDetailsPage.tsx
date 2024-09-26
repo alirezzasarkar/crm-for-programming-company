@@ -44,6 +44,7 @@ const TaskDetailsPage: React.FC = () => {
           .locale("fa")
           .format("YYYY/MM/DD");
 
+        // اطمینان از اینکه فایل هم در تسک وجود دارد
         setTask({ ...taskData, due_date: persianDueDate });
       } catch (error) {
         setError("خطا در بارگذاری تسک");
@@ -85,7 +86,7 @@ const TaskDetailsPage: React.FC = () => {
   }
 
   if (!task) {
-    return <div>Task not found</div>;
+    return <div>تسکی پیدا نشد</div>; // متن به زبان فارسی
   }
 
   return (
@@ -96,8 +97,9 @@ const TaskDetailsPage: React.FC = () => {
       status={task.status}
       title={task.title}
       description={task.description}
+      fileUrl={task.file} // لینک فایل از تسک
       onComplete={handleCompleteTask} // اضافه کردن تابع به کامپوننت TaskDetails
-      showCompleteButton={task.receiver == userId} // نمایش دکمه فقط اگر کاربر دریافت‌کننده نباشد
+      showCompleteButton={task.receiver === userId} // نمایش دکمه فقط اگر کاربر دریافت‌کننده نباشد
     />
   );
 };
