@@ -16,18 +16,39 @@ export const getEmployees = async () => {
 // ایجاد پروژه جدید
 export const createProject = async (projectData: ProjectFormInputs) => {
   try {
-    const response = await apiClient.post('/projects/projects/', projectData);
+    const formData = new FormData();
+
+    // Append other project data fields
+    for (const key in projectData) {
+      if (Array.isArray(projectData[key])) {
+        projectData[key].forEach((file: File) => {
+          formData.append(key, file); // Append each file to the FormData
+        });
+      } else {
+        formData.append(key, projectData[key]); // Append other fields
+      }
+    }
+
+    const response = await apiClient.post('/projects/projects/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Set content type for form data
+      },
+    });
+
     return response.data;
   } catch (error) {
-    handleApiError(error);
-    throw error;
+    console.error("خطا در ایجاد پروژه:", error);
+    // You might want to handle errors more gracefully, maybe throw them or show a message
+    throw error; // Rethrow or handle as per your application logic
   }
 };
+
 
 // دریافت لیست پروژه‌ها
 export const fetchProjects = async () => {
   try {
     const response = await apiClient.get('/projects/projects/');
+    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);

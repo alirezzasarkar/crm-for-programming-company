@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Button from "../Common/Button";
-import { FaSave, FaTimes } from "react-icons/fa";
+import { FaSave } from "react-icons/fa";
 import Title from "../Common/Title";
 import { ProjectFormInputs, Employee } from "../../pages/AddProjectPage";
 import { UseFormRegister, UseFormSetValue, FieldErrors } from "react-hook-form";
@@ -24,6 +24,19 @@ interface AddProjectProps {
   selectedResponsiblePerson: number;
   onResponsiblePersonSelect: (id: number) => void;
 }
+
+const fieldLabelsAndPlaceholders: Record<
+  keyof ProjectFormInputs,
+  { label: string; placeholder: string }
+> = {
+  domain_end_date: {
+    label: "تاریخ اتمام دامین",
+    placeholder: "تاریخ اتمام دامین",
+  },
+  host_end_date: { label: "تاریخ اتمام هاست", placeholder: "تاریخ اتمام هاست" },
+  start_date: { label: "تاریخ شروع", placeholder: "تاریخ شروع" },
+  end_date: { label: "تاریخ اتمام", placeholder: "تاریخ اتمام" },
+};
 
 const projectStatusOptions = [
   { value: "not_started", label: "شروع نشده" },
@@ -61,8 +74,8 @@ const AddProject: React.FC<AddProjectProps> = ({
   };
 
   const handleRemove = (id: number) => {
-    onClearSelection(); // پاک کردن اعضای تیم از حالت انتخاب
-    // برای حذف دقیق‌تر می‌توانید از روش‌های دیگر نیز استفاده کنید
+    onClearSelection();
+    // Here you might want to remove the specific team member from the state
   };
 
   const selectedResponsiblePersonName =
@@ -109,6 +122,7 @@ const AddProject: React.FC<AddProjectProps> = ({
           register={register}
           errors={errors}
         />
+
         <DropdownField
           id="team_members"
           label="اعضای تیم"
@@ -118,7 +132,7 @@ const AddProject: React.FC<AddProjectProps> = ({
           dropdownOpen={dropdownOpen}
           handleToggle={handleDropdownToggle}
           handleSelect={handleEmployeeClick}
-          handleRemove={handleRemove} // اضافه کردن تابع حذف
+          handleRemove={handleRemove}
           value={selectedTeamMembersNames}
           errors={errors}
         />
@@ -140,6 +154,7 @@ const AddProject: React.FC<AddProjectProps> = ({
           value={selectedResponsiblePersonName}
           errors={errors}
         />
+
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="status"
@@ -170,48 +185,38 @@ const AddProject: React.FC<AddProjectProps> = ({
             )}
           </div>
         </div>
-        <DatePickerField
-          id="domain_end_date"
-          label="تاریخ اتمام دامین"
-          placeholder="تاریخ اتمام دامین"
-          errors={errors}
-          register={register}
-          setValue={setValue}
-        />
-        <DatePickerField
-          id="host_end_date"
-          label="تاریخ اتمام هاست"
-          placeholder="تاریخ اتمام هاست"
-          errors={errors}
-          register={register}
-          setValue={setValue}
-        />
-        <DatePickerField
-          id="start_date"
-          label="تاریخ شروع"
-          placeholder="تاریخ شروع"
-          errors={errors}
-          register={register}
-          setValue={setValue}
-        />
-        <DatePickerField
-          id="end_date"
-          label="تاریخ اتمام"
-          placeholder="تاریخ اتمام"
-          errors={errors}
-          register={register}
-          setValue={setValue}
-        />
+
+        {/* Date Picker Fields */}
+        {(
+          [
+            "domain_end_date",
+            "host_end_date",
+            "start_date",
+            "end_date",
+          ] as Array<keyof ProjectFormInputs>
+        ).map((field) => (
+          <DatePickerField
+            key={field}
+            id={field}
+            label={fieldLabelsAndPlaceholders[field].label} // Get the Persian label
+            placeholder={fieldLabelsAndPlaceholders[field].placeholder} // Get the Persian placeholder
+            errors={errors}
+            register={register}
+            setValue={setValue}
+          />
+        ))}
+
         <FileUploadField
           id="design_files"
           label="فایل‌های دیزاین"
-          setValue={setValue}
+          setValue={setValue} // Use setValue directly from the form hook
         />
         <FileUploadField
           id="contract_files"
           label="فایل قرارداد"
-          setValue={setValue}
+          setValue={setValue} // Use setValue directly from the form hook
         />
+
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="description"
