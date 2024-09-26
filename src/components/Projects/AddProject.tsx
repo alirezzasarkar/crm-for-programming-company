@@ -25,19 +25,6 @@ interface AddProjectProps {
   onResponsiblePersonSelect: (id: number) => void;
 }
 
-const fieldLabelsAndPlaceholders: Record<
-  keyof ProjectFormInputs,
-  { label: string; placeholder: string }
-> = {
-  domain_end_date: {
-    label: "تاریخ اتمام دامین",
-    placeholder: "تاریخ اتمام دامین",
-  },
-  host_end_date: { label: "تاریخ اتمام هاست", placeholder: "تاریخ اتمام هاست" },
-  start_date: { label: "تاریخ شروع", placeholder: "تاریخ شروع" },
-  end_date: { label: "تاریخ اتمام", placeholder: "تاریخ اتمام" },
-};
-
 const projectStatusOptions = [
   { value: "not_started", label: "شروع نشده" },
   { value: "in_progress", label: "در حال انجام" },
@@ -198,8 +185,8 @@ const AddProject: React.FC<AddProjectProps> = ({
           <DatePickerField
             key={field}
             id={field}
-            label={fieldLabelsAndPlaceholders[field].label} // Get the Persian label
-            placeholder={fieldLabelsAndPlaceholders[field].placeholder} // Get the Persian placeholder
+            label={field.replace(/_/g, " ")} // Replace underscores with spaces for labels
+            placeholder={field.replace(/_/g, " ")} // Same for placeholders
             errors={errors}
             register={register}
             setValue={setValue}
