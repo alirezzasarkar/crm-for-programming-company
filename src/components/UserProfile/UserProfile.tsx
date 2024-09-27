@@ -8,7 +8,7 @@ import Button from "../../components/Common/Button";
 import TextField from "../../components/Common/TextField";
 import { FaSave, FaUpload } from "react-icons/fa";
 import Title from "../Common/Title";
-import Modal from "../Common/Modal"; // Import the Modal component
+import Modal from "../Common/Modal";
 
 interface ProfileFormInputs {
   email: string;
@@ -25,7 +25,7 @@ interface ProfileFormInputs {
 }
 
 interface ProfileProps {
-  userProfile: (data: FormData) => Promise<void>; // تغییر نوع ورودی
+  userProfile: (data: FormData) => Promise<void>;
   userProfileData: ProfileFormInputs;
 }
 
@@ -34,6 +34,7 @@ const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ProfileFormInputs>({
     resolver: yupResolver(profileSchema),
@@ -41,6 +42,12 @@ const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
   });
 
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [uploadedImageName, setUploadedImageName] = useState<string | null>(
+    null
+  );
+  const [selectedDateOfBirth, setSelectedDateOfBirth] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     if (userProfileData) {
@@ -51,6 +58,7 @@ const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
       setValue("work_position", userProfileData.work_position);
       setValue("date_of_birth", userProfileData.date_of_birth);
       setValue("phone_number", userProfileData.phone_number);
+      setSelectedDateOfBirth(userProfileData.date_of_birth); // نمایش تاریخ تولد اولیه
     }
   }, [userProfileData, setValue]);
 
@@ -76,7 +84,6 @@ const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
     try {
       const formData = new FormData();
 
-      // افزودن داده‌ها به FormData
       formData.append("email", data.email);
       formData.append("name", data.name);
       formData.append("last_name", data.last_name);
@@ -85,9 +92,8 @@ const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
       formData.append("date_of_birth", data.date_of_birth);
       formData.append("phone_number", data.phone_number);
 
-      // اگر تصویری انتخاب شده باشد، آن را به FormData اضافه کن
       if (data.picture && data.picture.length > 0) {
-        formData.append("picture", data.picture[0]); // فقط اولین تصویر را اضافه می‌کنیم
+        formData.append("picture", data.picture[0]);
       }
 
       await userProfile(formData);
@@ -194,18 +200,25 @@ const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
               placeholder="تاریخ"
               onChange={(date) => {
                 if (date) {
-                  const formattedDate = date.format("YYYY-MM-DD"); // فرمت دلخواه خود را استفاده کنید
+                  const formattedDate = date.format("YYYY-MM-DD");
                   setValue("date_of_birth", formattedDate, {
                     shouldValidate: true,
                   });
+                  setSelectedDateOfBirth(formattedDate); // ذخیره تاریخ انتخاب شده
                 } else {
-                  setValue("date_of_birth", "", { shouldValidate: true }); // اگر تاریخ انتخاب نشده است
+                  setValue("date_of_birth", "", { shouldValidate: true });
+                  setSelectedDateOfBirth(null); // اگر تاریخ حذف شد
                 }
               }}
             />
             {errors.date_of_birth && (
               <p className="text-red-500 text-xs pt-1">
                 {errors.date_of_birth.message}
+              </p>
+            )}
+            {selectedDateOfBirth && (
+              <p className="text-gray-600 text-xs mt-1">
+                تاریخ تولد انتخاب شده است.
               </p>
             )}
           </div>
@@ -219,9 +232,14 @@ const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
             <input
               id="picture"
               type="file"
-              onChange={(e) =>
-                e.target.files && setValue("picture", e.target.files)
-              }
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setValue("picture", e.target.files);
+                  setUploadedImageName(e.target.files[0].name); // ذخیره نام فایل
+                } else {
+                  setUploadedImageName(null); // اگر فایل انتخاب نشده است
+                }
+              }}
               className="hidden"
             />
             <label
@@ -233,8 +251,14 @@ const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
               </span>
               <FaUpload className="text-gray-400 mr-2" />
             </label>
+            {uploadedImageName && (
+              <p className="text-gray-600 text-xs mt-1">
+                فایل انتخاب شده: {uploadedImageName}
+              </p>
+            )}
           </div>
         </div>
+
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">
           <label
             htmlFor="phone_number"
@@ -255,6 +279,7 @@ const Profile: React.FC<ProfileProps> = ({ userProfile, userProfileData }) => {
             )}
           </div>
         </div>
+
         <div className="col-span-2 flex mt-20 justify-around w-1/4 mx-auto">
           <Button
             type="submit"
