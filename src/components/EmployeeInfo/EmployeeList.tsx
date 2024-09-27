@@ -32,16 +32,16 @@ const EmployeeList: React.FC<EmployeeListProps> = ({
           <th className="py-2 text-center text-sm font-medium pb-5">
             اطلاعات بیشتر
           </th>
-          <th className="py-2 text-center text-sm font-medium pb-5">
+          {/* <th className="py-2 text-center text-sm font-medium pb-5">
             ویرایش اطلاعات
-          </th>
+          </th> */}
           <th className="py-2 text-center text-sm font-medium pb-5">حذف</th>
         </tr>
       </thead>
       <tbody>
-        {employees.map((employee) => (
+        {employees.map((employee, index) => (
           <tr key={employee.id} className="bg-gray-100 hover:bg-gray-200">
-            <td className="py-3 text-sm text-center">{employee.index}</td>
+            <td className="py-3 text-sm text-center">{index + 1}</td>
             <td className="py-3 text-sm text-center">
               {employee.name} {employee.last_name}
             </td>
@@ -57,14 +57,14 @@ const EmployeeList: React.FC<EmployeeListProps> = ({
                 onClick={() => onMoreInfoClick(employee)}
               />
             </td>
-            <td className="py-3 text-sm text-center">
+            {/* <td className="py-3 text-sm text-center">
               <Link
                 to={`/dashboard/profile/${employee.id}`}
                 className="text-orange-500"
               >
                 <FaPencilAlt className="cursor-pointer mx-auto" />
               </Link>
-            </td>
+            </td> */}
             <td className="py-3 text-sm text-center">
               <FaTrashAlt
                 className="text-red-500 cursor-pointer mx-auto"

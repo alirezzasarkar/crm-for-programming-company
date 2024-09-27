@@ -5,6 +5,7 @@ import EmployeeModal from "../components/EmployeeInfo/EmployeeModal";
 import EmployeeFilter from "../components/EmployeeInfo/EmployeeFilter";
 import Title from "../components/Common/Title";
 import { getEmployees, deleteEmployee } from "../services/employee";
+import LoadingSpinner from "../components/Common/Loading"; // Import LoadingSpinner component
 
 export interface Employee {
   id: number;
@@ -30,14 +31,18 @@ const EmployeeListPage: React.FC = () => {
     direction: "ascending" | "descending";
   } | null>(null);
   const [filter, setFilter] = useState("نام و نام خانوادگی");
+  const [loading, setLoading] = useState<boolean>(true); // State for loading
 
   useEffect(() => {
     const fetchEmployees = async () => {
+      setLoading(true); // Set loading to true before fetching data
       try {
         const data = await getEmployees();
         setEmployees(data);
       } catch (error) {
         console.error("Error fetching employees:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
@@ -102,6 +107,10 @@ const EmployeeListPage: React.FC = () => {
       console.error("Error deleting employee:", error);
     }
   };
+
+  if (loading) {
+    return <LoadingSpinner />; // Show loading spinner while data is being fetched
+  }
 
   return (
     <>

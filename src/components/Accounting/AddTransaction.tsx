@@ -4,6 +4,8 @@ import { createTransaction } from "../../services/accounting"; // API service fo
 
 const TransactionEntry: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false); // State for loading
+  const [amountError, setAmountError] = useState<string>(""); // State for amount error
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -14,13 +16,14 @@ const TransactionEntry: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setAmountError(""); // Reset amount error
 
     const form = event.currentTarget;
     const transactionType = form.transactionType.value;
     const amount = form.amount.value;
     const description = form.description.value;
 
-    // Check if all required data is provided
+    // Validate amount
     if (!transactionType || !amount || !description) {
       Swal.fire({
         title: "خطا",
@@ -30,6 +33,13 @@ const TransactionEntry: React.FC = () => {
       });
       return;
     }
+
+    if (isNaN(Number(amount)) || Number(amount) <= 0) {
+      setAmountError("لطفاً مقدار صحیح و مثبتی وارد کنید.");
+      return;
+    }
+
+    setLoading(true); // Start loading
 
     try {
       // Prepare transaction data to send
@@ -61,6 +71,8 @@ const TransactionEntry: React.FC = () => {
         icon: "error",
         confirmButtonText: "باشه",
       });
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -88,8 +100,13 @@ const TransactionEntry: React.FC = () => {
             <input
               type="text"
               name="amount"
-              className="w-full px-3 py-2 border rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-700"
+              className={`w-full px-3 py-2 border rounded-md text-right focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-gray-700 ${
+                amountError ? "border-red-500" : ""
+              }`}
             />
+            {amountError && (
+              <p className="text-red-500 text-sm">{amountError}</p>
+            )}
           </div>
           <div className="mb-4">
             <label className="block text-right text-gray-600 mb-2 text-sm">
@@ -121,8 +138,9 @@ const TransactionEntry: React.FC = () => {
             <button
               type="submit"
               className="py-2 px-6 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+              disabled={loading} // Disable button while loading
             >
-              ذخیره تراکنش
+              {loading ? "در حال ذخیره..." : "ذخیره تراکنش"}
             </button>
           </div>
         </form>

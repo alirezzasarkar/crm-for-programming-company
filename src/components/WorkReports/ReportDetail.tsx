@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import Title from "../Common/Title";
 import moment from "jalali-moment";
 import Swal from "sweetalert2"; // Import SweetAlert2
+import LoadingSpinner from "../Common/Loading"; // Import LoadingSpinner component
 import { getReportDetails, approveReport } from "../../services/report";
 
 interface Report {
@@ -16,6 +16,7 @@ interface Report {
 const ReportDetails: React.FC<{ reportId: number }> = ({ reportId }) => {
   const [report, setReport] = useState<Report | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isApproving, setIsApproving] = useState<boolean>(false); // مدیریت حالت تایید
 
   useEffect(() => {
     const fetchReportData = async () => {
@@ -24,6 +25,12 @@ const ReportDetails: React.FC<{ reportId: number }> = ({ reportId }) => {
         setReport(fetchedReport);
       } catch (error) {
         console.error("Failed to fetch report details", error);
+        Swal.fire({
+          icon: "error",
+          title: "خطا",
+          text: "مشکلی در بارگیری جزئیات گزارش پیش آمد.",
+          confirmButtonText: "باشه",
+        });
       } finally {
         setLoading(false);
       }
@@ -34,6 +41,7 @@ const ReportDetails: React.FC<{ reportId: number }> = ({ reportId }) => {
 
   const handleApprove = async () => {
     if (report && !report.is_approved) {
+      setIsApproving(true);
       try {
         await approveReport(reportId);
         setReport(
@@ -57,16 +65,14 @@ const ReportDetails: React.FC<{ reportId: number }> = ({ reportId }) => {
           text: "تایید گزارش با مشکل مواجه شد.",
           confirmButtonText: "باشه",
         });
+      } finally {
+        setIsApproving(false);
       }
     }
   };
 
   if (loading) {
-    return <p>در حال بارگذاری...</p>;
-  }
-
-  if (!report) {
-    return <p>گزارش کار یافت نشد.</p>;
+    return <LoadingSpinner />; // نمایش اسپینر لودینگ تا زمانی که اطلاعات بارگذاری نشده
   }
 
   return (
@@ -88,9 +94,13 @@ const ReportDetails: React.FC<{ reportId: number }> = ({ reportId }) => {
           report.is_approved ? "bg-green-500" : "bg-orange-600"
         } text-white`}
         onClick={handleApprove}
-        disabled={report.is_approved} // دکمه غیر فعال می‌شود اگر تایید شده باشد
+        disabled={report.is_approved || isApproving} // دکمه غیر فعال می‌شود اگر تایید شده باشد یا در حال تایید باشد
       >
-        {report.is_approved ? "بررسی شده" : "گزارش کار تایید نشده"}
+        {isApproving
+          ? "در حال تایید..."
+          : report.is_approved
+          ? "بررسی شده"
+          : "گزارش کار تایید نشده"}
       </button>
     </div>
   );

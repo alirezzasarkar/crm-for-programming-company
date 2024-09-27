@@ -3,6 +3,7 @@ import { FaInfoCircle, FaFileInvoice } from "react-icons/fa";
 import Title from "../Common/Title";
 import { fetchSalaries } from "../../services/accounting"; // ایمپورت API
 import moment from "jalali-moment"; // برای تبدیل تاریخ به شمسی
+import LoadingSpinner from "../Common/Loading"; // Import LoadingSpinner component
 
 interface Transaction {
   id: number;
@@ -17,15 +18,19 @@ const TransactionList: React.FC = () => {
   const [hoveredTransaction, setHoveredTransaction] = useState<number | null>(
     null
   );
+  const [loading, setLoading] = useState<boolean>(true); // State for loading
 
   // دریافت داده‌های API
   useEffect(() => {
     const getSalaries = async () => {
+      setLoading(true); // Set loading to true before fetching data
       try {
         const data = await fetchSalaries();
         setTransactionList(data);
       } catch (error) {
         console.error("خطا در دریافت لیست حقوق:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
@@ -37,6 +42,10 @@ const TransactionList: React.FC = () => {
       window.open(file, "_blank"); // باز کردن تصویر در یک تب جدید
     }
   };
+
+  if (loading) {
+    return <LoadingSpinner />; // Show loading spinner while data is being fetched
+  }
 
   return (
     <div className="p-6 bg-white rounded shadow-md rtl">

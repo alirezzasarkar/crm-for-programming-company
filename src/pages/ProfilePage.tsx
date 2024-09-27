@@ -7,7 +7,7 @@ import {
   sendOtpCode,
   changePassword,
 } from "../services/profile"; // تغییر مسیر به profileAPI
-import LoadingSpinner from "../components/Common/LoadingSpinner"; // اضافه کردن کامپوننت لودینگ اسپینر
+import LoadingSpinner from "../components/Common/Loading"; // اضافه کردن کامپوننت لودینگ اسپینر
 
 const ProfilePage: React.FC = () => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);

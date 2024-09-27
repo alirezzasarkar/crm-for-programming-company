@@ -3,6 +3,7 @@ import { FaInfoCircle, FaFileInvoice } from "react-icons/fa";
 import Title from "../Common/Title";
 import { fetchTransactions } from "../../services/accounting"; // Import API
 import moment from "jalali-moment"; // Import the jalaali-moment library
+import LoadingSpinner from "../Common/Loading"; // Import LoadingSpinner component
 
 interface Transaction {
   id: number;
@@ -19,15 +20,19 @@ const TransactionList: React.FC = () => {
   const [hoveredTransaction, setHoveredTransaction] = useState<number | null>(
     null
   );
+  const [loading, setLoading] = useState<boolean>(true); // State for loading
 
   // Fetch transactions from the API
   useEffect(() => {
     const getTransactions = async () => {
+      setLoading(true); // Set loading to true before fetching data
       try {
         const data = await fetchTransactions();
         setTransactions(data);
       } catch (error) {
         console.error("خطا در دریافت تراکنش‌ها:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
@@ -98,6 +103,10 @@ const TransactionList: React.FC = () => {
   const filteredTransactions = transactions.filter(
     (transaction) => transaction.transaction_type === activeTab
   );
+
+  if (loading) {
+    return <LoadingSpinner />; // Show loading spinner while data is being fetched
+  }
 
   return (
     <div className="p-6 bg-white rounded shadow-md rtl">

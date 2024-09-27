@@ -5,9 +5,10 @@ import Search from "../Common/Search";
 
 interface WorkTimeEntry {
   id: number;
-  name: string;
+  user: number;
   team: string;
-  timeRecorded: string;
+  total_worked_time: string;
+  jalali_date: string; // Include jalali_date here
 }
 
 interface WorkingHoursListProps {
@@ -40,16 +41,14 @@ const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
               <th className="py-2 text-center text-sm font-medium pb-5">
                 نام و نام خانوادگی
               </th>
-              <th className="py-2 text-center text-sm font-medium pb-5">تیم</th>
+              <th className="py-2 text-center text-sm font-medium pb-5">
+                تاریخ ثبت
+              </th>
               <th className="py-2 text-center text-sm font-medium pb-5">
                 زمان ثبت شده
               </th>
               <th className="py-2 text-center text-sm font-medium pb-5">
                 نمایش جزئیات
-              </th>
-              <th className="py-2 text-center text-sm font-medium pb-5">حذف</th>
-              <th className="py-2 text-center text-sm font-medium pb-5">
-                ویرایش
               </th>
             </tr>
           </thead>
@@ -59,37 +58,19 @@ const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
                 key={index}
                 className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
               >
-                <td className="py-3 text-sm text-center">{entry.name}</td>
-                <td className="py-3 text-sm text-center">{entry.team}</td>
+                <td className="py-3 text-sm text-center">{entry.user}</td>
+                <td className="py-3 text-sm text-center">
+                  {entry.jalali_date}
+                </td>{" "}
+                {/* Display Jalali date */}
                 <td className="py-3 text-sm text-center text-green-500">
-                  {entry.timeRecorded}
+                  {entry.total_worked_time}
                 </td>
                 <td className="py-3 text-sm text-center">
                   <FaEllipsisV
                     className="text-gray-500 mx-auto cursor-pointer"
                     onClick={() => onEntryClick(entry)}
                   />
-                </td>
-                <td className="py-3 text-sm text-center">
-                  <button
-                    className="text-red-500"
-                    onClick={() => onDelete(entry.id)}
-                  >
-                    حذف
-                  </button>
-                </td>
-                <td className="py-3 text-sm text-center">
-                  <button
-                    className="text-blue-500"
-                    onClick={() =>
-                      onUpdate(entry.id, {
-                        ...entry,
-                        name: "نام جدید", // برای مثال: نام جدیدی که می‌خواهید ویرایش کنید
-                      })
-                    }
-                  >
-                    ویرایش
-                  </button>
                 </td>
               </tr>
             ))}

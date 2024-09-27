@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { DateObject } from "react-multi-date-picker";
 import { getEmployees, createTask } from "../../services/task";
 import { jwtDecode } from "jwt-decode"; // برای دیکود کردن JWT
+import LoadingSpinner from "../Common/Loading"; // Import LoadingSpinner component
 
 interface Employee {
   id: number;
@@ -24,6 +25,7 @@ const AddTask: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [senderId, setSenderId] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false); // State for loading
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -77,8 +79,8 @@ const AddTask: React.FC = () => {
       return;
     }
 
+    setLoading(true); // Set loading to true before submitting
     try {
-      // ایجاد FormData برای ارسال فایل و داده‌ها
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", details);
@@ -86,7 +88,7 @@ const AddTask: React.FC = () => {
         formData.append("due_date", dueDate.toDate().toISOString());
       }
       if (file) {
-        formData.append("file", file); // اضافه کردن فایل به فرم دیتا
+        formData.append("file", file);
       }
       formData.append("receiver", assignedTo.toString());
       formData.append("sender", senderId.toString());
@@ -111,6 +113,8 @@ const AddTask: React.FC = () => {
         title: "خطا",
         text: "در ثبت تسک خطایی رخ داد.",
       });
+    } finally {
+      setLoading(false); // Set loading to false after submission
     }
   };
 
@@ -134,6 +138,10 @@ const AddTask: React.FC = () => {
       }
     });
   };
+
+  if (loading) {
+    return <LoadingSpinner />; // Show loading spinner while submitting
+  }
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md rtl">
