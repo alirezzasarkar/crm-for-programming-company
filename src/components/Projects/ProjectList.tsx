@@ -64,40 +64,44 @@ const ProjectList: React.FC<ProjectListProps> = ({
             <th className="py-2 text-center text-sm font-medium pb-5">
               نمایش جزئیات
             </th>
-            <th className="py-2 text-center text-sm font-medium pb-5">
+            {/* <th className="py-2 text-center text-sm font-medium pb-5">
               ویرایش
-            </th>
+            </th> */}
             <th className="py-2 text-center text-sm font-medium pb-5">
               حذف پروژه
             </th>
           </tr>
         </thead>
         <tbody>
-          {projects.map((project) => (
-            <tr
-              key={project.id}
-              className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
-              onClick={() => onProjectClick(project.id)}
-            >
-              <td className="py-3 text-sm text-center">
-                {project.project_name}
-              </td>
-              <td className="py-3 text-sm text-center text-blue-600">
-                {project.domain}
-              </td>
-              <td className="py-3 text-sm text-center">
-                {project.manager_full_name}
-              </td>
-              <td className="py-3 text-sm text-center text-yellow-500">
-                {convertToJalali(project.end_date)} {/* تبدیل تاریخ به شمسی */}
-              </td>
-              <td className="py-3 text-sm text-center">
-                {translateStatus(project.status)}
-              </td>
-              <td className="py-3 text-sm text-center">
-                <FaEllipsisV className="text-gray-500 mx-auto" />
-              </td>
-              <td className="py-3 text-sm text-center">
+          {projects
+            .slice()
+            .reverse()
+            .map((project) => (
+              <tr
+                key={project.id}
+                className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
+                onClick={() => onProjectClick(project.id)}
+              >
+                <td className="py-3 text-sm text-center">
+                  {project.project_name}
+                </td>
+                <td className="py-3 text-sm text-center text-blue-600">
+                  {project.domain}
+                </td>
+                <td className="py-3 text-sm text-center">
+                  {project.manager_full_name}
+                </td>
+                <td className="py-3 text-sm text-center text-yellow-500">
+                  {convertToJalali(project.end_date)}{" "}
+                  {/* تبدیل تاریخ به شمسی */}
+                </td>
+                <td className="py-3 text-sm text-center">
+                  {translateStatus(project.status)}
+                </td>
+                <td className="py-3 text-sm text-center">
+                  <FaEllipsisV className="text-gray-500 mx-auto" />
+                </td>
+                {/* <td className="py-3 text-sm text-center">
                 <FaEdit
                   className="text-blue-500 mx-auto cursor-pointer"
                   onClick={(e) => {
@@ -105,18 +109,18 @@ const ProjectList: React.FC<ProjectListProps> = ({
                     onEditProject(project.id); // ارسال id به تابع onEditProject
                   }}
                 />
-              </td>
-              <td className="py-3 text-sm text-center">
-                <FaTrash
-                  className="text-red-500 mx-auto cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation(); // جلوگیری از کلیک روی ردیف
-                    onDeleteProject(project.id); // ارسال id به تابع onDeleteProject
-                  }}
-                />
-              </td>
-            </tr>
-          ))}
+              </td> */}
+                <td className="py-3 text-sm text-center">
+                  <FaTrash
+                    className="text-red-500 mx-auto cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation(); // جلوگیری از کلیک روی ردیف
+                      onDeleteProject(project.id); // ارسال id به تابع onDeleteProject
+                    }}
+                  />
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

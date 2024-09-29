@@ -40,7 +40,7 @@ const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
           <thead>
             <tr className="text-right">
               <th className="py-2 text-center text-sm font-medium pb-5">
-                نام و نام خانوادگی
+                نام خانوادگی
               </th>
               <th className="py-2 text-center text-sm font-medium pb-5">
                 تاریخ ثبت
@@ -57,33 +57,36 @@ const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
             </tr>
           </thead>
           <tbody>
-            {workTimeEntries.map((entry, index) => (
-              <tr
-                key={index}
-                className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
-              >
-                <td className="py-3 text-sm text-center">{entry.user}</td>
-                <td className="py-3 text-sm text-center">
-                  {entry.jalali_date}
-                </td>{" "}
-                {/* Display Jalali date */}
-                <td className="py-3 text-sm text-center">
-                  {moment(entry.jalali_date, "jYYYY/jMM/jDD")
-                    .locale("fa")
-                    .format("dddd")}{" "}
-                  {/* Display day of the week in Persian */}
-                </td>
-                <td className="py-3 text-sm text-center text-green-500">
-                  {entry.total_worked_time}
-                </td>
-                {/* <td className="py-3 text-sm text-center">
+            {workTimeEntries
+              .slice()
+              .reverse()
+              .map((entry, index) => (
+                <tr
+                  key={index}
+                  className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
+                >
+                  <td className="py-3 text-sm text-center">{entry.user}</td>
+                  <td className="py-3 text-sm text-center">
+                    {entry.jalali_date}
+                  </td>{" "}
+                  {/* Display Jalali date */}
+                  <td className="py-3 text-sm text-center">
+                    {moment(entry.jalali_date, "jYYYY/jMM/jDD")
+                      .locale("fa")
+                      .format("dddd")}{" "}
+                    {/* Display day of the week in Persian */}
+                  </td>
+                  <td className="py-3 text-sm text-center text-green-500">
+                    {entry.total_worked_time}
+                  </td>
+                  {/* <td className="py-3 text-sm text-center">
                   <FaEllipsisV
                     className="text-gray-500 mx-auto cursor-pointer"
                     onClick={() => onEntryClick(entry)}
                   />
                 </td> */}
-              </tr>
-            ))}
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

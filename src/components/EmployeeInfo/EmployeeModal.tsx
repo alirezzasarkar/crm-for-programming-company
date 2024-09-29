@@ -1,6 +1,7 @@
 // components/EmployeeModal.tsx
 import React from "react";
 import { FaTimes } from "react-icons/fa";
+import { FiUser } from "react-icons/fi";
 
 interface EmployeeModalProps {
   employee: {
@@ -33,11 +34,14 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
             <FaTimes className="text-xl" />
           </button>
           <div className="text-center">
-            <img
-              src={employee.picture}
-              alt={`${employee.name} profile`}
-              className="mx-auto rounded-full w-24 h-24 object-cover"
-            />
+            {employee.picture ? (
+              <img
+                src={employee.picture}
+                className="mx-auto rounded-full w-24 h-24 object-cover"
+              />
+            ) : (
+              <FiUser className="mx-auto rounded-full w-24 h-24 text-blue-600" />
+            )}
           </div>
         </div>
         <div className="p-6">

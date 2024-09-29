@@ -46,7 +46,7 @@ const ProjectDetailsPage: React.FC = () => {
   const handleDeleteProject = async (projectId: number) => {
     Swal.fire({
       title: "آیا مطمئن هستید؟",
-      text: "این عملیات قابل بازگشت نیست!",
+      text: "این عملیات قابل بازگشت نیست",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -56,7 +56,7 @@ const ProjectDetailsPage: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteProject(projectId);
-        Swal.fire("حذف شد!", "پروژه با موفقیت حذف شد.", "success");
+        Swal.fire("حذف شد", "پروژه با موفقیت حذف شد", "success");
         navigate("/dashboard/projects");
       }
     });

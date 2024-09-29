@@ -78,28 +78,33 @@ const ReportList: React.FC<ReportListProps> = ({
             </tr>
           </thead>
           <tbody>
-            {filteredReports.map((report, id) => (
-              <tr key={id} className="bg-gray-100 hover:bg-gray-200">
-                <td className="py-3 text-sm text-center">{report.last_name}</td>
-                <td
-                  className={`py-3 text-sm text-center ${
-                    report.is_approved ? "text-green-500" : "text-red-500"
-                  }`}
-                >
-                  {report.is_approved ? "بررسی شده" : "بررسی نشده"}
-                </td>
-                <td className="py-3 text-sm text-center">
-                  {moment(report.date).format("jYYYY/jMM/jDD")}{" "}
-                  {/* Convert to Jalali */}
-                </td>
-                <td className="py-3 text-sm flex justify-center items-center">
-                  <FaEllipsisV
-                    className="text-gray-500 cursor-pointer"
-                    onClick={() => onReportClick(report)}
-                  />
-                </td>
-              </tr>
-            ))}
+            {filteredReports
+              .slice()
+              .reverse()
+              .map((report, id) => (
+                <tr key={id} className="bg-gray-100 hover:bg-gray-200">
+                  <td className="py-3 text-sm text-center">
+                    {report.last_name}
+                  </td>
+                  <td
+                    className={`py-3 text-sm text-center ${
+                      report.is_approved ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    {report.is_approved ? "بررسی شده" : "بررسی نشده"}
+                  </td>
+                  <td className="py-3 text-sm text-center">
+                    {moment(report.date).format("jYYYY/jMM/jDD")}{" "}
+                    {/* Convert to Jalali */}
+                  </td>
+                  <td className="py-3 text-sm flex justify-center items-center">
+                    <FaEllipsisV
+                      className="text-gray-500 cursor-pointer"
+                      onClick={() => onReportClick(report)}
+                    />
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

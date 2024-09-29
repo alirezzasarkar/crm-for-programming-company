@@ -55,46 +55,49 @@ const TransactionList: React.FC = () => {
         </tr>
       </thead>
       <tbody>
-        {filteredTransactions.map((transaction, index) => (
-          <tr
-            key={transaction.id}
-            className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
-          >
-            <td className="py-3 text-sm text-center">{index + 1}</td>
-            <td className="py-3 text-sm text-center">
-              {moment(transaction.date).locale("fa").format("jYYYY/jMM/jDD")}{" "}
-              {/* Convert to Shamsi */}
-            </td>
-            <td className="py-3 text-sm text-center">{transaction.amount}</td>
-            <td className="py-3 text-center text-blue-500 relative">
-              <div
-                onMouseEnter={() => setHoveredTransaction(transaction.id)}
-                onMouseLeave={() => setHoveredTransaction(null)}
-                className="inline-block"
-              >
-                <FaInfoCircle className="cursor-pointer" />
-                {hoveredTransaction === transaction.id && (
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-48 p-2 bg-white border rounded-lg shadow-lg z-10">
-                    <p className="text-xs text-gray-700">
-                      {transaction.description}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </td>
-            <td className="py-3 text-center text-green-500">
-              <div className="inline-block">
-                <a
-                  href={transaction.file}
-                  target="_blank"
-                  rel="noopener noreferrer"
+        {filteredTransactions
+          .slice()
+          .reverse()
+          .map((transaction, index) => (
+            <tr
+              key={transaction.id}
+              className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
+            >
+              <td className="py-3 text-sm text-center">{index + 1}</td>
+              <td className="py-3 text-sm text-center">
+                {moment(transaction.date).locale("fa").format("jYYYY/jMM/jDD")}{" "}
+                {/* Convert to Shamsi */}
+              </td>
+              <td className="py-3 text-sm text-center">{transaction.amount}</td>
+              <td className="py-3 text-center text-blue-500 relative">
+                <div
+                  onMouseEnter={() => setHoveredTransaction(transaction.id)}
+                  onMouseLeave={() => setHoveredTransaction(null)}
+                  className="inline-block"
                 >
-                  <FaFileInvoice className="cursor-pointer" />
-                </a>
-              </div>
-            </td>
-          </tr>
-        ))}
+                  <FaInfoCircle className="cursor-pointer" />
+                  {hoveredTransaction === transaction.id && (
+                    <div className="absolute left-1/2 transform -translate-x-1/2 w-48 p-2 bg-white border rounded-lg shadow-lg z-10">
+                      <p className="text-xs text-gray-700">
+                        {transaction.description}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </td>
+              <td className="py-3 text-center text-green-500">
+                <div className="inline-block">
+                  <a
+                    href={transaction.file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FaFileInvoice className="cursor-pointer" />
+                  </a>
+                </div>
+              </td>
+            </tr>
+          ))}
       </tbody>
     </table>
   );

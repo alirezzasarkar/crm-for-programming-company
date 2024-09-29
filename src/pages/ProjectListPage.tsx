@@ -68,7 +68,7 @@ const ProjectListPage = () => {
   const handleDeleteProject = (projectId: number) => {
     Swal.fire({
       title: "آیا مطمئن هستید؟",
-      text: "این عملیات قابل بازگشت نیست!",
+      text: "این عملیات قابل بازگشت نیست",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -78,7 +78,7 @@ const ProjectListPage = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         mutation.mutate(projectId);
-        Swal.fire("حذف شد!", "پروژه با موفقیت حذف شد.", "success");
+        Swal.fire("حذف شد", "پروژه با موفقیت حذف شد", "success");
       }
     });
   };

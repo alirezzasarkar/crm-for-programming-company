@@ -64,13 +64,13 @@ const AddProjectPage: React.FC = () => {
       await Swal.fire({
         icon: "success",
         title: "ثبت اطلاعات موفقیت‌آمیز",
-        text: "اطلاعات پروژه با موفقیت ثبت شد.",
+        text: "اطلاعات پروژه با موفقیت ثبت شد",
       });
     } catch (error) {
       await Swal.fire({
         icon: "error",
         title: "خطا",
-        text: "خطایی در ثبت اطلاعات پروژه رخ داده است.",
+        text: "خطایی در ثبت اطلاعات پروژه رخ داده است",
       });
     }
   };

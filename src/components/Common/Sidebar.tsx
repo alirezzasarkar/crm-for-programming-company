@@ -90,7 +90,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           />
         </SidebarItem>
 
-        <SidebarItem
+        {/* <SidebarItem
           to="/dashboard/tickets"
           icon={<IoTicketOutline />}
           label="تیکت"
@@ -108,7 +108,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             label="لیست"
             isOpen={isOpen}
           />
-        </SidebarItem>
+        </SidebarItem> */}
         <SidebarItem
           to="/dashboard/employee-info"
           icon={<IoIosInformationCircleOutline />}
