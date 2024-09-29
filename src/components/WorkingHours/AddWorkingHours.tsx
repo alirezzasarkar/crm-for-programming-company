@@ -6,6 +6,12 @@ import Title from "../Common/Title";
 import { getWeekDates, getStartOfWeek } from "../../utils/dateUtils";
 import moment from "jalali-moment";
 import Swal from "sweetalert2";
+import {
+  startWorking,
+  pauseWorking,
+  resumeWorking,
+  stopWorking,
+} from "../../services/workingHours"; // Import the working time API functions
 
 const WorkTimeEntry: React.FC = () => {
   const [time, setTime] = useState("00:00");
@@ -24,34 +30,74 @@ const WorkTimeEntry: React.FC = () => {
     setWeekDays(getWeekDates(startOfWeek));
   }, []);
 
-  const startTimer = () => {
-    setIsRunning(true);
-    setIsPaused(false);
-    const startTime = Date.now() - elapsedTime;
-    const interval = window.setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      setElapsedTime(elapsed);
-      const minutes = Math.floor((elapsed / 1000 / 60) % 60);
-      const seconds = Math.floor((elapsed / 1000) % 60);
-      setTime(
-        `${minutes < 10 ? "0" : ""}${minutes}:${
-          seconds < 10 ? "0" : ""
-        }${seconds}`
-      );
-    }, 1000);
-    setTimerInterval(interval);
+  const startTimer = async () => {
+    try {
+      await startWorking(); // Call the API to start working
+      setIsRunning(true);
+      setIsPaused(false);
+      const startTime = Date.now() - elapsedTime;
+      const interval = window.setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        setElapsedTime(elapsed);
+        const minutes = Math.floor((elapsed / 1000 / 60) % 60);
+        const seconds = Math.floor((elapsed / 1000) % 60);
+        setTime(
+          `${minutes < 10 ? "0" : ""}${minutes}:${
+            seconds < 10 ? "0" : ""
+          }${seconds}`
+        );
+      }, 1000);
+      setTimerInterval(interval);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "خطا",
+        text: "خطایی در شروع زمان کاری رخ داد.",
+      });
+    }
   };
 
-  const pauseTimer = () => {
-    setIsRunning(false);
-    setIsPaused(true);
-    if (timerInterval !== null) clearInterval(timerInterval);
+  const pauseTimer = async () => {
+    try {
+      await pauseWorking(); // Call the API to pause working
+      setIsRunning(false);
+      setIsPaused(true);
+      if (timerInterval !== null) clearInterval(timerInterval);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "خطا",
+        text: "خطایی در وقفه زمان کاری رخ داد.",
+      });
+    }
   };
 
-  const stopTimer = () => {
-    setIsRunning(false);
-    setIsPaused(false);
-    if (timerInterval !== null) clearInterval(timerInterval);
+  const resumeTimer = async () => {
+    try {
+      await resumeWorking(); // Call the API to resume working
+      startTimer();
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "خطا",
+        text: "خطایی در ادامه زمان کاری رخ داد.",
+      });
+    }
+  };
+
+  const stopTimer = async () => {
+    try {
+      await stopWorking(); // Call the API to stop working
+      setIsRunning(false);
+      setIsPaused(false);
+      if (timerInterval !== null) clearInterval(timerInterval);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "خطا",
+        text: "خطایی در ثبت زمان کاری رخ داد.",
+      });
+    }
   };
 
   const submitTime = async () => {
@@ -108,6 +154,7 @@ const WorkTimeEntry: React.FC = () => {
           onSubmit={submitTime}
           isRunning={isRunning}
           isPaused={isPaused}
+          onResume={resumeTimer} // Add resume function for resuming
         />
       </div>
     </div>

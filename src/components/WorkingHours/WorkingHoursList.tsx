@@ -2,6 +2,7 @@ import React from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import Title from "../Common/Title";
 import Search from "../Common/Search";
+import moment from "jalali-moment"; // Import jalali-moment for day of the week
 
 interface WorkTimeEntry {
   id: number;
@@ -45,11 +46,14 @@ const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
                 تاریخ ثبت
               </th>
               <th className="py-2 text-center text-sm font-medium pb-5">
-                زمان ثبت شده
+                روز هفته
               </th>
               <th className="py-2 text-center text-sm font-medium pb-5">
-                نمایش جزئیات
+                زمان ثبت شده
               </th>
+              {/* <th className="py-2 text-center text-sm font-medium pb-5">
+                نمایش جزئیات
+              </th> */}
             </tr>
           </thead>
           <tbody>
@@ -63,15 +67,21 @@ const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
                   {entry.jalali_date}
                 </td>{" "}
                 {/* Display Jalali date */}
+                <td className="py-3 text-sm text-center">
+                  {moment(entry.jalali_date, "jYYYY/jMM/jDD")
+                    .locale("fa")
+                    .format("dddd")}{" "}
+                  {/* Display day of the week in Persian */}
+                </td>
                 <td className="py-3 text-sm text-center text-green-500">
                   {entry.total_worked_time}
                 </td>
-                <td className="py-3 text-sm text-center">
+                {/* <td className="py-3 text-sm text-center">
                   <FaEllipsisV
                     className="text-gray-500 mx-auto cursor-pointer"
                     onClick={() => onEntryClick(entry)}
                   />
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>

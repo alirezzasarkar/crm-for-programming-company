@@ -10,6 +10,7 @@ import {
   login as apiLogin,
   register as apiRegister,
 } from "../../services/userService";
+import LoadingSpinner from "../Common/Loading";
 
 interface User {
   user_id: number;
@@ -99,7 +100,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const isAuthenticated = !!user;
 
   if (loading) {
-    return <div>Loading...</div>; // نمایش یک لودینگ ساده تا وقتی که وضعیت JWT بررسی شود
+    return <LoadingSpinner />; // نمایش یک لودینگ ساده تا وقتی که وضعیت JWT بررسی شود
   }
 
   return (

@@ -67,3 +67,48 @@ export const updateWorkingHour = async (id: number, workingHourData: any) => {
     throw error;
   }
 };
+
+
+// شروع زمان کاری
+export const startWorking = async () => {
+  try {
+    const response = await apiClient.post('/timesheet/start/');
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
+// وقفه زمان کاری
+export const pauseWorking = async () => {
+  try {
+    const response = await apiClient.post('/timesheet/pause/');
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
+// ادامه زمان کاری
+export const resumeWorking = async () => {
+  try {
+    const response = await apiClient.post('/timesheet/resume/');
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
+// ثبت پایان زمان کاری
+export const stopWorking = async () => {
+  try {
+    const response = await apiClient.post('/timesheet/stop/');
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};

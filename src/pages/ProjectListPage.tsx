@@ -87,7 +87,7 @@ const ProjectListPage = () => {
     <>
       <div className="flex justify-start mb-4 rtl">
         <SearchBox searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-        <Filter
+        {/* <Filter
           filter={statusFilter}
           options={statusOptions}
           label="وضعیت"
@@ -98,7 +98,7 @@ const ProjectListPage = () => {
           options={dateOptions}
           label="تاریخ"
           onFilterChange={setDateFilter}
-        />
+        /> */}
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md rtl">
         <Title title="لیست پروژه های من" />
