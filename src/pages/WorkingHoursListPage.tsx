@@ -1,3 +1,4 @@
+// WorkingHoursListPage.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import WorkingHoursList from "../components/WorkingHours/WorkingHoursList";
@@ -5,31 +6,34 @@ import {
   getWorkingHours,
   deleteWorkingHour,
   updateWorkingHour,
+  getWeeklyWorkingHours,
+  getMonthlyWorkingHours,
 } from "../services/workingHours";
-import { getEmployees } from "../services/workingHours"; // Import getEmployees
-import moment from "jalali-moment"; // Import jalali-moment
+import { getEmployees } from "../services/workingHours";
+import moment from "jalali-moment";
 
 interface WorkTimeEntry {
   id: number;
-  user: string; // Last name of the user
+  user: string;
   date: string;
   total_worked_time: string;
-  jalali_date: string; // Add jalali_date for displaying the Persian date
+  jalali_date: string;
 }
 
 const WorkingHoursListPage: React.FC = () => {
   const navigate = useNavigate();
   const [workTimeEntries, setWorkTimeEntries] = useState<WorkTimeEntry[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [employeeMap, setEmployeeMap] = useState<{ [key: number]: string }>({}); // Mapping of user ID to last name
+  const [employeeMap, setEmployeeMap] = useState<{ [key: number]: string }>({});
+  const [period, setPeriod] = useState<"week" | "month" | "all">("all");
 
   const fetchEmployees = async () => {
     try {
       const employees = await getEmployees();
-      // Create a map of user IDs to last names
+      console.log("Fetched employees:", employees);
       const map: { [key: number]: string } = {};
       employees.forEach((employee: any) => {
-        map[employee.id] = employee.last_name; // Assuming last_name is the correct field
+        map[employee.id] = employee.last_name;
       });
       setEmployeeMap(map);
     } catch (error) {
@@ -39,13 +43,22 @@ const WorkingHoursListPage: React.FC = () => {
 
   const fetchWorkingHours = async () => {
     try {
-      const data = await getWorkingHours();
-      // Convert dates to Jalali format and map user IDs to last names
+      let data;
+      if (period === "week") {
+        data = await getWeeklyWorkingHours();
+      } else if (period === "month") {
+        data = await getMonthlyWorkingHours();
+      } else {
+        data = await getWorkingHours();
+      }
+
+      console.log(`Fetched working hours for period: ${period}`, data);
+
       const entriesWithJalaliDate = data.map((entry: any) => ({
         ...entry,
-        user: employeeMap[entry.user] || "نامشخص", // Use last name or default to "نامشخص"
-        jalali_date: moment(entry.date).format("jYYYY/jMM/jDD"), // Convert to Jalali
-        total_worked_time: entry.total_worked_time.split(".")[0], // Truncate milliseconds
+        user: employeeMap[entry.user] || "نامشخص",
+        jalali_date: moment(entry.date).format("jYYYY/jMM/jDD"),
+        total_worked_time: entry.total_worked_time.split(".")[0],
       }));
       setWorkTimeEntries(entriesWithJalaliDate);
     } catch (error) {
@@ -54,16 +67,23 @@ const WorkingHoursListPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchEmployees(); // Fetch employees when the component mounts
+    fetchEmployees();
   }, []);
 
   useEffect(() => {
-    fetchWorkingHours(); // Fetch working hours when employee map is updated
+    fetchWorkingHours();
+  }, [period]);
+
+  useEffect(() => {
+    if (employeeMap) {
+      fetchWorkingHours();
+    }
   }, [employeeMap]);
 
   const handleDelete = async (id: number) => {
     try {
       await deleteWorkingHour(id);
+      console.log(`Deleted working hour with ID: ${id}`);
       setWorkTimeEntries(workTimeEntries.filter((entry) => entry.id !== id));
     } catch (error) {
       console.error("Error deleting working hour:", error);
@@ -73,6 +93,7 @@ const WorkingHoursListPage: React.FC = () => {
   const handleUpdate = async (id: number, updatedData: WorkTimeEntry) => {
     try {
       const updatedEntry = await updateWorkingHour(id, updatedData);
+      console.log(`Updated working hour with ID: ${id}`, updatedEntry);
       setWorkTimeEntries(
         workTimeEntries.map((entry) => (entry.id === id ? updatedEntry : entry))
       );
@@ -85,20 +106,20 @@ const WorkingHoursListPage: React.FC = () => {
     navigate(`/dashboard/work-time/detail/${detail.id}`);
   };
 
-  // Filter the work time entries based on the search query
-  const filteredEntries = workTimeEntries.filter(
-    (entry) => entry.user.includes(searchQuery) // Check if the last name includes the search query
+  const filteredEntries = workTimeEntries.filter((entry) =>
+    entry.user.includes(searchQuery)
   );
 
   return (
     <>
       <WorkingHoursList
-        workTimeEntries={filteredEntries} // Pass the filtered entries
+        workTimeEntries={filteredEntries}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onEntryClick={handleClick}
         onDelete={handleDelete}
         onUpdate={handleUpdate}
+        setPeriod={setPeriod} // ارسال setPeriod به عنوان پروپ
       />
     </>
   );

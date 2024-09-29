@@ -36,6 +36,29 @@ export const getWorkingHours = async () => {
   }
 };
 
+// دریافت تایم کاری هفتگی
+export const getWeeklyWorkingHours = async () => {
+  try {
+    const response = await apiClient.get('/timesheet/list_for_admin/?period=week/');
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
+// دریافت تایم کاری ماهیانه
+export const getMonthlyWorkingHours = async () => {
+  try {
+    const response = await apiClient.get('/timesheet/list_for_admin/?period=month/');
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
+
 // دریافت یک زمان کاری بر اساس شناسه
 export const getWorkingHourById = async (id: number) => {
   try {

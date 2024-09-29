@@ -6,6 +6,7 @@ import EmployeeFilter from "../components/EmployeeInfo/EmployeeFilter";
 import Title from "../components/Common/Title";
 import { getEmployees, deleteEmployee } from "../services/employee";
 import LoadingSpinner from "../components/Common/Loading"; // Import LoadingSpinner component
+import Swal from "sweetalert2"; // اضافه کردن SweetAlert2
 
 export interface Employee {
   id: number;
@@ -48,6 +49,32 @@ const EmployeeListPage: React.FC = () => {
 
     fetchEmployees();
   }, []);
+
+  const handleDeleteEmployee = (id: number) => {
+    Swal.fire({
+      title: "آیا مطمئن هستید؟",
+      text: "این عملیات قابل بازگشت نیست",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "بله، حذف کن",
+      cancelButtonText: "لغو",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteEmployee(id);
+          setEmployees((prevEmployees) =>
+            prevEmployees.filter((employee) => employee.id !== id)
+          );
+          Swal.fire("حذف شد", "کارمند با موفقیت حذف شد", "success");
+        } catch (error) {
+          console.error("Error deleting employee:", error);
+          Swal.fire("خطا", "مشکلی در حذف کارمند رخ داد", "error");
+        }
+      }
+    });
+  };
 
   const sortedEmployees = useMemo(() => {
     let sortableEmployees = [...employees];
@@ -95,17 +122,6 @@ const EmployeeListPage: React.FC = () => {
       "سمت شغلی": "work_position",
     };
     requestSort(filterKeyMap[newFilter]);
-  };
-
-  const handleDeleteEmployee = async (id: number) => {
-    try {
-      await deleteEmployee(id);
-      setEmployees((prevEmployees) =>
-        prevEmployees.filter((employee) => employee.id !== id)
-      );
-    } catch (error) {
-      console.error("Error deleting employee:", error);
-    }
   };
 
   if (loading) {
