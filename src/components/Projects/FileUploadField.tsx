@@ -3,9 +3,9 @@ import { UseFormSetValue } from "react-hook-form";
 import { FaUpload } from "react-icons/fa";
 
 interface FileUploadFieldProps {
-  id: string;
-  label: string;
-  setValue: UseFormSetValue<any>; // Correct type for setValue
+  id: string; // شناسه ورودی
+  label: string; // برچسب ورودی
+  setValue: UseFormSetValue<any>; // تابع setValue از react-hook-form
 }
 
 const FileUploadField: React.FC<FileUploadFieldProps> = ({
@@ -13,13 +13,14 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   label,
   setValue,
 }) => {
-  const [fileNames, setFileNames] = useState<string[]>([]);
+  const [fileNames, setFileNames] = useState<string[]>([]); // برای ذخیره نام فایل‌ها
 
+  // تابعی برای مدیریت تغییرات فایل
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
-      setValue(id, filesArray); // Set the files array in form state
-      setFileNames(filesArray.map((file) => file.name)); // Display file names
+      setValue(id, filesArray); // ذخیره آرایه فایل‌ها در وضعیت فرم
+      setFileNames(filesArray.map((file) => file.name)); // نمایش نام فایل‌ها
     }
   };
 
@@ -32,10 +33,10 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         <input
           id={id}
           type="file"
-          accept=".zip,.pdf" // Accept zip and pdf files
-          onChange={handleFileChange} // Use handleFileChange for file uploads
-          multiple // Allow multiple file uploads
-          className="hidden"
+          accept=".zip,.pdf" // تنها فایل‌های zip و pdf پذیرفته می‌شود
+          onChange={handleFileChange} // استفاده از تابع handleFileChange
+          multiple // اجازه بارگذاری چندین فایل
+          className="hidden" // مخفی کردن ورودی فایل
         />
         <label htmlFor={id} className="flex items-center cursor-pointer">
           <span className="text-gray-400 border border-gray-200 py-2 px-3 rounded-xl">
@@ -44,6 +45,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           <FaUpload className="text-gray-400 mr-2" />
         </label>
 
+        {/* نمایش نام فایل‌های بارگذاری شده */}
         {fileNames.length > 0 && (
           <div className="mt-2 text-gray-600">
             {fileNames.map((fileName, index) => (

@@ -1,9 +1,9 @@
-// WorkingHoursListPage.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import WorkingHoursList from "../components/WorkingHours/WorkingHoursList";
 import {
   getWorkingHours,
+  getWorkingHoursEmployee,
   deleteWorkingHour,
   updateWorkingHour,
   getWeeklyWorkingHours,
@@ -11,6 +11,7 @@ import {
 } from "../services/workingHours";
 import { getEmployees } from "../services/workingHours";
 import moment from "jalali-moment";
+import { useAuth } from "../components/Authentication/AuthContext";
 
 interface WorkTimeEntry {
   id: number;
@@ -22,6 +23,7 @@ interface WorkTimeEntry {
 
 const WorkingHoursListPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth(); // استفاده از context احراز هویت
   const [workTimeEntries, setWorkTimeEntries] = useState<WorkTimeEntry[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [employeeMap, setEmployeeMap] = useState<{ [key: number]: string }>({});
@@ -30,29 +32,31 @@ const WorkingHoursListPage: React.FC = () => {
   const fetchEmployees = async () => {
     try {
       const employees = await getEmployees();
-      console.log("Fetched employees:", employees);
       const map: { [key: number]: string } = {};
       employees.forEach((employee: any) => {
         map[employee.id] = employee.last_name;
       });
       setEmployeeMap(map);
     } catch (error) {
-      console.error("Error fetching employees:", error);
+      console.error(error);
     }
   };
 
   const fetchWorkingHours = async () => {
     try {
       let data;
-      if (period === "week") {
-        data = await getWeeklyWorkingHours();
-      } else if (period === "month") {
-        data = await getMonthlyWorkingHours();
+      // بررسی نقش کاربر
+      if (user?.role === "employee") {
+        data = await getWorkingHoursEmployee(); // API برای کاربرانی با نقش employee
       } else {
-        data = await getWorkingHours();
+        if (period === "week") {
+          data = await getWeeklyWorkingHours();
+        } else if (period === "month") {
+          data = await getMonthlyWorkingHours();
+        } else {
+          data = await getWorkingHours();
+        }
       }
-
-      console.log(`Fetched working hours for period: ${period}`, data);
 
       const entriesWithJalaliDate = data.map((entry: any) => ({
         ...entry,
@@ -62,7 +66,7 @@ const WorkingHoursListPage: React.FC = () => {
       }));
       setWorkTimeEntries(entriesWithJalaliDate);
     } catch (error) {
-      console.error("Error fetching working hours data:", error);
+      console.error(error);
     }
   };
 
@@ -72,33 +76,25 @@ const WorkingHoursListPage: React.FC = () => {
 
   useEffect(() => {
     fetchWorkingHours();
-  }, [period]);
-
-  useEffect(() => {
-    if (employeeMap) {
-      fetchWorkingHours();
-    }
-  }, [employeeMap]);
+  }, [period, employeeMap]); // employeeMap را نیز به وابستگی‌ها اضافه کنید
 
   const handleDelete = async (id: number) => {
     try {
       await deleteWorkingHour(id);
-      console.log(`Deleted working hour with ID: ${id}`);
       setWorkTimeEntries(workTimeEntries.filter((entry) => entry.id !== id));
     } catch (error) {
-      console.error("Error deleting working hour:", error);
+      console.error(error);
     }
   };
 
   const handleUpdate = async (id: number, updatedData: WorkTimeEntry) => {
     try {
       const updatedEntry = await updateWorkingHour(id, updatedData);
-      console.log(`Updated working hour with ID: ${id}`, updatedEntry);
       setWorkTimeEntries(
         workTimeEntries.map((entry) => (entry.id === id ? updatedEntry : entry))
       );
     } catch (error) {
-      console.error("Error updating working hour:", error);
+      console.error(error);
     }
   };
 

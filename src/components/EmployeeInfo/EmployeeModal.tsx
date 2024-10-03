@@ -2,6 +2,7 @@
 import React from "react";
 import { FaTimes } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
+import { useAuth } from "../Authentication/AuthContext";
 
 interface EmployeeModalProps {
   employee: {
@@ -25,6 +26,8 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
   onClose,
 }) => {
   if (!isOpen || !employee) return null;
+
+  const { user } = useAuth();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -51,18 +54,22 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
             </strong>
             {employee.name}
           </p>
-          <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
-            <strong className="text-blue-600 text-sm">کد ملی:</strong>
-            {employee.post_code}
-          </p>
+          {user?.role === "manager" && (
+            <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
+              <strong className="text-blue-600 text-sm">کد ملی:</strong>
+              {employee.post_code}
+            </p>
+          )}
           <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
             <strong className="text-blue-600 text-sm">سمت شغلی:</strong>
             {employee.work_position}
           </p>
-          <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
-            <strong className="text-blue-600 text-sm">تاریخ تولد:</strong>
-            {employee.date_of_birth}
-          </p>
+          {user?.role === "manager" && (
+            <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
+              <strong className="text-blue-600 text-sm">تاریخ تولد:</strong>
+              {employee.date_of_birth}
+            </p>
+          )}
           <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">
             <strong className="text-blue-600 text-sm">شماره تماس:</strong>
             {employee.phone_number}

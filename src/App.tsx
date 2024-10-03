@@ -9,9 +9,10 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ForgetPasswordPage from "./pages/ForgetPasswordPage";
 import DashboardPage from "./pages/DashboardPage";
+import { useAuth } from "./components/Authentication/AuthContext"; // فرض بر این است که یک AuthContext داریم
 
 const App: React.FC = () => {
-  const token = localStorage.getItem("authToken");
+  const { user } = useAuth(); // استفاده از AuthContext
 
   return (
     <Router>
@@ -19,7 +20,7 @@ const App: React.FC = () => {
         <Route
           path="/"
           element={
-            token ? (
+            user ? (
               <Navigate to="/dashboard" replace />
             ) : (
               <Navigate to="/login" replace />
@@ -29,7 +30,11 @@ const App: React.FC = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
-        <Route path="/dashboard/*" element={<DashboardPage />} />
+        {/* Protected Route برای داشبورد */}
+        <Route
+          path="/dashboard/*"
+          element={user ? <DashboardPage /> : <Navigate to="/login" replace />}
+        />
       </Routes>
     </Router>
   );

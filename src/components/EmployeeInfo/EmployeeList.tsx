@@ -3,6 +3,7 @@ import React from "react";
 import { FaTrashAlt, FaPencilAlt, FaInfoCircle } from "react-icons/fa";
 import { Employee } from "../../pages/EmployeeListPage";
 import { Link } from "react-router-dom"; // افزودن این خط
+import { useAuth } from "../Authentication/AuthContext";
 
 interface EmployeeListProps {
   employees: Employee[];
@@ -15,6 +16,8 @@ const EmployeeList: React.FC<EmployeeListProps> = ({
   onMoreInfoClick,
   onDeleteClick,
 }) => {
+  const { user } = useAuth();
+
   return (
     <table className="min-w-full bg-white mt-2 border-separate border-spacing-y-3">
       <thead>
@@ -34,7 +37,9 @@ const EmployeeList: React.FC<EmployeeListProps> = ({
           {/* <th className="py-2 text-center text-sm font-medium pb-5">
             ویرایش اطلاعات
           </th> */}
-          <th className="py-2 text-center text-sm font-medium pb-5">حذف</th>
+          {user?.role === "manager" && (
+            <th className="py-2 text-center text-sm font-medium pb-5">حذف</th>
+          )}
         </tr>
       </thead>
       <tbody>
@@ -66,12 +71,14 @@ const EmployeeList: React.FC<EmployeeListProps> = ({
                 <FaPencilAlt className="cursor-pointer mx-auto" />
               </Link>
             </td> */}
-              <td className="py-3 text-sm text-center">
-                <FaTrashAlt
-                  className="text-red-500 cursor-pointer mx-auto"
-                  onClick={() => onDeleteClick(employee.id)}
-                />
-              </td>
+              {user?.role === "manager" && (
+                <td className="py-3 text-sm text-center">
+                  <FaTrashAlt
+                    className="text-red-500 cursor-pointer mx-auto"
+                    onClick={() => onDeleteClick(employee.id)}
+                  />
+                </td>
+              )}
             </tr>
           ))}
       </tbody>

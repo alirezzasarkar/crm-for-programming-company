@@ -1,6 +1,7 @@
 import React from "react";
 import { FaTrash } from "react-icons/fa";
 import moment from "jalali-moment"; // کتابخانه برای تبدیل تاریخ
+import { useAuth } from "../Authentication/AuthContext";
 
 interface ProjectDetailsProps {
   project: {
@@ -62,6 +63,8 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
     }
   };
 
+  const { user } = useAuth(); // استفاده از context احراز هویت
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md rtl">
       <table className="min-w-full bg-white mt-4">
@@ -74,10 +77,12 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             <td className="px-4 py-3 text-gray-700">مدیر پروژه:</td>
             <td className="px-4 py-3 text-gray-500">{manager_full_name}</td>
           </tr>
-          <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">شماره تماس:</td>
-            <td className="px-4 py-3 text-gray-500">{phone_number}</td>
-          </tr>
+          {user?.role === "manager" && (
+            <tr className="w-full border-b border-gray-200">
+              <td className="px-4 py-3 text-gray-700">شماره تماس:</td>
+              <td className="px-4 py-3 text-gray-500">{phone_number}</td>
+            </tr>
+          )}
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">دامنه:</td>
             <td className="px-4 py-3 text-gray-500">{domain}</td>
@@ -125,18 +130,20 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
               </a>
             </td>
           </tr>
-          <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">فایل‌های قرارداد:</td>
-            <td className="px-4 py-3 text-gray-500">
-              <a
-                href={contract_files}
-                className="text-blue-500 hover:text-blue-700"
-                download
-              >
-                دانلود فایل‌ها
-              </a>
-            </td>
-          </tr>
+          {user?.role === "manager" && (
+            <tr className="w-full border-b border-gray-200">
+              <td className="px-4 py-3 text-gray-700">فایل‌های قرارداد:</td>
+              <td className="px-4 py-3 text-gray-500">
+                <a
+                  href={contract_files}
+                  className="text-blue-500 hover:text-blue-700"
+                  download
+                >
+                  دانلود فایل‌ها
+                </a>
+              </td>
+            </tr>
+          )}
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">اعضای تیم:</td>
             <td className="px-4 py-3 text-gray-500">
@@ -150,13 +157,15 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
         </tbody>
       </table>
       <div className="flex justify-end mt-6">
-        <button
-          className="flex items-center px-4 py-2 bg-red-500 text-white rounded-lg"
-          onClick={() => onDeleteProject(id)}
-        >
-          <FaTrash className="mr-2" />
-          حذف پروژه
-        </button>
+        {user?.role === "manager" && ( // شرط نمایش دکمه حذف
+          <button
+            className="flex items-center px-4 py-2 bg-red-500 text-white rounded-lg"
+            onClick={() => onDeleteProject(id)}
+          >
+            <FaTrash className="mr-2" />
+            حذف پروژه
+          </button>
+        )}
       </div>
     </div>
   );

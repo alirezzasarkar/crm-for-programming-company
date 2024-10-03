@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IoMdLogIn } from "react-icons/io";
@@ -16,6 +16,7 @@ interface LoginFormData {
 }
 
 const LoginPage: React.FC = () => {
+  const [loading, setLoading] = useState(false); // وضعیت بارگذاری
   const {
     register,
     handleSubmit,
@@ -24,17 +25,16 @@ const LoginPage: React.FC = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const { login, user } = useAuth(); // Get login and user state from AuthContext
+  const { login, isAuthenticated } = useAuth(); // گرفتن وضعیت لاگین از AuthContext
   const navigate = useNavigate();
 
   const onSubmit = async (data: LoginFormData) => {
+    setLoading(true); // آغاز بارگذاری
     try {
-      // Attempt to log in the user
       await login(data);
 
-      // Navigate to dashboard if the user is a manager or employee
-      if (user?.role === "manager" || user?.role === "employee") {
-        // Show success message
+      // چک کردن اینکه آیا کاربر لاگین شده است
+      if (isAuthenticated) {
         Swal.fire({
           title: "ورود موفقیت‌آمیز",
           text: "شما با موفقیت وارد شدید",
@@ -42,20 +42,19 @@ const LoginPage: React.FC = () => {
           confirmButtonText: "باشه",
           confirmButtonColor: "#3b82f6",
         }).then(() => {
-          navigate("/dashboard");
+          navigate("/dashboard"); // هدایت به داشبورد
         });
       } else {
-        // Handle cases for other roles if necessary
         Swal.fire({
           title: "ورود ناموفق",
-          text: "شما به عنوان کاربر غیرمجاز وارد شدید.",
-          icon: "warning",
+          text: "اطلاعات وارد شده اشتباه است.",
+          icon: "error",
           confirmButtonText: "باشه",
           confirmButtonColor: "#f87171",
         });
       }
     } catch (error) {
-      // If an error occurs, show error message
+      console.error(error); // ثبت خطا در کنسول
       Swal.fire({
         title: "خطا",
         text: "ورود ناموفق بود",
@@ -63,6 +62,8 @@ const LoginPage: React.FC = () => {
         confirmButtonText: "باشه",
         confirmButtonColor: "#f87171",
       });
+    } finally {
+      setLoading(false); // پایان بارگذاری
     }
   };
 
@@ -111,10 +112,19 @@ const LoginPage: React.FC = () => {
           <div className="mt-7">
             <Button
               type="submit"
-              className="flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+              className={`flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={loading} // غیرفعال کردن دکمه در زمان بارگذاری
             >
-              <IoMdLogIn className="mr-2 text-xl transform rotate-180" />
-              ورود
+              {loading ? (
+                <span>در حال ورود...</span> // نمایش متن لودینگ
+              ) : (
+                <>
+                  <IoMdLogIn className="mr-2 text-xl transform rotate-180" />
+                  ورود
+                </>
+              )}
             </Button>
           </div>
         </form>

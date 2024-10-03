@@ -68,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
             </div>
           )}
         </div>
-        <div className="relative">
+        {/* <div className="relative">
           <button
             className="bg-white p-2 rounded-full mr-4"
             onClick={handleMessageIconClick}
@@ -95,19 +95,19 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
               </button>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
       <div className="flex justify-center flex-1">
         <img src={logo} alt="Logo" className="h-14" />
       </div>
-      <div className="flex items-center">
+      {/* <div className="flex items-center">
         <button
           onClick={toggleSidebar}
           className="text-gray-200 focus:outline-none ml-4"
         >
           <FiMenu className="w-6 h-6" />
         </button>
-      </div>
+      </div> */}
     </header>
   );
 };

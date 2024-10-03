@@ -1,7 +1,6 @@
 import { useState } from "react";
 import ProjectList from "../components/Projects/ProjectList";
 import SearchBox from "../components/Common/Search";
-import Filter from "../components/Projects/ProjectFilter";
 import Title from "../components/Common/Title";
 import { useNavigate } from "react-router-dom";
 import { filterProjectsByDate } from "../components/Common/DateFilter";
@@ -49,9 +48,9 @@ const ProjectListPage = () => {
   let filteredProjects = (projects || []).filter((project) => {
     const matchesStatus =
       statusFilter === "تمام پروژه‌ها" || project.status === statusFilter;
-    const matchesSearch = project.project_name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      project.project_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.domain.toLowerCase().includes(searchQuery.toLowerCase()); // Filter by domain as well
     return matchesStatus && matchesSearch;
   });
 
@@ -87,6 +86,7 @@ const ProjectListPage = () => {
     <>
       <div className="flex justify-start mb-4 rtl">
         <SearchBox searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        {/* You can uncomment the Filters if you decide to use them in the future */}
         {/* <Filter
           filter={statusFilter}
           options={statusOptions}

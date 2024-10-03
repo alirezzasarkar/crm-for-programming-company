@@ -1,6 +1,7 @@
 import React from "react";
 import { FaEllipsisV, FaTrash, FaEdit } from "react-icons/fa";
 import moment from "jalali-moment"; // اضافه کردن کتابخانه برای تبدیل تاریخ
+import { useAuth } from "../Authentication/AuthContext";
 
 interface Project {
   id: number;
@@ -43,6 +44,8 @@ const ProjectList: React.FC<ProjectListProps> = ({
   onDeleteProject,
   onEditProject, // اضافه کردن تابع جدید
 }) => {
+  const { user } = useAuth();
+
   return (
     <div className="bg-white p-6 rounded-lg rtl">
       <table className="min-w-full bg-white mt-2 border-separate border-spacing-y-3">
@@ -67,9 +70,11 @@ const ProjectList: React.FC<ProjectListProps> = ({
             {/* <th className="py-2 text-center text-sm font-medium pb-5">
               ویرایش
             </th> */}
-            <th className="py-2 text-center text-sm font-medium pb-5">
-              حذف پروژه
-            </th>
+            {user?.role === "manager" && (
+              <th className="py-2 text-center text-sm font-medium pb-5">
+                حذف پروژه
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -110,15 +115,17 @@ const ProjectList: React.FC<ProjectListProps> = ({
                   }}
                 />
               </td> */}
-                <td className="py-3 text-sm text-center">
-                  <FaTrash
-                    className="text-red-500 mx-auto cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation(); // جلوگیری از کلیک روی ردیف
-                      onDeleteProject(project.id); // ارسال id به تابع onDeleteProject
-                    }}
-                  />
-                </td>
+                {user?.role === "manager" && (
+                  <td className="py-3 text-sm text-center">
+                    <FaTrash
+                      className="text-red-500 mx-auto cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation(); // جلوگیری از کلیک روی ردیف
+                        onDeleteProject(project.id); // ارسال id به تابع onDeleteProject
+                      }}
+                    />
+                  </td>
+                )}
               </tr>
             ))}
         </tbody>

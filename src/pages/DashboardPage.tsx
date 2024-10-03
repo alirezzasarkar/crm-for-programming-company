@@ -1,4 +1,3 @@
-// DashboardPage.tsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Layout from "../components/Layout/layout";
@@ -24,6 +23,7 @@ import AddTransactionPage from "./AddTransactionPage";
 import EmployeeSalariesPage from "./EmployeeSalariesPage";
 import TransactionListPage from "./TransactionListPage";
 import ProtectedRoute from "../components/Authentication/ProtectedRoutes";
+import AccessControl from "../components/Authentication/AccessControl"; // مسیر مناسب را تنظیم کنید
 import Dashboard from "../components/Dashboard/Dashboard";
 
 const DashboardPage: React.FC = () => {
@@ -32,42 +32,193 @@ const DashboardPage: React.FC = () => {
       <Routes>
         <Route
           path="/"
-          element={<ProtectedRoute allowedRoles={["employee", "manager"]} />}
-        >
-          <Route path="/" element={<Dashboard />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="profile/:id" element={<ProfilePage />} />
-          <Route path="employee-info" element={<EmployeeInfo />} />
-          <Route path="reports/entry" element={<ReportEntryPage />} />
-          <Route path="reports/list" element={<ReportListPage />} />
-          <Route path="reports/detail/:id" element={<ReportDetailPage />} />
-          <Route path="tasks/entry" element={<TaskEntryPage />} />
-          <Route path="tasks/list" element={<TaskListPage />} />
-          <Route path="tasks/detail/:id" element={<TaskDetailsPage />} />
-          <Route path="projects/entry" element={<AddProjectPage />} />
-          <Route path="projects/entry/:id" element={<AddProjectPage />} />
-          <Route path="projects/list" element={<ProjectListPage />} />
-          <Route path="projects/detail/:id" element={<ProjectDetailsPage />} />
-          <Route path="work-time/entry" element={<AddWorkingHoursPage />} />
-          <Route path="work-time/list" element={<WorkingHoursListPage />} />
-          <Route
-            path="work-time/detail/:id"
-            element={<WorkingHoursDetailsPage />}
-          />
-          <Route path="tickets/new" element={<SendTicketPage />} />
-          <Route path="tickets/list" element={<TicketListPage />} />
-          <Route path="tickets/detail/:id" element={<TicketDetailsPage />} />
-        </Route>
-
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route
-          path="/accounting"
-          element={<ProtectedRoute allowedRoles={["manager"]} />}
-        >
-          <Route path="dashboard" element={<AccountingDashboardPage />} />
-          <Route path="add-transaction" element={<AddTransactionPage />} />
-          <Route path="employee-salaries" element={<EmployeeSalariesPage />} />
-          <Route path="transaction-list" element={<TransactionListPage />} />
-        </Route>
+          path="profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="profile/:id"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="employee-info"
+          element={
+            <ProtectedRoute>
+              <EmployeeInfo />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="reports/entry"
+          element={
+            <ProtectedRoute>
+              <ReportEntryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="reports/list"
+          element={
+            <ProtectedRoute>
+              <ReportListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="reports/detail/:id"
+          element={
+            <ProtectedRoute>
+              <ReportDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="tasks/entry"
+          element={
+            <ProtectedRoute>
+              <TaskEntryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="tasks/list"
+          element={
+            <ProtectedRoute>
+              <TaskListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="tasks/detail/:id"
+          element={
+            <ProtectedRoute>
+              <TaskDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="projects/entry"
+          element={
+            <ProtectedRoute>
+              <AddProjectPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="projects/entry/:id"
+          element={
+            <ProtectedRoute>
+              <AddProjectPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="projects/list"
+          element={
+            <ProtectedRoute>
+              <ProjectListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="projects/detail/:id"
+          element={
+            <ProtectedRoute>
+              <ProjectDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="work-time/entry"
+          element={
+            <ProtectedRoute>
+              <AddWorkingHoursPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="work-time/list"
+          element={
+            <ProtectedRoute>
+              <WorkingHoursListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="work-time/detail/:id"
+          element={
+            <ProtectedRoute>
+              <WorkingHoursDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="tickets/new"
+          element={
+            <ProtectedRoute>
+              <SendTicketPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="tickets/list"
+          element={
+            <ProtectedRoute>
+              <TicketListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="tickets/detail/:id"
+          element={
+            <ProtectedRoute>
+              <TicketDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* مسیرهای حسابداری با استفاده از AccessControl برای نقش مدیر */}
+        <Route
+          path="/accounting/*"
+          element={
+            <ProtectedRoute>
+              <AccessControl role="manager">
+                <Routes>
+                  <Route
+                    path="dashboard"
+                    element={<AccountingDashboardPage />}
+                  />
+                  <Route
+                    path="add-transaction"
+                    element={<AddTransactionPage />}
+                  />
+                  <Route
+                    path="employee-salaries"
+                    element={<EmployeeSalariesPage />}
+                  />
+                  <Route
+                    path="transaction-list"
+                    element={<TransactionListPage />}
+                  />
+                </Routes>
+              </AccessControl>
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Layout>
   );

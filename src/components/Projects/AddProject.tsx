@@ -19,7 +19,9 @@ interface AddProjectProps {
   ) => void;
   employees: Employee[];
   onTeamMemberSelect: (id: number) => void;
-  onClearSelection: () => void;
+  onClearSelection: (
+    selectedMembers: { id: number; last_name: string }[]
+  ) => void; // Updated to accept the new selection
   selectedTeamMembers: { id: number; last_name: string }[];
   selectedResponsiblePerson: number;
   onResponsiblePersonSelect: (id: number) => void;
@@ -60,9 +62,11 @@ const AddProject: React.FC<AddProjectProps> = ({
     setManagerDropdownOpen(false);
   };
 
-  const handleRemove = (id: number) => {
-    onClearSelection();
-    // Here you might want to remove the specific team member from the state
+  const handleRemoveTeamMember = (id: number) => {
+    const newSelectedTeamMembers = selectedTeamMembers.filter(
+      (member) => member.id !== id
+    );
+    onClearSelection(newSelectedTeamMembers); // Pass updated team members to onClearSelection
   };
 
   const selectedResponsiblePersonName =
@@ -113,13 +117,13 @@ const AddProject: React.FC<AddProjectProps> = ({
         <DropdownField
           id="team_members"
           label="اعضای تیم"
-          placeholder="اعضای تیم"
+          placeholder="اعضای تیم را انتخاب کنید"
           employees={employees}
           selectedItems={selectedTeamMembers}
           dropdownOpen={dropdownOpen}
           handleToggle={handleDropdownToggle}
           handleSelect={handleEmployeeClick}
-          handleRemove={handleRemove}
+          handleRemove={handleRemoveTeamMember} // Use updated remove function
           value={selectedTeamMembersNames}
           errors={errors}
         />
@@ -127,7 +131,7 @@ const AddProject: React.FC<AddProjectProps> = ({
         <DropdownField
           id="responsible_person"
           label="مسئول پروژه"
-          placeholder="مسئول پروژه"
+          placeholder="مسئول پروژه را انتخاب کنید"
           employees={employees}
           selectedItems={[
             {
@@ -185,8 +189,12 @@ const AddProject: React.FC<AddProjectProps> = ({
           <DatePickerField
             key={field}
             id={field}
-            label={field.replace(/_/g, " ")} // Replace underscores with spaces for labels
-            placeholder={field.replace(/_/g, " ")} // Same for placeholders
+            label={field
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, (c) => c.toUpperCase())} // Replace underscores with spaces and capitalize
+            placeholder={field
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, (c) => c.toUpperCase())} // Capitalize the first letter of each word
             errors={errors}
             register={register}
             setValue={setValue}
@@ -196,12 +204,12 @@ const AddProject: React.FC<AddProjectProps> = ({
         <FileUploadField
           id="design_files"
           label="فایل‌های دیزاین"
-          setValue={setValue} // Use setValue directly from the form hook
+          setValue={setValue}
         />
         <FileUploadField
           id="contract_files"
           label="فایل قرارداد"
-          setValue={setValue} // Use setValue directly from the form hook
+          setValue={setValue}
         />
 
         <div className="col-span-2 md:col-span-1 flex items-center mt-2">

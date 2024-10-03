@@ -14,7 +14,7 @@ import LoadingSpinner from "../Common/Loading";
 
 interface User {
   user_id: number;
-  role: string;
+  role: string; // نقش کاربر
 }
 
 interface AuthContextType {
@@ -25,12 +25,14 @@ interface AuthContextType {
     password: string;
   }) => Promise<void>;
   register: (userData: {
-    first_name: string; // تغییر نام فیلد به first_name
+    first_name: string;
     last_name: string;
     phone_number: string;
     password: string;
   }) => Promise<void>;
   logout: () => void;
+  loading: boolean; // وضعیت لودینگ
+  hasAccess: (requiredRole: string) => boolean; // تابع بررسی دسترسی
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -45,20 +47,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     const token = localStorage.getItem("authToken");
     if (token) {
       try {
-        setUser(decodeToken(token));
+        setUser(decodeToken(token)); // ست کردن کاربر با نقش
       } catch (e) {
         console.error("Error decoding token:", e);
         localStorage.removeItem("authToken");
       }
     }
-    setLoading(false); // پس از بررسی JWT، لودینگ را به پایان برسانید
+    setLoading(false);
   }, []);
 
   const decodeToken = (token: string): User => {
     const decoded: any = jwtDecode(token);
     return {
       user_id: decoded.user_id,
-      role: decoded.role,
+      role: decoded.role, // نقش کاربر را از توکن استخراج می‌کنیم
     };
   };
 
@@ -73,11 +75,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setUser(decodeToken(token));
     } catch (error) {
       console.error("Login failed:", error);
+      throw new Error("Login failed");
     }
   };
 
   const register = async (userData: {
-    first_name: string; // تغییر نام فیلد به first_name
+    first_name: string;
     last_name: string;
     phone_number: string;
     password: string;
@@ -89,6 +92,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setUser(decodeToken(token));
     } catch (error) {
       console.error("Registration failed:", error);
+      throw new Error("Registration failed");
     }
   };
 
@@ -99,13 +103,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const isAuthenticated = !!user;
 
+  const hasAccess = (requiredRole: string) => {
+    return user?.role === requiredRole; // بررسی نقش کاربر
+  };
+
   if (loading) {
-    return <LoadingSpinner />; // نمایش یک لودینگ ساده تا وقتی که وضعیت JWT بررسی شود
+    return <LoadingSpinner />;
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, login, register, logout }}
+      value={{
+        user,
+        isAuthenticated,
+        login,
+        register,
+        logout,
+        loading,
+        hasAccess,
+      }}
     >
       {children}
     </AuthContext.Provider>

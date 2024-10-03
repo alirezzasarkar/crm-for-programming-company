@@ -7,7 +7,7 @@ import TopEmployees from "./TopEmployees";
 const Dashboard: React.FC = () => {
   return (
     <div className="bg-blue-50 min-h-screen">
-      <main className="p-4 md:p-8">
+      {/* <main className="p-4 md:p-8">
         <h2 className="text-blue-700 text-lg md:text-xl font-bold mb-6 md:mb-10">
           خلاصه وضعیت کلی
         </h2>
@@ -17,7 +17,10 @@ const Dashboard: React.FC = () => {
           <UnreadTickets />
           <TopEmployees />
         </div>
-      </main>
+      </main> */}
+      <div className="flex justify-center">
+        <h1 className="mt-5">داشبورد به زودی در نسخه بعدی منتشر خواهد شد</h1>
+      </div>
     </div>
   );
 };

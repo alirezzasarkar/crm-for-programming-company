@@ -36,6 +36,18 @@ export const getWorkingHours = async () => {
   }
 };
 
+// دریافت تمام زمان‌های کاری
+export const getWorkingHoursEmployee = async () => {
+  try {
+    const response = await apiClient.get('/timesheet/list/');
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
 // دریافت تایم کاری هفتگی
 export const getWeeklyWorkingHours = async () => {
   try {
