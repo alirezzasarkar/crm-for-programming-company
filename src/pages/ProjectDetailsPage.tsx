@@ -12,6 +12,7 @@ interface ProjectDetailsPageProps {
   domain: string;
   manager_full_name: string;
   phone_number: string;
+  responsible_person: number;
   description: string;
   start_date: string;
   end_date: string;

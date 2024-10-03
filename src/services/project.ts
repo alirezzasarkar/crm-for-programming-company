@@ -34,7 +34,6 @@ export const createProject = async (projectData: ProjectFormInputs) => {
         'Content-Type': 'multipart/form-data', // Set content type for form data
       },
     });
-
     return response.data;
   } catch (error) {
     console.error("خطا در ایجاد پروژه:", error);
@@ -48,7 +47,6 @@ export const createProject = async (projectData: ProjectFormInputs) => {
 export const fetchProjects = async () => {
   try {
     const response = await apiClient.get('/projects/projects/');
-    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);

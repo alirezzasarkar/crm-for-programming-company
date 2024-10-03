@@ -56,6 +56,16 @@ const AddProjectPage: React.FC = () => {
     fetchEmployees();
   }, []);
 
+  // به‌روزرسانی فرم بعد از تغییر اعضای تیم
+  useEffect(() => {
+    setValue("team_members", selectedTeamMembers);
+  }, [selectedTeamMembers, setValue]);
+
+  // به‌روزرسانی فرم بعد از تغییر مسئول پروژه
+  useEffect(() => {
+    setValue("responsible_person", selectedResponsiblePerson);
+  }, [selectedResponsiblePerson, setValue]);
+
   const onSubmit: SubmitHandler<ProjectFormInputs> = async (data) => {
     console.log("Submitted data:", data);
 
@@ -86,12 +96,17 @@ const AddProjectPage: React.FC = () => {
 
   const handleTeamMemberSelect = (id: number) => {
     setSelectedTeamMembers((prev) => [...prev, id]);
-    setValue("team_members", [...selectedTeamMembers, id]);
   };
 
   const handleResponsiblePersonSelect = (id: number) => {
     setSelectedResponsiblePerson(id);
-    setValue("responsible_person", id);
+  };
+
+  const handleClearSelection = (
+    newSelectedMembers: { id: number; last_name: string }[]
+  ) => {
+    const newSelectedIds = newSelectedMembers.map((member) => member.id);
+    setSelectedTeamMembers(newSelectedIds);
   };
 
   return (
@@ -100,12 +115,15 @@ const AddProjectPage: React.FC = () => {
         handleFileChange={handleFileChange}
         employees={employees}
         onTeamMemberSelect={handleTeamMemberSelect}
-        selectedTeamMembers={selectedTeamMembers}
+        selectedTeamMembers={employees.filter((emp) =>
+          selectedTeamMembers.includes(emp.id)
+        )}
         selectedResponsiblePerson={selectedResponsiblePerson}
         onResponsiblePersonSelect={handleResponsiblePersonSelect}
         register={register}
         errors={errors}
         setValue={setValue}
+        onClearSelection={handleClearSelection}
       />
     </form>
   );

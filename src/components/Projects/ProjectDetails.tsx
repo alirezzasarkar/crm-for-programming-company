@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import moment from "jalali-moment"; // کتابخانه برای تبدیل تاریخ
 import { useAuth } from "../Authentication/AuthContext";
+import { getEmployees } from "../../services/project"; // مسیر صحیح فایل API خود را وارد کنید
 
 interface ProjectDetailsProps {
   project: {
@@ -13,6 +14,7 @@ interface ProjectDetailsProps {
     description: string;
     start_date: string;
     end_date: string;
+    responsible_person: number;
     status: string;
     design_files: string;
     domain_end_date: string;
@@ -35,6 +37,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
   const {
     id,
     project_name,
+    responsible_person,
     domain,
     manager_full_name,
     phone_number,
@@ -48,6 +51,27 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
     contract_files,
     team_members,
   } = project;
+
+  // وضعیت کارمندان
+  const [employees, setEmployees] = useState<{ [key: number]: string }>({});
+
+  // دریافت کارمندان
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const employeesData = await getEmployees();
+        const employeeMap: { [key: number]: string } = {};
+        employeesData.forEach((employee: { id: number; last_name: string }) => {
+          employeeMap[employee.id] = employee.last_name; // ایجاد دیکشنری از ID به نام خانوادگی
+        });
+        setEmployees(employeeMap);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
 
   // تابع ترجمه وضعیت پروژه به فارسی
   const translateStatus = (status: string) => {
@@ -74,8 +98,14 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             <td className="px-4 py-3 text-gray-500">{project_name}</td>
           </tr>
           <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">مدیر پروژه:</td>
+            <td className="px-4 py-3 text-gray-700">کارفرما:</td>
             <td className="px-4 py-3 text-gray-500">{manager_full_name}</td>
+          </tr>
+          <tr className="w-full border-b border-gray-200">
+            <td className="px-4 py-3 text-gray-700">مدیر پروژه:</td>
+            <td className="px-4 py-3 text-gray-500">
+              {employees[responsible_person] || "ناشناخته"}
+            </td>
           </tr>
           {user?.role === "manager" && (
             <tr className="w-full border-b border-gray-200">
@@ -144,10 +174,13 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
               </td>
             </tr>
           )}
+
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">اعضای تیم:</td>
             <td className="px-4 py-3 text-gray-500">
-              {team_members.join(", ")}
+              {team_members
+                .map((memberId) => employees[memberId] || "ناشناخته")
+                .join(", ")}
             </td>
           </tr>
           <tr className="w-full border-b border-gray-200">

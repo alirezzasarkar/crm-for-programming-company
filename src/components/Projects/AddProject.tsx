@@ -62,6 +62,11 @@ const AddProject: React.FC<AddProjectProps> = ({
     setManagerDropdownOpen(false);
   };
 
+  // تابع حذف مسئول پروژه
+  const handleRemoveResponsiblePerson = () => {
+    onResponsiblePersonSelect(0); // تنظیم ID به 0 برای حذف مسئول
+  };
+
   const handleRemoveTeamMember = (id: number) => {
     const newSelectedTeamMembers = selectedTeamMembers.filter(
       (member) => member.id !== id
@@ -85,7 +90,7 @@ const AddProject: React.FC<AddProjectProps> = ({
           id="project_name"
           label="نام پروژه"
           type="text"
-          placeholder="نام پروژه"
+          placeholder="نام پروژه را وارد کنید"
           register={register}
           errors={errors}
         />
@@ -93,7 +98,7 @@ const AddProject: React.FC<AddProjectProps> = ({
           id="manager_full_name"
           label="نام کارفرما"
           type="text"
-          placeholder="نام کارفرما"
+          placeholder="نام کارفرما را وارد کنید"
           register={register}
           errors={errors}
         />
@@ -101,7 +106,7 @@ const AddProject: React.FC<AddProjectProps> = ({
           id="phone_number"
           label="شماره تماس کارفرما"
           type="text"
-          placeholder="شماره تماس کارفرما"
+          placeholder="شماره تماس کارفرما را وارد کنید"
           register={register}
           errors={errors}
         />
@@ -109,7 +114,7 @@ const AddProject: React.FC<AddProjectProps> = ({
           id="domain"
           label="دامنه"
           type="text"
-          placeholder="دامنه"
+          placeholder="دامنه را وارد کنید"
           register={register}
           errors={errors}
         />
@@ -142,6 +147,7 @@ const AddProject: React.FC<AddProjectProps> = ({
           dropdownOpen={managerDropdownOpen}
           handleToggle={handleManagerDropdownToggle}
           handleSelect={handleManagerClick}
+          handleRemove={handleRemoveResponsiblePerson} // Add handleRemove for responsible person
           value={selectedResponsiblePersonName}
           errors={errors}
         />
@@ -161,7 +167,7 @@ const AddProject: React.FC<AddProjectProps> = ({
               onChange={(e) => setValue("status", e.target.value)}
             >
               <option value="" disabled>
-                انتخاب وضعیت پروژه
+                لطفا وضعیت پروژه را انتخاب کنید
               </option>
               {projectStatusOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -189,12 +195,24 @@ const AddProject: React.FC<AddProjectProps> = ({
           <DatePickerField
             key={field}
             id={field}
-            label={field
-              .replace(/_/g, " ")
-              .replace(/\b\w/g, (c) => c.toUpperCase())} // Replace underscores with spaces and capitalize
-            placeholder={field
-              .replace(/_/g, " ")
-              .replace(/\b\w/g, (c) => c.toUpperCase())} // Capitalize the first letter of each word
+            label={
+              field === "domain_end_date"
+                ? "تاریخ پایان دامنه"
+                : field === "host_end_date"
+                ? "تاریخ پایان هاست"
+                : field === "start_date"
+                ? "تاریخ شروع"
+                : "تاریخ پایان"
+            }
+            placeholder={
+              field === "domain_end_date"
+                ? "تاریخ پایان دامنه را وارد کنید"
+                : field === "host_end_date"
+                ? "تاریخ پایان هاست را وارد کنید"
+                : field === "start_date"
+                ? "تاریخ شروع را وارد کنید"
+                : "تاریخ پایان را وارد کنید"
+            }
             errors={errors}
             register={register}
             setValue={setValue}
@@ -222,7 +240,7 @@ const AddProject: React.FC<AddProjectProps> = ({
           <div className="w-2/3">
             <textarea
               id="description"
-              placeholder="توضیحات"
+              placeholder="توضیحات را وارد کنید"
               rows={4}
               className="w-full p-2 border border-gray-300 rounded-md"
               {...register("description", { required: "توضیحات الزامی است" })}
