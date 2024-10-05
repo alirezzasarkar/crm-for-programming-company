@@ -4,6 +4,7 @@ import TaskDetails from "../components/Tasks/TaskDetails";
 import { getTaskDetails, updateTask } from "../services/task"; // ایمپورت تابع API
 import moment from "jalali-moment"; // ایمپورت کتابخانه برای تبدیل تاریخ
 import { jwtDecode } from "jwt-decode"; // ایمپورت تابع برای دیکود کردن JWT
+import LoadingSpinner from "../components/Common/Loading";
 
 interface JwtPayload {
   user_id: number; // فرض اینکه id در توکن موجود است
@@ -78,15 +79,7 @@ const TaskDetailsPage: React.FC = () => {
 
   // کنترل بارگذاری و نمایش خطا
   if (loading) {
-    return <div>در حال بارگذاری...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  if (!task) {
-    return <div>تسکی پیدا نشد</div>; // متن به زبان فارسی
+    return <LoadingSpinner />;
   }
 
   return (

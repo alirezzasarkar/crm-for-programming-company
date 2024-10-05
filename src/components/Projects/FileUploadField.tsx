@@ -14,6 +14,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   setValue,
 }) => {
   const [fileNames, setFileNames] = useState<string[]>([]); // برای ذخیره نام فایل‌ها
+  console.log(fileNames);
 
   // تابعی برای مدیریت تغییرات فایل
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,14 +34,14 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
         <input
           id={id}
           type="file"
-          accept=".zip,.pdf" // تنها فایل‌های zip و pdf پذیرفته می‌شود
+          accept=".zip" // تنها فایل‌های zip و pdf پذیرفته می‌شود
           onChange={handleFileChange} // استفاده از تابع handleFileChange
           multiple // اجازه بارگذاری چندین فایل
           className="hidden" // مخفی کردن ورودی فایل
         />
         <label htmlFor={id} className="flex items-center cursor-pointer">
           <span className="text-gray-400 border border-gray-200 py-2 px-3 rounded-xl">
-            آپلود به صورت فایل زیپ یا PDF
+            آپلود به صورت فایل زیپ
           </span>
           <FaUpload className="text-gray-400 mr-2" />
         </label>
