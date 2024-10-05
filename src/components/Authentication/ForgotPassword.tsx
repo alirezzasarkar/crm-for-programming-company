@@ -27,8 +27,6 @@ const ForgotPassword: React.FC = () => {
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     try {
-      console.log(data);
-
       const { value: code } = await Swal.fire({
         title: "کد تأیید را وارد کنید",
         input: "text",

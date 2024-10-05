@@ -138,11 +138,11 @@ const WorkTimeEntry: React.FC = () => {
   return (
     <div className="p-4 bg-white rounded shadow-md rtl">
       <Title title="وارد کردن زمان کاری" />
-      <WeekDaysSlider
+      {/* <WeekDaysSlider
         days={weekDates}
         activeDate={today} // پاس کردن تاریخ جاری
         onDayClick={(index) => console.log("Clicked day index:", index)}
-      />
+      /> */}
       <div className="mt-20">
         <TimerDisplay time={time} />
       </div>

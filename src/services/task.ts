@@ -42,7 +42,6 @@ export const createTask = async (taskData: FormData) => {
         'Content-Type': 'multipart/form-data', // تنظیم هدر مناسب برای ارسال فایل
       },
     });
-    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error); // مدیریت خطا
@@ -76,7 +75,6 @@ export const deleteTask = async (id: number) => {
 export const getTaskDetails = async (id: number) => {
   try {
     const response = await apiClient.get(`/task/tasks/${id}`);
-    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);

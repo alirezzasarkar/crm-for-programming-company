@@ -14,7 +14,6 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
   setValue,
 }) => {
   const [fileNames, setFileNames] = useState<string[]>([]); // برای ذخیره نام فایل‌ها
-  console.log(fileNames);
 
   // تابعی برای مدیریت تغییرات فایل
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

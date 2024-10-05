@@ -27,7 +27,6 @@ export const getEmployees = async () => {
 export const fetchReports = async () => {
   try {
     const response = await apiClient.get('/workreport/workreports/');
-    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);

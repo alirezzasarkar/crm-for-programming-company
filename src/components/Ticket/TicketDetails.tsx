@@ -45,9 +45,6 @@ const TicketDetails: React.FC = () => {
           className="hidden"
           onChange={(event) => {
             const file = event.target.files?.[0];
-            if (file) {
-              console.log("Selected file:", file.name);
-            }
           }}
         />
         <label

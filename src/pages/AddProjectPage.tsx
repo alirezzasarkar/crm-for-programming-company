@@ -67,8 +67,6 @@ const AddProjectPage: React.FC = () => {
   }, [selectedResponsiblePerson, setValue]);
 
   const onSubmit: SubmitHandler<ProjectFormInputs> = async (data) => {
-    console.log("Submitted data:", data);
-
     try {
       await createProject(data);
       await Swal.fire({

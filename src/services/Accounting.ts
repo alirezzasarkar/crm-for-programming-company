@@ -35,7 +35,6 @@ export const createTransaction = async (transactionData: any, selectedFile: File
 export const dashboardInfo = async () => {
   try {
     const response = await apiClient.get('/accounting/accounting-overview/');
-    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);
@@ -49,7 +48,6 @@ export const dashboardInfo = async () => {
 export const fetchSalaries = async () => {
     try {
       const response = await apiClient.get('/accounting/salaries/');
-      console.log(response.data)
       return response.data;
     } catch (error) {
       handleApiError(error);

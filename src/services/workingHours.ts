@@ -28,7 +28,6 @@ export const getEmployees = async () => {
 export const getWorkingHours = async () => {
   try {
     const response = await apiClient.get('/timesheet/list_for_admin/');
-    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);
@@ -40,7 +39,6 @@ export const getWorkingHours = async () => {
 export const getWorkingHoursEmployee = async () => {
   try {
     const response = await apiClient.get('/timesheet/list/');
-    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);
