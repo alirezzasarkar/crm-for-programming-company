@@ -117,10 +117,10 @@ const ProfilePage: React.FC = () => {
       {isLoading && <LoadingSpinner />} {/* نمایش اسپینر در زمان لودینگ */}
       <UserProfile
         userProfile={userProfile}
-        handlePasswordChange={handlePasswordChange}
-        sendOtpCode={sendOtpCodeHandler}
-        isPasswordModalOpen={isPasswordModalOpen}
-        setIsPasswordModalOpen={setIsPasswordModalOpen}
+        // handlePasswordChange={handlePasswordChange}
+        // sendOtpCode={sendOtpCodeHandler}
+        // isPasswordModalOpen={isPasswordModalOpen}
+        // setIsPasswordModalOpen={setIsPasswordModalOpen}
         userProfileData={userProfileData}
       />
     </>

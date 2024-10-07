@@ -2,34 +2,35 @@ import React from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import Title from "../Common/Title";
 import Search from "../Common/Search";
-import moment from "jalali-moment"; // Import jalali-moment for day of the week
+import moment from "jalali-moment";
 
 interface WorkTimeEntry {
   id: number;
-  user: string; // Change from number to string to store last name
-  team: string;
-  total_worked_time: string;
-  jalali_date: string; // Include jalali_date here
+  user: string; // نام خانوادگی کارمند
+  team: string; // تیم کارمند
+  total_worked_time: string; // زمان کار کرده
+  date: string; // تاریخ
+  jalali_date: string; // تاریخ به فرمت جلالی
 }
 
 interface WorkingHoursListProps {
   workTimeEntries: WorkTimeEntry[];
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  onEntryClick: (entry: WorkTimeEntry) => void;
+  // onEntryClick: (entry: WorkTimeEntry) => void;
   onDelete: (id: number) => void;
   onUpdate: (id: number, updatedEntry: WorkTimeEntry) => void;
-  setPeriod: (period: "week" | "month" | "all") => void; // اضافه کردن پروپ برای setPeriod
+  setPeriod: (period: "week" | "month" | "all") => void;
 }
 
 const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
   workTimeEntries,
   searchQuery,
   onSearchChange,
-  onEntryClick,
+  // onEntryClick,
   onDelete,
   onUpdate,
-  setPeriod, // دریافت setPeriod به عنوان یک پروپ
+  setPeriod,
 }) => {
   return (
     <>
@@ -83,9 +84,9 @@ const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
               .reverse()
               .map((entry) => (
                 <tr
-                  key={entry.id} // تغییر key به entry.id به جای index
+                  key={entry.id}
                   className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
-                  onClick={() => onEntryClick(entry)} // افزودن قابلیت کلیک روی ردیف
+                  // onClick={() => onEntryClick(entry)}
                 >
                   <td className="py-3 text-sm text-center">{entry.user}</td>
                   <td className="py-3 text-sm text-center">

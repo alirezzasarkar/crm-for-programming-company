@@ -81,24 +81,24 @@ const ReportDetails: React.FC<{ reportId: number }> = ({ reportId }) => {
 
       <div className="bg-gray-100 p-4 rounded mt-4">
         <p className="text-sm text-gray-700 leading-relaxed">
-          {report.content || "محتوای گزارش یافت نشد."}
+          {report?.content || "محتوای گزارش یافت نشد."}
         </p>
         <div className="text-right mt-2 text-gray-500 text-xs">
-          {moment(report.date).format("jYYYY/jMM/jDD")}
+          {moment(report?.date).format("jYYYY/jMM/jDD")}
           {/* تبدیل تاریخ به شمسی */}
         </div>
       </div>
 
       <button
         className={`px-6 py-2 rounded mt-4 ${
-          report.is_approved ? "bg-green-500" : "bg-orange-600"
+          report?.is_approved ? "bg-green-500" : "bg-orange-600"
         } text-white`}
         onClick={handleApprove}
-        disabled={report.is_approved || isApproving} // دکمه غیر فعال می‌شود اگر تایید شده باشد یا در حال تایید باشد
+        disabled={(report && report.is_approved) || isApproving} // دکمه غیر فعال می‌شود اگر تایید شده باشد یا در حال تایید باشد
       >
         {isApproving
           ? "در حال تایید..."
-          : report.is_approved
+          : report?.is_approved
           ? "بررسی شده"
           : "گزارش کار تایید نشده"}
       </button>

@@ -25,7 +25,7 @@ export const createProject = async (projectData: ProjectFormInputs) => {
           formData.append(key, file); // Append each file to the FormData
         });
       } else {
-        formData.append(key, projectData[key]); // Append other fields
+        formData.append(key, projectData[key as keyof ProjectFormInputs]); // Use key as keyof ProjectFormInputs
       }
     }
 
@@ -37,10 +37,10 @@ export const createProject = async (projectData: ProjectFormInputs) => {
     return response.data;
   } catch (error) {
     console.error("خطا در ایجاد پروژه:", error);
-    // You might want to handle errors more gracefully, maybe throw them or show a message
     throw error; // Rethrow or handle as per your application logic
   }
 };
+
 
 
 // دریافت لیست پروژه‌ها

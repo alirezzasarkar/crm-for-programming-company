@@ -12,6 +12,7 @@ interface Report {
   team: string;
   is_approved: boolean;
   date: string;
+  content: string; // این ویژگی را اضافه کنید تا در هر دو جا یکسان باشد
 }
 
 interface ReportListProps {

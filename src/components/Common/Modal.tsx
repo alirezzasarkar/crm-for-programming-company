@@ -6,7 +6,7 @@ interface ModalProps {
   children?: React.ReactNode; // اضافه کردن ویژگی children
 }
 
-const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ onClose }) => {
   // Handle escape key press to close modal
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {

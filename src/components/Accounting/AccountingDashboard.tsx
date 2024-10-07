@@ -7,10 +7,28 @@ import { Link } from "react-router-dom";
 import LoadingSpinner from "../Common/Loading"; // Import LoadingSpinner component
 import Swal from "sweetalert2"; // Import SweetAlert2
 
-const TransactionTable = ({ title, transactions }) => {
-  const [hoveredTransaction, setHoveredTransaction] = useState(null);
+// تعریف تایپ برای تراکنش‌ها
+interface Transaction {
+  id: number;
+  amount: number;
+  date: string;
+  description?: string;
+}
 
-  const handleMouseEnter = (transaction) => {
+// تعریف props برای TransactionTable
+interface TransactionTableProps {
+  title: string;
+  transactions: Transaction[];
+}
+
+const TransactionTable: React.FC<TransactionTableProps> = ({
+  title,
+  transactions,
+}) => {
+  const [hoveredTransaction, setHoveredTransaction] =
+    useState<Transaction | null>(null);
+
+  const handleMouseEnter = (transaction: Transaction) => {
     setHoveredTransaction(transaction);
   };
 
@@ -66,8 +84,13 @@ const TransactionTable = ({ title, transactions }) => {
   );
 };
 
-const Dashboard = () => {
-  const [data, setData] = useState(null);
+const Dashboard: React.FC = () => {
+  const [data, setData] = useState<{
+    income_transactions: Transaction[];
+    outcome_transactions: Transaction[];
+    total_account_balance: number;
+    transactions_grouped_by_5days: any[];
+  } | null>(null);
   const [loading, setLoading] = useState(true); // Loading state
 
   // Fetch dashboard data on mount
@@ -158,7 +181,7 @@ const Dashboard = () => {
           <div className="bg-white rounded shadow-md">
             <TransactionChart
               transactionsGroupedBy5Days={transactions_grouped_by_5days}
-            />{" "}
+            />
             {/* Pass grouped transactions */}
           </div>
         </div>

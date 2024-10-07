@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { getEmployees, createProject } from "../services/project";
 
 export interface ProjectFormInputs {
+  [key: string]: any; // Allows indexing with string keys
   project_name: string;
   responsible_person: number;
   domain: string;
@@ -14,6 +15,7 @@ export interface ProjectFormInputs {
   host_end_date: string;
   phone_number: string;
   status: string;
+  files: File[];
   team_members: number[];
   design_files?: FileList;
   contract_files?: FileList;
@@ -88,7 +90,7 @@ const AddProjectPage: React.FC = () => {
     field: keyof ProjectFormInputs
   ) => {
     if (event.target.files) {
-      setValue(field, event.target.files);
+      setValue(field as string, event.target.files); // تبدیل به string
     }
   };
 

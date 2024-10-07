@@ -3,8 +3,8 @@ import React from "react";
 interface ControlButtonsProps {
   onStart: () => void;
   onPause: () => void;
-  onStop: () => void;
   onSubmit: () => void;
+  onResume: () => void;
   isRunning: boolean;
   isPaused: boolean;
 }
@@ -12,8 +12,8 @@ interface ControlButtonsProps {
 const ControlButtons: React.FC<ControlButtonsProps> = ({
   onStart,
   onPause,
-  onStop,
   onSubmit,
+  onResume,
   isRunning,
   isPaused,
 }) => {
@@ -38,19 +38,12 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
       {isPaused && (
         <button
           className="px-6 py-2 mx-2 bg-blue-600 text-white rounded"
-          onClick={onStart}
+          onClick={onResume}
         >
           ادامه
         </button>
       )}
-      {(isRunning || isPaused) && (
-        <button
-          className="px-6 py-2 mx-2 bg-red-600 text-white rounded"
-          onClick={onStop}
-        >
-          توقف
-        </button>
-      )}
+      {/* دکمه توقف حذف شده است */}
       <button
         className="px-6 py-2 mx-2 bg-green-600 text-white rounded"
         onClick={onSubmit}

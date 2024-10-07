@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 import { IoMdLogIn } from "react-icons/io";
 
 interface ForgotPasswordFormData {
-  phone: string;
+  phone_number: string;
   newPassword: string;
 }
 
@@ -68,11 +68,11 @@ const ForgotPassword: React.FC = () => {
               <TextField
                 type="text"
                 placeholder="شماره موبایل"
-                {...register("phone")}
+                {...register("phone_number")}
               />
-              {errors.phone && (
+              {errors.phone_number && (
                 <p className="text-red-500 mt-2 text-sm">
-                  {errors.phone.message}
+                  {errors.phone_number.message}
                 </p>
               )}
             </div>

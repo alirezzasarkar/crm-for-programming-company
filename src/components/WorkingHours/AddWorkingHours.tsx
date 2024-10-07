@@ -75,7 +75,21 @@ const WorkTimeEntry: React.FC = () => {
   const resumeTimer = async () => {
     try {
       await resumeWorking(); // Call the API to resume working
-      startTimer();
+      setIsPaused(false);
+      const startTime = Date.now() - elapsedTime; // Calculate the start time again
+      const interval = window.setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        setElapsedTime(elapsed);
+        const minutes = Math.floor((elapsed / 1000 / 60) % 60);
+        const seconds = Math.floor((elapsed / 1000) % 60);
+        setTime(
+          `${minutes < 10 ? "0" : ""}${minutes}:${
+            seconds < 10 ? "0" : ""
+          }${seconds}`
+        );
+      }, 1000);
+      setTimerInterval(interval); // Set the new interval
+      setIsRunning(true); // Set the running state to true
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -85,22 +99,8 @@ const WorkTimeEntry: React.FC = () => {
     }
   };
 
-  const stopTimer = async () => {
-    try {
-      await stopWorking(); // Call the API to stop working
-      setIsRunning(false);
-      setIsPaused(false);
-      if (timerInterval !== null) clearInterval(timerInterval);
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "خطا",
-        text: "خطایی در ثبت زمان کاری رخ داد.",
-      });
-    }
-  };
-
   const submitTime = async () => {
+    stopWorking();
     try {
       await Swal.fire({
         icon: "success",
@@ -138,11 +138,6 @@ const WorkTimeEntry: React.FC = () => {
   return (
     <div className="p-4 bg-white rounded shadow-md rtl">
       <Title title="وارد کردن زمان کاری" />
-      {/* <WeekDaysSlider
-        days={weekDates}
-        activeDate={today} // پاس کردن تاریخ جاری
-        onDayClick={(index) => console.log("Clicked day index:", index)}
-      /> */}
       <div className="mt-20">
         <TimerDisplay time={time} />
       </div>
@@ -150,8 +145,7 @@ const WorkTimeEntry: React.FC = () => {
         <ControlButtons
           onStart={startTimer}
           onPause={pauseTimer}
-          onStop={stopTimer}
-          onSubmit={submitTime}
+          onSubmit={submitTime} // Set submit as the action for the button
           isRunning={isRunning}
           isPaused={isPaused}
           onResume={resumeTimer} // Add resume function for resuming

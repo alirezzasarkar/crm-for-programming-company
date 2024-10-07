@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import moment from "jalali-moment";
-import { getWeekDates, getStartOfWeek } from "../../utils/dateUtils"; // توابعی که قبلاً تعریف شده‌اند
 
 const DateFilter: React.FC<{
   dateFilter: string;
