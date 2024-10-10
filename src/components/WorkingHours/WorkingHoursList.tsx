@@ -27,11 +27,15 @@ const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
   workTimeEntries,
   searchQuery,
   onSearchChange,
-  // onEntryClick,
   onDelete,
   onUpdate,
   setPeriod,
 }) => {
+  // فیلتر کردن ورودی‌ها بر اساس جستجو در نام خانوادگی
+  const filteredEntries = workTimeEntries.filter((entry) =>
+    entry.user.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
       <div className="flex justify-start mb-4 rtl">
@@ -79,14 +83,13 @@ const WorkingHoursList: React.FC<WorkingHoursListProps> = ({
             </tr>
           </thead>
           <tbody>
-            {workTimeEntries
+            {filteredEntries
               .slice()
               .reverse()
               .map((entry) => (
                 <tr
                   key={entry.id}
                   className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
-                  // onClick={() => onEntryClick(entry)}
                 >
                   <td className="py-3 text-sm text-center">{entry.user}</td>
                   <td className="py-3 text-sm text-center">
