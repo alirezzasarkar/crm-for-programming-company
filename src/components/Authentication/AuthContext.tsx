@@ -23,7 +23,7 @@ interface AuthContextType {
   login: (credentials: {
     phone_number: string;
     password: string;
-  }) => Promise<void>;
+  }) => Promise<boolean>; // تغییر نوع به Promise<boolean>
   register: (userData: {
     first_name: string;
     last_name: string;
@@ -67,15 +67,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const login = async (credentials: {
     phone_number: string;
     password: string;
-  }) => {
+  }): Promise<boolean> => {
     try {
       const response = await apiLogin(credentials);
       const token = response.access;
       localStorage.setItem("authToken", token);
       setUser(decodeToken(token));
+      return true; // بازگرداندن true در صورت موفقیت
     } catch (error) {
       console.error("Login failed:", error);
-      throw new Error("Login failed");
+      return false; // بازگرداندن false در صورت شکست
     }
   };
 

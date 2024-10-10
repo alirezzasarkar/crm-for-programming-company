@@ -31,10 +31,10 @@ const LoginPage: React.FC = () => {
   const onSubmit = async (data: LoginFormData) => {
     setLoading(true); // آغاز بارگذاری
     try {
-      await login(data);
+      const loginResult = await login(data); // دریافت نتیجه لاگین
 
-      // چک کردن اینکه آیا کاربر لاگین شده است
-      if (isAuthenticated) {
+      // چک کردن نتیجه لاگین
+      if (loginResult) {
         Swal.fire({
           title: "ورود موفقیت‌آمیز",
           text: "شما با موفقیت وارد شدید",
