@@ -70,11 +70,15 @@ const TaskDetails: React.FC<TaskDetailsProps> = ({
           <Title title="جزئیات تسک" />
           <div className="mb-4 mt-4">
             <span className="font-bold text-gray-700 text-sm">عنوان</span>
-            <div className="bg-gray-100 p-3 rounded-md mt-2">{title}</div>
+            <div className="bg-gray-100 p-3 rounded-md mt-2 break-words overflow-wrap break-word max-w-full">
+              {title}
+            </div>
           </div>
           <div className="mt-7">
             <span className="font-bold text-gray-700 text-sm">جزئیات</span>
-            <div className="bg-gray-100 p-3 rounded-md mt-2">{description}</div>
+            <div className="bg-gray-100 p-3 rounded-md mt-2  break-words overflow-wrap max-w-full">
+              {description}
+            </div>
           </div>
         </div>
         <div className="mt-10">

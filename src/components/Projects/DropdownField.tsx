@@ -8,7 +8,7 @@ interface Employee {
 
 interface DropdownFieldProps {
   id: string;
-  label: string;
+  label?: string; // Optional label
   placeholder: string;
   employees: Employee[];
   selectedItems: Employee[];
@@ -78,10 +78,13 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
 
   return (
     <div className="col-span-2 md:col-span-1 flex items-center mt-2">
-      <label htmlFor={id} className="w-1/5 ml-5 text-gray-700 text-right">
-        {label}
-      </label>
-      <div className="w-2/3 relative">
+      {/* بررسی اینکه آیا label تعریف شده است */}
+      {label && (
+        <label htmlFor={id} className="w-1/5 ml-5 text-gray-700 text-right">
+          {label}
+        </label>
+      )}
+      <div className={label ? "w-2/3 relative" : "w-full relative"}>
         {/* اینپوت برای نمایش اسامی انتخاب‌شده */}
         <input
           type="text"

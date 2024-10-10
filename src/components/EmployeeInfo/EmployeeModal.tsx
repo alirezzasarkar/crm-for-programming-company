@@ -52,7 +52,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({
             <strong className="text-blue-600 text-sm">
               نام و نام خانوادگی:
             </strong>
-            {employee.name}
+            {employee.name} {employee.last_name}
           </p>
           {user?.role === "manager" && (
             <p className="text-right border border-gray-300 rounded-2xl p-1 px-3 mt-2 flex justify-between text-sm">

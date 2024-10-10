@@ -5,7 +5,11 @@ import { GoProjectRoadmap } from "react-icons/go";
 import { CiTimer } from "react-icons/ci";
 import { FaTasks } from "react-icons/fa";
 import { IoTicketOutline } from "react-icons/io5";
-import { IoIosInformationCircleOutline } from "react-icons/io";
+import {
+  IoIosAddCircle,
+  IoIosInformationCircleOutline,
+  IoIosPeople,
+} from "react-icons/io";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { TbReport } from "react-icons/tb";
 import { FaRegUser } from "react-icons/fa";
@@ -170,6 +174,27 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           <SidebarItem
             to="/dashboard/reports/list"
             icon={<TbReport />}
+            label="لیست"
+            isOpen={isOpen}
+          />
+        </SidebarItem>
+        <SidebarItem
+          to="/dashboard/meetings"
+          icon={<IoIosPeople />}
+          label="جلسات"
+          isOpen={isOpen}
+        >
+          <AccessControl role="manager">
+            <SidebarItem
+              to="/dashboard/meetings/entry"
+              icon={<IoIosAddCircle />}
+              label="وارد کردن"
+              isOpen={isOpen}
+            />
+          </AccessControl>
+          <SidebarItem
+            to="/dashboard/meetings/list"
+            icon={<IoIosPeople />}
             label="لیست"
             isOpen={isOpen}
           />

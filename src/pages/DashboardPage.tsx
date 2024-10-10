@@ -25,6 +25,9 @@ import TransactionListPage from "./TransactionListPage";
 import ProtectedRoute from "../components/Authentication/ProtectedRoutes";
 import AccessControl from "../components/Authentication/AccessControl"; // مسیر مناسب را تنظیم کنید
 import Dashboard from "../components/Dashboard/Dashboard";
+import MeetingEntryPage from "./MeetingEntryPage";
+import MeetingListPage from "./MeetingListPage";
+import MeetingDetailsPage from "./MeetingDetailsPage";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -187,6 +190,31 @@ const DashboardPage: React.FC = () => {
           element={
             <ProtectedRoute>
               <TicketDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="meetings/entry"
+          element={
+            <ProtectedRoute>
+              <MeetingEntryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="meetings/list"
+          element={
+            <ProtectedRoute>
+              <MeetingListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="meetings/detail/:id"
+          element={
+            <ProtectedRoute>
+              <MeetingDetailsPage />
             </ProtectedRoute>
           }
         />

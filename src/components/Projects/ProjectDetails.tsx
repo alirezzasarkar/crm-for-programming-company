@@ -183,9 +183,9 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
                 .join(", ")}
             </td>
           </tr>
-          <tr className="w-full border-b border-gray-200">
+          <tr className="w-full border-b border-gray-200 break-words overflow-wrap">
             <td className="px-4 py-3 text-gray-700">توضیحات:</td>
-            <td className="px-4 py-3 text-gray-500">{description}</td>
+            <td className="px-4 py-3 text-gray-500 max-w-24">{description}</td>
           </tr>
         </tbody>
       </table>
