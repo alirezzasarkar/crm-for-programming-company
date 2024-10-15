@@ -58,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <SidebarItem
                 to="/dashboard/content-production/entry"
                 icon={<GoProjectRoadmap />}
-                label="وارد کردن تولید محتوا"
+                label="وارد کردن پروژه مارکتینگ"
                 isOpen={isOpen}
               />
             </AccessControl>
@@ -66,7 +66,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           <SidebarItem
             to="/dashboard/projects/list"
             icon={<GoProjectRoadmap />}
-            label="لیست"
+            label="لیست وبسایت ها"
+            isOpen={isOpen}
+          />
+          <SidebarItem
+            to="/dashboard/content-production/list"
+            icon={<GoProjectRoadmap />}
+            label="لیست پروژه مارکتینگ"
             isOpen={isOpen}
           />
         </SidebarItem>

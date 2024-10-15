@@ -5,13 +5,7 @@ import LoadingSpinner from "../components/Common/Loading";
 // import { fetchMeetings } from "../services/meeting"; // سرویس API برای دریافت جلسات
 import Swal from "sweetalert2";
 import Title from "../components/Common/Title";
-
-// دیتای فیک
-const fakeMeetings = [
-  { id: 1, title: "جلسه اول", meeting_date: "2024-10-12" },
-  { id: 2, title: "جلسه دوم", meeting_date: "2024-10-15" },
-  { id: 3, title: "جلسه سوم", meeting_date: "2024-10-20" },
-];
+import { fetchMeetings } from "../services/meeting";
 
 interface Meeting {
   id: number;
@@ -29,8 +23,7 @@ const MeetingListPage = () => {
     const getMeetings = async () => {
       try {
         // استفاده از دیتای فیک به جای API
-        // const response = await fetchMeetings();
-        const response = fakeMeetings; // دیتای فیک
+        const response = await fetchMeetings();
         setMeetings(response);
       } catch (error) {
         Swal.fire({

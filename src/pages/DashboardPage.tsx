@@ -29,6 +29,7 @@ import MeetingEntryPage from "./MeetingEntryPage";
 import MeetingListPage from "./MeetingListPage";
 import MeetingDetailsPage from "./MeetingDetailsPage";
 import { AddContentProductionPage } from "./AddContentProductionPage";
+import ContentProjectListPage from "./ContentProductionListPage";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -143,6 +144,14 @@ const DashboardPage: React.FC = () => {
           element={
             <ProtectedRoute>
               <ProjectListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="content-production/list"
+          element={
+            <ProtectedRoute>
+              <ContentProjectListPage />
             </ProtectedRoute>
           }
         />

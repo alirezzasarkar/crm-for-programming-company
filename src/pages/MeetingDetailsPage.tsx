@@ -4,22 +4,25 @@ import MeetingDetails from "../components/Meeting/MeetingDetails";
 import Title from "../components/Common/Title";
 import LoadingSpinner from "../components/Common/Loading";
 import Swal from "sweetalert2";
+import {
+  fetchMeetingDetails,
+  updateMeetingMinutes,
+  deleteMeeting,
+} from "../services/meeting"; // Import your API functions here
 
-// داده فیک برای جلسه
-const fakeMeetingData = {
-  id: 1,
-  title: "جلسه بررسی پروژه",
-  date: "1403/07/01", // تاریخ به فرمت مناسب
-  details: "این جلسه برای بررسی پیشرفت پروژه برگزار می‌شود.",
-  attachment: "link/to/attachment.pdf", // لینک دانلود فایل پیوست
-  minutes:
-    "این صورت جلسه شامل نکات مطرح شده در جلسه است. این صورت جلسه شامل نکات مطرح شده در جلسه است.",
-  participants: [1, 2, 3], // لیستی از شناسه‌های کارمندان شرکت‌کننده
-};
+interface Meeting {
+  id: number;
+  title: string;
+  date: string;
+  description: string;
+  attachment: string;
+  records: string;
+  participants: number[];
+}
 
 const MeetingDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // دریافت ID جلسه از URL
-  const [meeting, setMeeting] = useState<typeof fakeMeetingData | null>(null);
+  const [meeting, setMeeting] = useState<Meeting | null>(null); // نوع Meeting را مشخص کنید
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -27,8 +30,8 @@ const MeetingDetailsPage: React.FC = () => {
   useEffect(() => {
     const getMeetingDetails = async () => {
       try {
-        // استفاده از داده فیک
-        setMeeting(fakeMeetingData);
+        const meetingData = await fetchMeetingDetails(id!); // دریافت جزئیات جلسه از API
+        setMeeting(meetingData);
       } catch (error) {
         setError("خطا در بارگذاری جزئیات جلسه");
       } finally {
@@ -49,25 +52,37 @@ const MeetingDetailsPage: React.FC = () => {
       cancelButtonColor: "#3085d6",
       confirmButtonText: "بله، حذف کن",
       cancelButtonText: "لغو",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        // کامنت کردن کد مربوط به حذف جلسه
-        // await deleteMeeting(meetingId); // فراخوانی API برای حذف جلسه
-        Swal.fire("حذف شد", "جلسه با موفقیت حذف شد", "success");
-        navigate("/dashboard/meetings"); // هدایت به صفحه لیست جلسات
+        try {
+          await deleteMeeting(meetingId); // فراخوانی API برای حذف جلسه
+          Swal.fire("حذف شد", "جلسه با موفقیت حذف شد", "success");
+          navigate("/dashboard/meetings/list"); // هدایت به صفحه لیست جلسات
+        } catch (error) {
+          Swal.fire("خطا", "خطا در حذف جلسه", "error");
+        }
       }
     });
   };
 
-  const handleAddMinutes = (newMinutes: string) => {
-    setMeeting((prevMeeting) => ({
-      ...prevMeeting!,
-      minutes: newMinutes,
-    }));
+  const handleAddRecords = async (newRecords: string) => {
+    try {
+      await updateMeetingMinutes(meeting!.id, { records: newRecords }); // استفاده از meeting با ! برای اطمینان از وجود آن
+      setMeeting((prevMeeting: Meeting | null) => {
+        if (prevMeeting) {
+          return {
+            ...prevMeeting,
+            records: newRecords,
+          };
+        }
+        return prevMeeting; // در صورتی که prevMeeting null باشد
+      });
+    } catch (error) {
+      console.error("خطا در به‌روزرسانی صورت جلسه:", error);
+    }
   };
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <div>{error}</div>;
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
@@ -76,7 +91,7 @@ const MeetingDetailsPage: React.FC = () => {
         <MeetingDetails
           meeting={meeting}
           onDeleteMeeting={handleDeleteMeeting}
-          onAddMinutes={handleAddMinutes}
+          onAddrecords={handleAddRecords} // به‌روزرسانی نام تابع
         />
       )}
     </div>

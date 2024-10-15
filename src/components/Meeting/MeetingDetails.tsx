@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import moment from "jalali-moment"; // کتابخانه برای تبدیل تاریخ
 import { useAuth } from "../Authentication/AuthContext";
-import { getEmployees } from "../../services/project"; // مسیر صحیح فایل API خود را وارد کنید
+import { getEmployees } from "../../services/meeting"; // Import the getEmployees API
 import Title from "../Common/Title";
 import RichTextEditor from "../Common/RichTextEditor"; // وارد کردن کامپوننت جدید
 
@@ -11,32 +11,33 @@ interface MeetingDetailsProps {
     id: number;
     title: string;
     date: string; // تاریخ جلسه به فرمت مناسب
-    details: string; // جزئیات جلسه
+    description: string; // جزئیات جلسه
     attachment: string; // لینک دانلود فایل پیوست
-    minutes: string; // صورت جلسه
+    records: string; // صورت جلسه
     participants: number[]; // لیستی از شناسه‌های کارمندان شرکت‌کننده
   };
   onDeleteMeeting: (meetingId: number) => void;
-  onAddMinutes: (newMinutes: string) => void; // تابع برای اضافه کردن صورت جلسه
+  onAddrecords: (newrecords: string) => void; // تابع برای اضافه کردن صورت جلسه
 }
 
 // تابع تبدیل تاریخ به شمسی
-const convertToJalali = (date: string) => {
-  return moment(date, "YYYY-MM-DD").locale("fa").format("jYYYY/jMM/jDD");
+const convertToJalali = (gregorianDate: string) => {
+  const jalaliDate = moment(gregorianDate).locale("fa").format("jYYYY/jMM/jDD");
+  return jalaliDate;
 };
 
 const MeetingDetails: React.FC<MeetingDetailsProps> = ({
   meeting,
   onDeleteMeeting,
-  onAddMinutes,
+  onAddrecords,
 }) => {
-  const { id, title, date, details, attachment, minutes, participants } =
+  const { id, title, date, description, attachment, records, participants } =
     meeting;
 
   // وضعیت کارمندان
   const [employees, setEmployees] = useState<{ [key: number]: string }>({});
   const [showModal, setShowModal] = useState(false);
-  const [newMinutes, setNewMinutes] = useState("");
+  const [newrecords, setNewrecords] = useState("");
 
   // دریافت کارمندان
   useEffect(() => {
@@ -58,12 +59,6 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ({
 
   const { user } = useAuth(); // استفاده از context احراز هویت
 
-  const handleAddMinutes = () => {
-    onAddMinutes(newMinutes);
-    setNewMinutes("");
-    setShowModal(false);
-  };
-
   return (
     <div className="bg-white p-6 rounded-lg shadow-md rtl">
       <table className="min-w-full bg-white mt-4">
@@ -78,7 +73,7 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ({
           </tr>
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">جزئیات:</td>
-            <td className="px-4 py-3 text-gray-500">{details}</td>
+            <td className="px-4 py-3 text-gray-500">{description}</td>
           </tr>
           <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">اعضای شرکت‌کننده:</td>
@@ -89,24 +84,10 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ({
             </td>
           </tr>
           <tr className="w-full border-b border-gray-200">
-            <td className="px-4 py-3 text-gray-700">فایل پیوست:</td>
-            <td className="px-4 py-3 text-gray-500">
-              {attachment && (
-                <a
-                  href={attachment}
-                  className="text-blue-500 hover:text-blue-700"
-                  download
-                >
-                  دانلود فایل
-                </a>
-              )}
-            </td>
-          </tr>
-          <tr className="w-full border-b border-gray-200">
             <td className="px-4 py-3 text-gray-700">صورت جلسه:</td>
             <td
               className="px-4 py-3 text-gray-500"
-              dangerouslySetInnerHTML={{ __html: minutes }}
+              dangerouslySetInnerHTML={{ __html: records }}
             />
           </tr>
         </tbody>
@@ -125,33 +106,32 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ({
             className="flex items-center px-4 py-2 bg-red-500 text-white rounded-lg mr-2"
             onClick={() => onDeleteMeeting(id)}
           >
-            <FaTrash className="mr-2" />
-            حذف جلسه
+            <FaTrash className="mr-1" />
+            حذف
           </button>
         )}
       </div>
 
-      {/* مدال صورت جلسه */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-md w-full h-full">
-            <Title title="صورت جلسه را وارد کنید" />
-            <RichTextEditor // استفاده از کامپوننت CKEditor جدید
-              data={newMinutes}
-              onChange={setNewMinutes}
-            />
-            <div className="flex justify-end mt-4">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+            <Title title="افزودن صورت جلسه" />
+            <RichTextEditor data={newrecords} onChange={setNewrecords} />
+            <div className="flex justify-end mt-6">
               <button
-                className="ml-2 px-4 py-2 bg-green-500 text-white rounded-lg mr-2"
-                onClick={handleAddMinutes}
+                className="px-4 ml-2 py-2 bg-blue-500 text-white rounded-lg mr-2"
+                onClick={() => {
+                  onAddrecords(newrecords); // استفاده از newrecords
+                  setShowModal(false); // بستن modal پس از ذخیره
+                }}
               >
-                تایید
+                ذخیره
               </button>
               <button
-                className="px-4 py-2 bg-gray-300 rounded-lg"
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg"
                 onClick={() => setShowModal(false)}
               >
-                بستن
+                لغو
               </button>
             </div>
           </div>

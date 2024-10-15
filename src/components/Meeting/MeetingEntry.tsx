@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Title from "../Common/Title";
-import { FaUpload } from "react-icons/fa";
 import MyDatePicker from "../Common/PersianDatePicker";
 import Swal from "sweetalert2";
 import { DateObject } from "react-multi-date-picker";
 import { createMeeting } from "../../services/meeting";
-import { jwtDecode } from "jwt-decode";
 import LoadingSpinner from "../Common/Loading";
 import DropdownField from "../Projects/DropdownField";
 import { getEmployees } from "../../services/meeting"; // Import getEmployees
-
-interface JwtPayload {
-  user_id: number;
-}
 
 interface Employee {
   id: number;
@@ -23,8 +17,6 @@ const MeetingEntry: React.FC = () => {
   const [title, setTitle] = useState("");
   const [meetingDate, setMeetingDate] = useState<DateObject | null>(null);
   const [details, setDetails] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [senderId, setSenderId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -34,16 +26,6 @@ const MeetingEntry: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      try {
-        const decoded: JwtPayload = jwtDecode(token);
-        setSenderId(decoded.user_id);
-      } catch (error) {
-        console.error("خطا در دیکود کردن JWT:", error);
-      }
-    }
-
     // دریافت لیست کارمندان از API
     const fetchEmployees = async () => {
       try {
@@ -75,47 +57,24 @@ const MeetingEntry: React.FC = () => {
     .map((member) => member.last_name)
     .join(", ");
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const selectedFile = event.target.files[0];
-      if (selectedFile.size > 10 * 1024 * 1024) {
-        Swal.fire({
-          icon: "error",
-          title: "فایل بیش از حد بزرگ است",
-          text: "اندازه فایل باید کمتر از 10 مگابایت باشد.",
-        });
-        return;
-      }
-      setFile(selectedFile);
-    }
-  };
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!senderId) {
-      Swal.fire({
-        icon: "error",
-        title: "خطا",
-        text: "شناسه فرستنده موجود نیست.",
-      });
-      return;
-    }
-
     setLoading(true);
     try {
-      const formData = new FormData();
+      const formData = new FormData(); // ایجاد یک نمونه از FormData
       formData.append("title", title);
       formData.append("description", details);
       if (meetingDate) {
         formData.append("meeting_date", meetingDate.toDate().toISOString());
       }
-      if (file) {
-        formData.append("file", file);
-      }
-      formData.append("sender", senderId.toString());
 
-      await createMeeting(formData);
+      // اضافه کردن شرکت‌کنندگان به FormData به‌صورت جداگانه
+      selectedTeamMembers.forEach((member) => {
+        formData.append("participants", member.id.toString()); // اضافه کردن هر شناسه به FormData
+      });
+
+      await createMeeting(formData); // ارسال به API
 
       await Swal.fire({
         icon: "success",
@@ -123,10 +82,11 @@ const MeetingEntry: React.FC = () => {
         text: "جلسه شما با موفقیت ارسال شد.",
       });
 
+      // پاک کردن فرم بعد از ثبت
       setTitle("");
       setMeetingDate(null);
       setDetails("");
-      setFile(null);
+      setSelectedTeamMembers([]);
     } catch (error) {
       await Swal.fire({
         icon: "error",
@@ -153,7 +113,7 @@ const MeetingEntry: React.FC = () => {
         setTitle("");
         setMeetingDate(null);
         setDetails("");
-        setFile(null);
+        setSelectedTeamMembers([]);
       }
     });
   };
@@ -206,25 +166,7 @@ const MeetingEntry: React.FC = () => {
             className="w-full p-2 border rounded-xl h-24"
           />
         </div>
-        <div className="mb-4">
-          <div className="w-1/3">
-            <input
-              id="meetingFile"
-              type="file"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-            <label
-              htmlFor="meetingFile"
-              className="flex items-center cursor-pointer"
-            >
-              <span className="text-gray-400 border rounded-xl py-2 px-3 rounded-lg w-4/6">
-                انتخاب فایل
-              </span>
-              <FaUpload className="text-gray-400 mr-2" />
-            </label>
-          </div>
-        </div>
+
         <div className="flex justify-start mt-10">
           <button
             type="submit"

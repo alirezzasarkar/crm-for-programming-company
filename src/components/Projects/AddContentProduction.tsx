@@ -1,10 +1,5 @@
-import React from "react";
-import {
-  UseFormRegister,
-  FieldErrors,
-  useForm,
-  UseFormSetValue,
-} from "react-hook-form";
+import React, { useState } from "react";
+import { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
 import InputField from "./InputField";
 import DatePickerField from "./DatePickerField";
 import CheckboxField from "./CheckboxField";
@@ -13,6 +8,7 @@ import Title from "../Common/Title";
 import Button from "../Common/Button";
 import { FaSave } from "react-icons/fa";
 import FileUploadField from "./FileUploadField";
+import DropdownField from "./DropdownField";
 
 // در فایل AddContentProduction.tsx
 
@@ -39,10 +35,21 @@ export interface ContentProjectFormInputs {
   outOfCityShoot: boolean;
 }
 
+// Define the props for the component
 interface AddContentProjectProps {
+  employees: Array<{ id: number; last_name: string; first_name: string }>; // Define the type for employees
+  selectedTeamMembers: Array<{
+    id: number;
+    last_name: string;
+    first_name: string;
+  }>; // Define the type for selected team members
   register: UseFormRegister<ContentProjectFormInputs>;
   errors: FieldErrors<ContentProjectFormInputs>;
-  setValue: UseFormSetValue<ContentProjectFormInputs>; // اضافه کردن تایپ برای setValue
+  setValue: UseFormSetValue<ContentProjectFormInputs>;
+  onTeamMemberSelect: (id: number) => void; // Add the type for onTeamMemberSelect
+  onClearSelection: (
+    members: Array<{ id: number; last_name: string; first_name: string }>
+  ) => void; // Add the type for onClearSelection
 }
 
 const projectStatusOptions = [
@@ -52,13 +59,37 @@ const projectStatusOptions = [
 ];
 
 const AddContentProject: React.FC<AddContentProjectProps> = ({
+  employees,
+  selectedTeamMembers,
   register,
   errors,
   setValue,
+  onTeamMemberSelect,
+  onClearSelection,
 }) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleDropdownToggle = () => setDropdownOpen(!dropdownOpen);
+
+  const handleEmployeeClick = (id: number) => {
+    onTeamMemberSelect(id);
+    setDropdownOpen(false);
+  };
+
+  const handleRemoveTeamMember = (id: number) => {
+    const newSelectedTeamMembers = selectedTeamMembers.filter(
+      (member) => member.id !== id
+    );
+    onClearSelection(newSelectedTeamMembers); // Pass updated team members to onClearSelection
+  };
+
+  const selectedTeamMembersNames = selectedTeamMembers
+    .map((member) => member.last_name)
+    .join(", ");
+
   return (
     <div className="max-md mx-auto p-6 bg-white shadow-md rounded-lg rtl">
-      <Title title="وارد کردن اطلاعات پروژه تولید محتوا" />
+      <Title title="وارد کردن اطلاعات پروژه" />
       <div className="mt-5">
         {/* نام کارفرما */}
         <InputField
@@ -77,6 +108,20 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
           type="tel"
           placeholder="مثال: 09123456789"
           register={register}
+          errors={errors}
+        />
+
+        <DropdownField
+          id="team_members"
+          label="اعضای تیم"
+          placeholder="اعضای تیم را انتخاب کنید"
+          employees={employees}
+          selectedItems={selectedTeamMembers}
+          dropdownOpen={dropdownOpen}
+          handleToggle={handleDropdownToggle}
+          handleSelect={handleEmployeeClick}
+          handleRemove={handleRemoveTeamMember}
+          value={selectedTeamMembersNames}
           errors={errors}
         />
 
