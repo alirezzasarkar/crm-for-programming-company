@@ -28,6 +28,7 @@ import Dashboard from "../components/Dashboard/Dashboard";
 import MeetingEntryPage from "./MeetingEntryPage";
 import MeetingListPage from "./MeetingListPage";
 import MeetingDetailsPage from "./MeetingDetailsPage";
+import { AddContentProductionPage } from "./AddContentProductionPage";
 
 const DashboardPage: React.FC = () => {
   return (
@@ -118,6 +119,14 @@ const DashboardPage: React.FC = () => {
           element={
             <ProtectedRoute>
               <AddProjectPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="content-production/entry"
+          element={
+            <ProtectedRoute>
+              <AddContentProductionPage />
             </ProtectedRoute>
           }
         />
