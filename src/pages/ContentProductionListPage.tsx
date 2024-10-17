@@ -6,18 +6,34 @@ import LoadingSpinner from "../components/Common/Loading";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import {
   fetchContentProjects,
-  deleteContentProject,
+  contentProjectsDelete,
 } from "../services/contentProject";
 import Swal from "sweetalert2";
 import ContentProjectList from "../components/Projects/ContentProductionList";
 
 interface ContentProject {
   id: number;
-  fullName: string;
-  contactNumber: string;
-  startDate: string;
-  endDate: string;
-  status: string;
+  full_name: string; // نام پروژه یا کارفرما
+  contact_number: string; // شماره تماس
+  start_date: string; // تاریخ شروع
+  end_date: string; // تاریخ پایان
+  project_status: string; // وضعیت پروژه
+  team_members: number[]; // اعضای تیم
+  photo_frequency: number;
+  photos_per_month: number;
+  videos_per_month: number;
+  organization_colors: string;
+  collaboration_duration: string;
+  contract_file: string | null;
+  damage: string;
+  consultation: boolean;
+  caption_writing: boolean;
+  cover_design: boolean;
+  post_scenario_writing: boolean;
+  teaser: boolean;
+  drone_shot: boolean;
+  outside_shoot: boolean;
+  out_of_city_shoot: boolean;
 }
 
 const statusOptions = ["تمام پروژه‌ها", "درحال انجام", "انجام شده"];
@@ -36,31 +52,30 @@ const ContentProjectListPage = () => {
     error,
   } = useQuery<ContentProject[]>("contentProjects", fetchContentProjects);
 
-  const mutation = useMutation(deleteContentProject, {
+  const mutation = useMutation(contentProjectsDelete, {
     onSuccess: () => {
-      // Invalidate and refetch content projects after deletion
       queryClient.invalidateQueries("contentProjects");
     },
   });
 
   if (isLoading) return <LoadingSpinner />;
 
-  // Filter content projects based on status and search query
   let filteredContentProjects = (contentProjects || []).filter((project) => {
     const matchesStatus =
-      statusFilter === "تمام پروژه‌ها" || project.status === statusFilter;
+      statusFilter === "تمام پروژه‌ها" ||
+      project.project_status === statusFilter;
     const matchesSearch =
-      project.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.contactNumber.includes(searchQuery); // Filter by contact number as well
+      project.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.contact_number.includes(searchQuery);
     return matchesStatus && matchesSearch;
   });
 
   const handleProjectClick = (projectId: number) => {
-    navigate(`/dashboard/content-projects/detail/${projectId}`);
+    navigate(`/dashboard/content-production/detail/${projectId}`);
   };
 
   const handleEditProject = (projectId: number) => {
-    navigate(`/dashboard/content-projects/edit/${projectId}`); // صفحه ویرایش پروژه
+    navigate(`/dashboard/content-projects/edit/${projectId}`);
   };
 
   const handleDeleteProject = (projectId: number) => {
@@ -89,9 +104,9 @@ const ContentProjectListPage = () => {
       <div className="bg-white p-6 rounded-lg shadow-md rtl">
         <Title title="لیست پروژه های تولید محتوا" />
         <ContentProjectList
-          contentProjects={filteredContentProjects} // مطمئن می‌شویم که همیشه یک آرایه ارسال می‌شود
+          contentProjects={filteredContentProjects}
           onProjectClick={handleProjectClick}
-          onEditProject={handleEditProject} // ارسال تابع ویرایش
+          onEditProject={handleEditProject}
           onDeleteProject={handleDeleteProject}
         />
       </div>

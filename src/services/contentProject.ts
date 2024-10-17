@@ -1,6 +1,5 @@
 import apiClient from './axiosConfig';
 import { handleApiError } from './errorHandler';
-import { ProjectFormInputs } from '../pages/AddProjectPage'; // Adjust path as needed
 
 // دریافت تمام کارمندان برای نام مدیر پروژه
 export const getEmployees = async () => {
@@ -14,7 +13,7 @@ export const getEmployees = async () => {
 };
 
 // ایجاد پروژه جدید
-export const createProject = async (projectData: ProjectFormInputs) => {
+export const createContentProjects = async (projectData: ProjectFormInputs) => {
   try {
     const formData = new FormData();
 
@@ -29,11 +28,12 @@ export const createProject = async (projectData: ProjectFormInputs) => {
       }
     }
 
-    const response = await apiClient.post('/projects/projects/', formData, {
+    const response = await apiClient.post('/projects/contentprojects/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data', // Set content type for form data
       },
     });
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error("خطا در ایجاد پروژه:", error);
@@ -41,12 +41,11 @@ export const createProject = async (projectData: ProjectFormInputs) => {
   }
 };
 
-
-
 // دریافت لیست پروژه‌ها
 export const fetchContentProjects = async () => {
   try {
-    const response = await apiClient.get('/projects/projects/');
+    const response = await apiClient.get('/projects/contentprojects/');
+    console.log(response.data);
     return response.data;
   } catch (error) {
     handleApiError(error);
@@ -54,17 +53,25 @@ export const fetchContentProjects = async () => {
   }
 };
 
-// دریافت جزئیات پروژه
-export const fetchProjectDetails = async (projectId: number) => {
-
+// دریافت جزئیات پروژه بر اساس شناسه
+export const fetchContentProjectsDetails = async (projectId: number) => {
+  try {
+    const response = await apiClient.get(`/projects/contentprojects/${projectId}/`);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
 };
 
-// ویرایش پروژه
-export const updateProject = async (projectId: number, projectData: ProjectFormInputs) => {
- 
+// حذف پروژه بر اساس شناسه
+export const contentProjectsDelete = async (projectId: number) => {
+  try {
+    const response = await apiClient.delete(`/projects/contentprojects/${projectId}/`);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
 };
 
-// حذف پروژه
-export const deleteContentProject = async (projectId: number) => {
-
-};

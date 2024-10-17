@@ -1,34 +1,37 @@
 import React from "react";
 import { FaEllipsisV, FaTrash, FaEdit } from "react-icons/fa";
-import moment from "jalali-moment"; // اضافه کردن کتابخانه برای تبدیل تاریخ
+import moment from "jalali-moment";
 import { useAuth } from "../Authentication/AuthContext";
 
 interface ContentProject {
   id: number;
-  fullName: string; // نام کارفرما
-  contactNumber: string; // شماره تماس
-  startDate: string; // تاریخ شروع
-  endDate: string; // تاریخ پایان
-  status: string; // وضعیت پروژه
+  full_name: string;
+  contact_number: string;
+  start_date: string;
+  end_date: string;
+  project_status: string;
 }
 
 interface ContentProjectListProps {
   contentProjects: ContentProject[];
   onProjectClick: (projectId: number) => void;
   onDeleteProject: (projectId: number) => void;
-  onEditProject: (projectId: number) => void; // تابع جدید برای ویرایش
+  onEditProject: (projectId: number) => void;
 }
 
-// تابع تبدیل تاریخ به شمسی
 const convertToJalali = (date: string) => {
+  if (!date || isNaN(new Date(date).getTime())) {
+    return "تاریخ نامعتبر"; // اگر تاریخ نامعتبر باشد
+  }
+
+  // تبدیل تاریخ میلادی به جلالی
   return moment(date, "YYYY-MM-DD").locale("fa").format("jYYYY/jMM/jDD");
 };
 
-// تابع ترجمه وضعیت پروژه به فارسی
 const translateStatus = (status: string): string => {
   switch (status) {
-    case "not_started":
-      return "شروع نشده";
+    case "pending":
+      return "در انتظار";
     case "in_progress":
       return "در حال انجام";
     case "completed":
@@ -42,7 +45,7 @@ const ContentProjectList: React.FC<ContentProjectListProps> = ({
   contentProjects,
   onProjectClick,
   onDeleteProject,
-  onEditProject, // اضافه کردن تابع جدید
+  onEditProject,
 }) => {
   const { user } = useAuth();
 
@@ -86,19 +89,20 @@ const ContentProjectList: React.FC<ContentProjectListProps> = ({
                 className="bg-gray-100 hover:bg-gray-200 cursor-pointer"
                 onClick={() => onProjectClick(project.id)}
               >
-                <td className="py-3 text-sm text-center">{project.fullName}</td>
+                <td className="py-3 text-sm text-center">
+                  {project.full_name}
+                </td>
                 <td className="py-3 text-sm text-center text-blue-600">
-                  {project.contactNumber}
+                  {project.contact_number}
                 </td>
                 <td className="py-3 text-sm text-center text-yellow-500">
-                  {convertToJalali(project.startDate)}{" "}
-                  {/* تبدیل تاریخ به شمسی */}
+                  {convertToJalali(project.start_date)}
                 </td>
                 <td className="py-3 text-sm text-center text-yellow-500">
-                  {convertToJalali(project.endDate)} {/* تبدیل تاریخ به شمسی */}
+                  {convertToJalali(project.end_date)}
                 </td>
                 <td className="py-3 text-sm text-center">
-                  {translateStatus(project.status)}
+                  {translateStatus(project.project_status)}
                 </td>
                 <td className="py-3 text-sm text-center">
                   <FaEllipsisV className="text-gray-500 mx-auto" />
@@ -108,8 +112,8 @@ const ContentProjectList: React.FC<ContentProjectListProps> = ({
                     <FaTrash
                       className="text-red-500 mx-auto cursor-pointer"
                       onClick={(e) => {
-                        e.stopPropagation(); // جلوگیری از کلیک روی ردیف
-                        onDeleteProject(project.id); // ارسال id به تابع onDeleteProject
+                        e.stopPropagation();
+                        onDeleteProject(project.id);
                       }}
                     />
                   </td>
