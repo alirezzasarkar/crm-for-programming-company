@@ -10,8 +10,6 @@ import { FaSave } from "react-icons/fa";
 import FileUploadField from "./FileUploadField";
 import DropdownField from "./DropdownField";
 
-// در فایل AddContentProduction.tsx
-
 export interface ContentProjectFormInputs {
   fullName: string;
   contactNumber: string;
@@ -37,19 +35,19 @@ export interface ContentProjectFormInputs {
 
 // Define the props for the component
 interface AddContentProjectProps {
-  employees: Array<{ id: number; last_name: string; first_name: string }>; // Define the type for employees
+  employees: Array<{ id: number; last_name: string; first_name: string }>;
   selectedTeamMembers: Array<{
     id: number;
     last_name: string;
     first_name: string;
-  }>; // Define the type for selected team members
+  }>;
   register: UseFormRegister<ContentProjectFormInputs>;
   errors: FieldErrors<ContentProjectFormInputs>;
   setValue: UseFormSetValue<ContentProjectFormInputs>;
-  onTeamMemberSelect: (id: number) => void; // Add the type for onTeamMemberSelect
+  onTeamMemberSelect: (id: number) => void;
   onClearSelection: (
     members: Array<{ id: number; last_name: string; first_name: string }>
-  ) => void; // Add the type for onClearSelection
+  ) => void;
 }
 
 const projectStatusOptions = [
@@ -80,7 +78,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
     const newSelectedTeamMembers = selectedTeamMembers.filter(
       (member) => member.id !== id
     );
-    onClearSelection(newSelectedTeamMembers); // Pass updated team members to onClearSelection
+    onClearSelection(newSelectedTeamMembers);
   };
 
   const selectedTeamMembersNames = selectedTeamMembers
@@ -168,20 +166,35 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
         register={register}
         errors={errors}
       />
-      <DatePickerField
-        id="startDate"
-        label="تاریخ شروع"
-        placeholder="تاریخ شروع را وارد کنید"
-        register={register}
-        errors={errors}
-      />
-      <DatePickerField
-        id="endDate"
-        label="تاریخ پایان"
-        placeholder="تاریخ پایان را وارد کنید"
-        register={register}
-        errors={errors}
-      />
+      {(
+        [
+          {
+            id: "startDate",
+            label: "تاریخ شروع",
+            placeholder: "تاریخ شروع را وارد کنید",
+          },
+          {
+            id: "endDate",
+            label: "تاریخ پایان",
+            placeholder: "تاریخ پایان را وارد کنید",
+          },
+        ] as Array<{
+          id: keyof ContentProjectFormInputs;
+          label: string;
+          placeholder: string;
+        }>
+      ).map(({ id, label, placeholder }) => (
+        <DatePickerField
+          key={id}
+          id={id}
+          label={label}
+          placeholder={placeholder}
+          register={register}
+          errors={errors}
+          setValue={setValue} // Pass setValue here
+        />
+      ))}
+
       <InputField
         id="videosPerMonth"
         label="تعداد ویدیو در هر ماه"

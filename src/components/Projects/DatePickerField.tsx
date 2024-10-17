@@ -1,6 +1,7 @@
 import React from "react";
 import { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
 import { ProjectFormInputs } from "../../pages/AddProjectPage";
+import { ContentProjectFormInputs } from "./AddContentProduction";
 import PersianDatePicker from "../Common/PersianDatePicker"; // Adjust the path if needed
 
 interface DatePickerFieldProps {

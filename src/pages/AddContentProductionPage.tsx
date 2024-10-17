@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddContentProject from "../components/Projects/AddContentProduction";
 import { useForm } from "react-hook-form";
 import { ContentProjectFormInputs } from "../components/Projects/AddContentProduction";
-import { createContentProjects } from "../services/contentProject"; // Import API function
+import {
+  createContentProjects,
+  getEmployees,
+} from "../services/contentProject"; // Import API functions
+import LoadingSpinner from "../components/Common/Loading";
+
+interface Employee {
+  id: number;
+  first_name: string;
+  last_name: string;
+}
 
 export const AddContentProductionPage = () => {
   const {
@@ -12,11 +22,29 @@ export const AddContentProductionPage = () => {
     formState: { errors },
   } = useForm<ContentProjectFormInputs>();
 
-  const [employees] = useState([]); // بدون اطلاعات پیش‌فرض
+  const [employees, setEmployees] = useState<Employee[]>([]); // تعریف نوع آرایه به عنوان Employee[]
+  const [selectedTeamMembers, setSelectedTeamMembers] = useState<Employee[]>(
+    []
+  );
+  const [loading, setLoading] = useState<boolean>(true); // برای حالت بارگذاری
+  const [error, setError] = useState<string | null>(null); // برای مدیریت خطا
 
-  const [selectedTeamMembers, setSelectedTeamMembers] = useState<
-    Array<{ id: number; first_name: string; last_name: string }>
-  >([]);
+  // useEffect برای فراخوانی API
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const data = await getEmployees(); // فراخوانی API
+        setEmployees(data); // ذخیره داده‌های دریافت‌شده
+      } catch (error) {
+        setError("خطا در دریافت اطلاعات کارمندان");
+        console.error("خطا در دریافت اطلاعات:", error);
+      } finally {
+        setLoading(false); // اتمام حالت بارگذاری
+      }
+    };
+
+    fetchEmployees(); // فراخوانی تابع
+  }, []); // اجرا فقط در بارگذاری اولیه
 
   const handleTeamMemberSelect = (id: number) => {
     const selectedEmployee = employees.find((employee) => employee.id === id);
@@ -31,9 +59,7 @@ export const AddContentProductionPage = () => {
     }
   };
 
-  const handleClearSelection = (
-    newMembers: Array<{ id: number; last_name: string; first_name: string }>
-  ) => {
+  const handleClearSelection = (newMembers: Employee[]) => {
     setSelectedTeamMembers(newMembers);
   };
 
@@ -46,6 +72,10 @@ export const AddContentProductionPage = () => {
       console.error("خطا در ثبت پروژه:", error);
     }
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>

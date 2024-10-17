@@ -1,3 +1,4 @@
+import { ContentProjectFormInputs } from '../components/Projects/AddContentProduction';
 import apiClient from './axiosConfig';
 import { handleApiError } from './errorHandler';
 
@@ -13,33 +14,44 @@ export const getEmployees = async () => {
 };
 
 // ایجاد پروژه جدید
-export const createContentProjects = async (projectData: ProjectFormInputs) => {
+export const createContentProjects = async (projectData: ContentProjectFormInputs) => {
   try {
     const formData = new FormData();
 
     // Append other project data fields
     for (const key in projectData) {
-      if (Array.isArray(projectData[key])) {
-        projectData[key].forEach((file: File) => {
-          formData.append(key, file); // Append each file to the FormData
+      const value = projectData[key as keyof ContentProjectFormInputs];
+
+      // بررسی و مدیریت انواع مختلف داده‌ها
+      if (Array.isArray(value)) {
+        // اگر مقدار یک آرایه از فایل‌ها باشد
+        value.forEach((file: File) => {
+          formData.append(key, file); // اضافه کردن هر فایل به formData
         });
-      } else {
-        formData.append(key, projectData[key as keyof ProjectFormInputs]); // Use key as keyof ProjectFormInputs
+      } else if (value instanceof File) {
+        formData.append(key, value); // اضافه کردن فایل به formData
+      } else if (typeof value === 'number' || typeof value === 'boolean') {
+        formData.append(key, String(value)); // تبدیل number/boolean به string
+      } else if (typeof value === 'string' && value !== '') {
+        formData.append(key, value); // اضافه کردن string به formData
       }
+      // اگر مقدار null یا undefined باشد، آن را نادیده می‌گیریم.
     }
 
     const response = await apiClient.post('/projects/contentprojects/', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data', // Set content type for form data
+        'Content-Type': 'multipart/form-data', // تنظیم نوع محتوا برای formData
       },
     });
-    console.log(response.data)
+    
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("خطا در ایجاد پروژه:", error);
-    throw error; // Rethrow or handle as per your application logic
+    throw error; // پرتاب دوباره یا مدیریت خطا
   }
 };
+
 
 // دریافت لیست پروژه‌ها
 export const fetchContentProjects = async () => {
