@@ -28,7 +28,6 @@ export const getEmployees = async () => {
 export const getWorkingHours = async () => {
   try {
     const response = await apiClient.get('/timesheet/list_for_admin/');
-    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);
@@ -107,7 +106,6 @@ export const updateWorkingHour = async (id: number, workingHourData: any) => {
 export const startWorking = async () => {
   try {
     const response = await apiClient.post('/timesheet/start/');
-    console.log(response.data)
 
     return response.data;
   } catch (error) {
@@ -120,7 +118,6 @@ export const startWorking = async () => {
 export const pauseWorking = async () => {
   try {
     const response = await apiClient.patch('/timesheet/pause/');
-    console.log(response.data)
 
     return response.data;
   } catch (error) {
@@ -133,7 +130,6 @@ export const pauseWorking = async () => {
 export const resumeWorking = async () => {
   try {
     const response = await apiClient.put('/timesheet/resume/');
-    console.log(response.data)
 
     return response.data;
   } catch (error) {
@@ -146,7 +142,6 @@ export const resumeWorking = async () => {
 export const stopWorking = async () => {
   try {
     const response = await apiClient.delete('/timesheet/stop/');
-    console.log(response.data)
 
     return response.data;
   } catch (error) {

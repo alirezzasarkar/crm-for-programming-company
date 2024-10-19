@@ -31,7 +31,7 @@ const convertToJalali = (date: string) => {
 const translateStatus = (status: string): string => {
   switch (status) {
     case "pending":
-      return "در انتظار";
+      return "شروع نشده";
     case "in_progress":
       return "در حال انجام";
     case "completed":

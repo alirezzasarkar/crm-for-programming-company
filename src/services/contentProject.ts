@@ -1,6 +1,6 @@
-import { ContentProjectFormInputs } from '../components/Projects/AddContentProduction';
 import apiClient from './axiosConfig';
 import { handleApiError } from './errorHandler';
+import { ContentProjectFormInputs } from './../components/Projects/AddContentProduction';
 
 // دریافت تمام کارمندان برای نام مدیر پروژه
 export const getEmployees = async () => {
@@ -13,51 +13,65 @@ export const getEmployees = async () => {
   }
 };
 
-// ایجاد پروژه جدید
 export const createContentProjects = async (projectData: ContentProjectFormInputs) => {
   try {
     const formData = new FormData();
 
     // Append other project data fields
     for (const key in projectData) {
-      const value = projectData[key as keyof ContentProjectFormInputs];
+      if (projectData.hasOwnProperty(key)) {
+        const value = projectData[key as keyof ContentProjectFormInputs];
 
-      // بررسی و مدیریت انواع مختلف داده‌ها
-      if (Array.isArray(value)) {
-        // اگر مقدار یک آرایه از فایل‌ها باشد
-        value.forEach((file: File) => {
-          formData.append(key, file); // اضافه کردن هر فایل به formData
-        });
-      } else if (value instanceof File) {
-        formData.append(key, value); // اضافه کردن فایل به formData
-      } else if (typeof value === 'number' || typeof value === 'boolean') {
-        formData.append(key, String(value)); // تبدیل number/boolean به string
-      } else if (typeof value === 'string' && value !== '') {
-        formData.append(key, value); // اضافه کردن string به formData
+        // مدیریت فایل (اگر key مربوط به فایل باشد)
+        if (key === "contract_file" && value instanceof FileList) {
+          // در اینجا فرض شده است که یک فایل آپلود می‌شود
+          if (value.length > 0) {
+            formData.append(key, value[0]); // افزودن فایل به فرم دیتا
+          }
+        }
+        // اگر آرایه باشد (مثلاً اعضای تیم)
+        else if (Array.isArray(value)) {
+          value.forEach((item) => {
+            formData.append(`${key}[]`, item.toString()); // هر آیتم آرایه را اضافه و به رشته تبدیل می‌کنیم
+          });
+        }
+        // تبدیل مقدار boolean به true/false
+        else if (typeof value === "boolean") {
+          formData.append(key, value ? "true" : "false");
+        }
+        // اگر مقدار عددی باشد، آن را به رشته تبدیل می‌کنیم
+        else if (typeof value === "number") {
+          formData.append(key, value.toString());
+        }
+        // بررسی اینکه مقدار نباید null یا undefined باشد
+        else if (value !== undefined && value !== null) {
+          formData.append(key, value as string); // به رشته تبدیل می‌شود
+        }
       }
-      // اگر مقدار null یا undefined باشد، آن را نادیده می‌گیریم.
     }
 
+    // ارسال درخواست به API
     const response = await apiClient.post('/projects/contentprojects/', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data', // تنظیم نوع محتوا برای formData
+        'Content-Type': 'multipart/form-data',
       },
     });
-    
+
     console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("خطا در ایجاد پروژه:", error);
-    throw error; // پرتاب دوباره یا مدیریت خطا
+    throw error;
   }
 };
+
+
 
 
 // دریافت لیست پروژه‌ها
 export const fetchContentProjects = async () => {
   try {
     const response = await apiClient.get('/projects/contentprojects/');
-    console.log(response.data);
     return response.data;
   } catch (error) {
     handleApiError(error);

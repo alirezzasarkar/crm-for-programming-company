@@ -1,17 +1,41 @@
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2"; // اضافه کردن SweetAlert2
 import AddContentProject from "../components/Projects/AddContentProduction";
-import { useForm } from "react-hook-form";
-import { ContentProjectFormInputs } from "../components/Projects/AddContentProduction";
+import { useForm, SubmitHandler } from "react-hook-form";
 import {
   createContentProjects,
   getEmployees,
 } from "../services/contentProject"; // Import API functions
 import LoadingSpinner from "../components/Common/Loading";
 
-interface Employee {
+export interface Employee {
   id: number;
-  first_name: string;
   last_name: string;
+}
+
+export interface ContentProjectFormInputs {
+  id: number;
+  full_name: string;
+  contact_number: string;
+  start_date: string;
+  end_date: string;
+  photo_frequency: number;
+  project_status: string;
+  team_members: number[];
+  photos_per_month: number;
+  videos_per_month: number;
+  organization_colors: string;
+  collaboration_duration: string;
+  contract_file?: FileList;
+  damage: string;
+  consultation: boolean;
+  caption_writing: boolean;
+  cover_design: boolean;
+  post_scenario_writing: boolean;
+  teaser: boolean;
+  drone_shot: boolean;
+  outside_shoot: boolean;
+  out_of_city_shoot: boolean;
 }
 
 export const AddContentProductionPage = () => {
@@ -22,54 +46,63 @@ export const AddContentProductionPage = () => {
     formState: { errors },
   } = useForm<ContentProjectFormInputs>();
 
-  const [employees, setEmployees] = useState<Employee[]>([]); // تعریف نوع آرایه به عنوان Employee[]
-  const [selectedTeamMembers, setSelectedTeamMembers] = useState<Employee[]>(
-    []
-  );
-  const [loading, setLoading] = useState<boolean>(true); // برای حالت بارگذاری
-  const [error, setError] = useState<string | null>(null); // برای مدیریت خطا
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [selectedTeamMembers, setSelectedTeamMembers] = useState<number[]>([]); // تغییر به آرایه‌ای از شناسه‌ها (IDها)
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // useEffect برای فراخوانی API
+  // فراخوانی API برای دریافت لیست کارمندان
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const data = await getEmployees(); // فراخوانی API
-        setEmployees(data); // ذخیره داده‌های دریافت‌شده
+        const data = await getEmployees();
+        setEmployees(data);
       } catch (error) {
         setError("خطا در دریافت اطلاعات کارمندان");
         console.error("خطا در دریافت اطلاعات:", error);
       } finally {
-        setLoading(false); // اتمام حالت بارگذاری
+        setLoading(false);
       }
     };
 
-    fetchEmployees(); // فراخوانی تابع
-  }, []); // اجرا فقط در بارگذاری اولیه
+    fetchEmployees();
+  }, []);
+
+  // به‌روزرسانی فرم با اعضای تیم انتخاب شده
+  useEffect(() => {
+    setValue("team_members", selectedTeamMembers);
+  }, [selectedTeamMembers, setValue]);
 
   const handleTeamMemberSelect = (id: number) => {
-    const selectedEmployee = employees.find((employee) => employee.id === id);
-    if (
-      selectedEmployee &&
-      !selectedTeamMembers.some((member) => member.id === id)
-    ) {
-      setSelectedTeamMembers((prevMembers) => [
-        ...prevMembers,
-        selectedEmployee,
-      ]);
-    }
+    setSelectedTeamMembers((prev) => [...prev, id]);
   };
 
-  const handleClearSelection = (newMembers: Employee[]) => {
-    setSelectedTeamMembers(newMembers);
+  const handleClearSelection = (
+    newSelectedMembers: { id: number; last_name: string }[]
+  ) => {
+    const newSelectedIds = newSelectedMembers.map((member) => member.id);
+    setSelectedTeamMembers(newSelectedIds);
   };
 
-  const onSubmit = async (data: ContentProjectFormInputs) => {
+  const onSubmit: SubmitHandler<ContentProjectFormInputs> = async (data) => {
     try {
-      const result = await createContentProjects(data);
-      console.log("پروژه با موفقیت ایجاد شد:", result);
-      // پیام موفقیت یا ریدایرکت
+      await createContentProjects(data);
+      // استفاده از SweetAlert برای نمایش پیام موفقیت
+      Swal.fire({
+        icon: "success",
+        title: "پروژه با موفقیت ثبت شد!",
+        showConfirmButton: true,
+        timer: 2000,
+      });
     } catch (error) {
       console.error("خطا در ثبت پروژه:", error);
+
+      // نمایش پیام خطا
+      Swal.fire({
+        icon: "error",
+        title: "خطا در ثبت پروژه",
+        text: "لطفا دوباره تلاش کنید.",
+      });
     }
   };
 
@@ -82,7 +115,9 @@ export const AddContentProductionPage = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <AddContentProject
           employees={employees}
-          selectedTeamMembers={selectedTeamMembers}
+          selectedTeamMembers={employees.filter((emp) =>
+            selectedTeamMembers.includes(emp.id)
+          )}
           register={register}
           setValue={setValue}
           errors={errors}

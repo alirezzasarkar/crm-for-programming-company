@@ -28,7 +28,6 @@ const ProjectDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // دریافت ID پروژه از URL
   const [project, setProject] = useState<ProjectDetailsPageProps | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {

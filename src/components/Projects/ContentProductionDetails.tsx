@@ -8,10 +8,10 @@ interface ContentProductionDetailsProps {
   project: {
     id: number;
     full_name: string;
-    phone_number: string;
+    contact_number: string;
     start_date: string;
     end_date: string;
-    status: string;
+    project_status: string;
     team_members: number[];
     photos_per_month: number;
     videos_per_month: number;
@@ -42,10 +42,10 @@ const ContentProductionDetails: React.FC<ContentProductionDetailsProps> = ({
   const {
     id,
     full_name,
-    phone_number,
+    contact_number,
     start_date,
     end_date,
-    status,
+    project_status,
     team_members,
     photos_per_month,
     videos_per_month,
@@ -65,13 +65,14 @@ const ContentProductionDetails: React.FC<ContentProductionDetailsProps> = ({
 
   const [employees, setEmployees] = useState<{ [key: number]: string }>({});
 
+  // دریافت کارمندان
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const employeesData = await getEmployees();
         const employeeMap: { [key: number]: string } = {};
         employeesData.forEach((employee: { id: number; last_name: string }) => {
-          employeeMap[employee.id] = employee.last_name;
+          employeeMap[employee.id] = employee.last_name; // ایجاد دیکشنری از ID به نام خانوادگی
         });
         setEmployees(employeeMap);
       } catch (error) {
@@ -84,6 +85,19 @@ const ContentProductionDetails: React.FC<ContentProductionDetailsProps> = ({
 
   const { user } = useAuth();
 
+  const translateStatus = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "شروع نشده";
+      case "in_progress":
+        return "در حال انجام";
+      case "completed":
+        return "انجام شده";
+      default:
+        return status;
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md rtl">
       <table className="min-w-full bg-white mt-4">
@@ -94,7 +108,7 @@ const ContentProductionDetails: React.FC<ContentProductionDetailsProps> = ({
           </tr>
           <tr className="border-b">
             <td className="px-4 py-3 text-gray-700">شماره تماس:</td>
-            <td className="px-4 py-3 text-gray-500">{phone_number}</td>
+            <td className="px-4 py-3 text-gray-500">{contact_number}</td>
           </tr>
           <tr className="border-b">
             <td className="px-4 py-3 text-gray-700">تاریخ شروع:</td>
@@ -110,7 +124,9 @@ const ContentProductionDetails: React.FC<ContentProductionDetailsProps> = ({
           </tr>
           <tr className="border-b">
             <td className="px-4 py-3 text-gray-700">وضعیت پروژه:</td>
-            <td className="px-4 py-3 text-gray-500">{status}</td>
+            <td className="px-4 py-3 text-gray-500">
+              {translateStatus(project_status)}
+            </td>
           </tr>
           <tr className="border-b">
             <td className="px-4 py-3 text-gray-700">اعضای تیم:</td>

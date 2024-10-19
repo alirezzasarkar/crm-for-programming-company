@@ -38,7 +38,6 @@ export const createMeeting = async (meetingData: {
 export const fetchMeetings = async () => {
   try {
     const response = await apiClient.get("/meetings/meetings/");
-    console.log(response.data)
     return response.data;
   } catch (error) {
     handleApiError(error);

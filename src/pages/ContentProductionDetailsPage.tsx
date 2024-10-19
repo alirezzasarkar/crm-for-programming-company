@@ -14,12 +14,12 @@ interface ContentProductionDetails {
   full_name: string;
   domain: string;
   manager_full_name: string;
-  phone_number: string;
+  contact_number: string;
   description: string;
   start_date: string;
   end_date: string;
   responsible_person: number;
-  status: string;
+  project_status: string;
   contract_file: string | null;
   photos_per_month: number;
   videos_per_month: number;
@@ -49,8 +49,6 @@ const ContentProductionDetailsPage: React.FC = () => {
       try {
         const data = await fetchContentProjectsDetails(Number(id));
         setContentProject(data);
-      } catch (error) {
-        console.error("Error fetching project details:", error);
       } finally {
         setLoading(false);
       }

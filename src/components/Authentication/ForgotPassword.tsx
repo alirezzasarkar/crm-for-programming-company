@@ -43,9 +43,6 @@ const ForgotPassword: React.FC = () => {
 
       if (code) {
         setVerificationCode(code);
-
-        console.log("کد وارد شده:", code);
-
         Swal.fire("رمز عبور با موفقیت تغییر یافت", "", "success");
       }
     } catch (error) {

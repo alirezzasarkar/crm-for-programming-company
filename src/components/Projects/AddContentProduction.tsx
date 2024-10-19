@@ -9,49 +9,48 @@ import Button from "../Common/Button";
 import { FaSave } from "react-icons/fa";
 import FileUploadField from "./FileUploadField";
 import DropdownField from "./DropdownField";
+import { Employee } from "../../pages/AddContentProductionPage";
 
 export interface ContentProjectFormInputs {
-  fullName: string;
-  contactNumber: string;
-  projectStatus: string;
-  contractFile: File | null;
-  photoFrequency: number;
-  startDate: string;
-  endDate: string;
-  videosPerMonth: number;
-  photosPerMonth: number;
-  organizationColors: string;
-  collaborationDuration: number;
+  id: number;
+  full_name: string;
+  contact_number: string;
+  start_date: string;
+  end_date: string;
+  photo_frequency: number;
+  project_status: string;
+  team_members: number[];
+  photos_per_month: number;
+  videos_per_month: number;
+  organization_colors: string;
+  collaboration_duration: string;
+  contract_file?: FileList;
   damage: string;
   consultation: boolean;
-  captionWriting: boolean;
-  coverDesign: boolean;
-  postScenarioWriting: boolean;
+  caption_writing: boolean;
+  cover_design: boolean;
+  post_scenario_writing: boolean;
   teaser: boolean;
-  droneShot: boolean;
-  outsideShoot: boolean;
-  outOfCityShoot: boolean;
+  drone_shot: boolean;
+  outside_shoot: boolean;
+  out_of_city_shoot: boolean;
 }
 
 // Define the props for the component
 interface AddContentProjectProps {
-  employees: Array<{ id: number; last_name: string; first_name: string }>;
-  selectedTeamMembers: Array<{
-    id: number;
-    last_name: string;
-    first_name: string;
-  }>;
+  employees: Employee[];
+  selectedTeamMembers: { id: number; last_name: string }[];
   register: UseFormRegister<ContentProjectFormInputs>;
   errors: FieldErrors<ContentProjectFormInputs>;
   setValue: UseFormSetValue<ContentProjectFormInputs>;
   onTeamMemberSelect: (id: number) => void;
   onClearSelection: (
-    members: Array<{ id: number; last_name: string; first_name: string }>
-  ) => void;
+    selectedMembers: { id: number; last_name: string }[]
+  ) => void; // Updated to accept the new selection
 }
 
 const projectStatusOptions = [
-  { value: "not_started", label: "شروع نشده" },
+  { value: "pending", label: "شروع نشده" },
   { value: "in_progress", label: "در حال انجام" },
   { value: "completed", label: "انجام شده" },
 ];
@@ -78,7 +77,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
     const newSelectedTeamMembers = selectedTeamMembers.filter(
       (member) => member.id !== id
     );
-    onClearSelection(newSelectedTeamMembers);
+    onClearSelection(newSelectedTeamMembers); // Pass updated team members to onClearSelection
   };
 
   const selectedTeamMembersNames = selectedTeamMembers
@@ -91,7 +90,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
       <div className="mt-5">
         {/* نام کارفرما */}
         <InputField
-          id="fullName"
+          id="full_name"
           label="نام کارفرما"
           type="text"
           placeholder="نام کارفرما را وارد کنید"
@@ -101,7 +100,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
 
         {/* شماره تماس کارفرما */}
         <InputField
-          id="contactNumber"
+          id="contact_number"
           label="شماره تماس کارفرما"
           type="tel"
           placeholder="مثال: 09123456789"
@@ -133,8 +132,8 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
           </label>
           <div className="w-2/3 flex">
             <select
-              id="projectStatus"
-              {...register("projectStatus", {
+              id="project_status"
+              {...register("project_status", {
                 required: "وضعیت پروژه الزامی است",
               })}
               className="w-full p-3 py-2 border border-gray-200 bg-white rounded-xl text-gray-400"
@@ -148,9 +147,9 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
                 </option>
               ))}
             </select>
-            {errors.projectStatus && (
+            {errors.project_status && (
               <p className="text-red-500 text-xs pt-1">
-                {errors.projectStatus.message}
+                {errors.project_status.message}
               </p>
             )}
           </div>
@@ -159,7 +158,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
 
       {/* سایر فیلدهای فرم */}
       <InputField
-        id="photoFrequency"
+        id="photo_frequency"
         label="تعداد دفعات حدودی تصویربرداری در ماه"
         type="number"
         placeholder="مثال: 2"
@@ -169,12 +168,12 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
       {(
         [
           {
-            id: "startDate",
+            id: "start_date",
             label: "تاریخ شروع",
             placeholder: "تاریخ شروع را وارد کنید",
           },
           {
-            id: "endDate",
+            id: "end_date",
             label: "تاریخ پایان",
             placeholder: "تاریخ پایان را وارد کنید",
           },
@@ -196,7 +195,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
       ))}
 
       <InputField
-        id="videosPerMonth"
+        id="videos_per_month"
         label="تعداد ویدیو در هر ماه"
         type="number"
         placeholder="تعداد ویدیو"
@@ -204,7 +203,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
         errors={errors}
       />
       <InputField
-        id="photosPerMonth"
+        id="photos_per_month"
         label="تعداد عکس‌ در هر ماه"
         type="number"
         placeholder="تعداد عکس"
@@ -212,7 +211,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
         errors={errors}
       />
       <InputField
-        id="organizationColors"
+        id="organization_colors"
         label="رنگ‌های سازمانی"
         type="text"
         placeholder="رنگ‌های سازمانی"
@@ -220,7 +219,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
         errors={errors}
       />
       <InputField
-        id="collaborationDuration"
+        id="collaboration_duration"
         label="مدت زمان همکاری"
         type="number"
         placeholder="مدت زمان (ماه)"
@@ -229,7 +228,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
       />
       {/* فایل قرارداد */}
       <FileUploadField
-        id="contractFile"
+        id="contract_file"
         label="فایل قرارداد"
         setValue={setValue}
       />
@@ -244,29 +243,29 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
 
       <CheckboxField id="consultation" label="مشاوره" register={register} />
       <CheckboxField
-        id="captionWriting"
+        id="caption_writing"
         label="کپشن‌نویسی"
         register={register}
       />
-      <CheckboxField id="coverDesign" label="طراحی کاور" register={register} />
+      <CheckboxField id="cover_design" label="طراحی کاور" register={register} />
       <CheckboxField
-        id="postScenarioWriting"
+        id="post_scenario_writing"
         label="سناریو نویسی پست‌ها"
         register={register}
       />
       <CheckboxField id="teaser" label="تیزر می‌خواهد" register={register} />
       <CheckboxField
-        id="droneShot"
+        id="drone_shot"
         label="نیاز به هلی‌شات"
         register={register}
       />
       <CheckboxField
-        id="outsideShoot"
+        id="outside_shoot"
         label="نیاز به تصویربرداری بیرون مجموعه"
         register={register}
       />
       <CheckboxField
-        id="outOfCityShoot"
+        id="out_of_city_shoot"
         label="نیاز به تصویربرداری خارج از شهر لوکیشن کارفرما"
         register={register}
       />
