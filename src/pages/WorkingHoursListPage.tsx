@@ -12,6 +12,7 @@ import {
 } from "../services/workingHours";
 import moment from "jalali-moment";
 import { useAuth } from "../components/Authentication/AuthContext";
+import LoadingSpinner from "../components/Common/Loading";
 
 interface WorkTimeEntry {
   id: number;
@@ -30,14 +31,17 @@ const WorkingHoursListPage: React.FC = () => {
   const [employeeMap, setEmployeeMap] = useState<{ [key: number]: string }>({});
   const [period, setPeriod] = useState<"week" | "month" | "all">("all");
 
+  const [isLoadingEmployees, setIsLoadingEmployees] = useState(true);
+
   const fetchEmployees = async () => {
     try {
       const employees = await getEmployees();
       const map: { [key: number]: string } = {};
       employees.forEach((employee: any) => {
-        map[employee.id] = employee.last_name; // نام خانوادگی را نگه‌داری می‌کند
+        map[employee.id] = employee.last_name;
       });
       setEmployeeMap(map);
+      setIsLoadingEmployees(false); // بارگذاری تمام شد
     } catch (error) {
       console.error("Error fetching employees:", error);
     }
@@ -45,6 +49,11 @@ const WorkingHoursListPage: React.FC = () => {
 
   const fetchWorkingHours = async () => {
     try {
+      if (Object.keys(employeeMap).length === 0) {
+        console.warn("Employee map is empty, skipping fetching working hours.");
+        return;
+      }
+
       let data;
       if (user?.role === "employee") {
         data = await getWorkingHoursEmployee();
@@ -65,7 +74,7 @@ const WorkingHoursListPage: React.FC = () => {
 
       const entriesWithJalaliDate = data.timesheets.map((entry: any) => ({
         ...entry,
-        user: employeeMap[entry.user], // اینجا باید نام خانوادگی درست نمایش داده شود
+        user: employeeMap[entry.user], // نام خانوادگی کارمند
         team: entry.team,
         jalali_date: moment(entry.date).format("jYYYY/jMM/jDD"),
         total_worked_time: entry.total_worked_time.split(".")[0],
@@ -112,6 +121,9 @@ const WorkingHoursListPage: React.FC = () => {
     }
   }, [employeeMap]);
 
+  if (isLoadingEmployees) {
+    return <LoadingSpinner />;
+  }
   return (
     <WorkingHoursList
       workTimeEntries={workTimeEntries}

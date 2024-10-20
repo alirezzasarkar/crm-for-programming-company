@@ -57,9 +57,11 @@ const ContentProjectList: React.FC<ContentProjectListProps> = ({
             <th className="py-2 text-center text-sm font-medium pb-5">
               نام و نام خانوادگی
             </th>
-            <th className="py-2 text-center text-sm font-medium pb-5">
-              شماره تماس
-            </th>
+            {user?.role === "manager" && (
+              <th className="py-2 text-center text-sm font-medium pb-5">
+                شماره تماس
+              </th>
+            )}
             <th className="py-2 text-center text-sm font-medium pb-5">
               تاریخ شروع
             </th>
@@ -92,9 +94,11 @@ const ContentProjectList: React.FC<ContentProjectListProps> = ({
                 <td className="py-3 text-sm text-center">
                   {project.full_name}
                 </td>
-                <td className="py-3 text-sm text-center text-blue-600">
-                  {project.contact_number}
-                </td>
+                {user?.role === "manager" && (
+                  <td className="py-3 text-sm text-center text-blue-600">
+                    {project.contact_number}
+                  </td>
+                )}
                 <td className="py-3 text-sm text-center text-yellow-500">
                   {convertToJalali(project.start_date)}
                 </td>

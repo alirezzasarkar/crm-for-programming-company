@@ -106,10 +106,12 @@ const ContentProductionDetails: React.FC<ContentProductionDetailsProps> = ({
             <td className="px-4 py-3 text-gray-700">نام پروژه:</td>
             <td className="px-4 py-3 text-gray-500">{full_name}</td>
           </tr>
-          <tr className="border-b">
-            <td className="px-4 py-3 text-gray-700">شماره تماس:</td>
-            <td className="px-4 py-3 text-gray-500">{contact_number}</td>
-          </tr>
+          {user?.role === "manager" && (
+            <tr className="border-b">
+              <td className="px-4 py-3 text-gray-700">شماره تماس:</td>
+              <td className="px-4 py-3 text-gray-500">{contact_number}</td>
+            </tr>
+          )}
           <tr className="border-b">
             <td className="px-4 py-3 text-gray-700">تاریخ شروع:</td>
             <td className="px-4 py-3 text-gray-500">
@@ -154,23 +156,25 @@ const ContentProductionDetails: React.FC<ContentProductionDetailsProps> = ({
               {collaboration_duration}
             </td>
           </tr>
-          <tr className="border-b">
-            <td className="px-4 py-3 text-gray-700">فایل قرارداد:</td>
-            <td className="px-4 py-3 text-gray-500">
-              {contract_file ? (
-                <a
-                  href={contract_file}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  مشاهده فایل
-                </a>
-              ) : (
-                "فایلی بارگذاری نشده"
-              )}
-            </td>
-          </tr>
+          {user?.role === "manager" && (
+            <tr className="border-b">
+              <td className="px-4 py-3 text-gray-700">فایل قرارداد:</td>
+              <td className="px-4 py-3 text-gray-500">
+                {contract_file ? (
+                  <a
+                    href={contract_file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 underline"
+                  >
+                    مشاهده فایل
+                  </a>
+                ) : (
+                  "فایلی بارگذاری نشده"
+                )}
+              </td>
+            </tr>
+          )}
           <tr className="border-b">
             <td className="px-4 py-3 text-gray-700">خسارت:</td>
             <td className="px-4 py-3 text-gray-500">

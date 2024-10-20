@@ -93,7 +93,6 @@ export const AddContentProductionPage = () => {
 
   const onSubmit: SubmitHandler<ContentProjectFormInputs> = async (data) => {
     if (selectedTeamMembers.length === 0) {
-      console.log(selectedTeamMembers);
       Swal.fire({
         icon: "error",
         title: "اعضای تیم انتخاب نشده است",
