@@ -24,7 +24,6 @@ export const createContentProjects = async (projectData: ContentProjectFormInput
 
         // مدیریت فایل (اگر key مربوط به فایل باشد)
         if (key === "contract_file" && value instanceof FileList) {
-          // در اینجا فرض شده است که یک فایل آپلود می‌شود
           if (value.length > 0) {
             formData.append(key, value[0]); // افزودن فایل به فرم دیتا
           }
@@ -32,7 +31,7 @@ export const createContentProjects = async (projectData: ContentProjectFormInput
         // اگر آرایه باشد (مثلاً اعضای تیم)
         else if (Array.isArray(value)) {
           value.forEach((item) => {
-            formData.append(`${key}[]`, item.toString()); // هر آیتم آرایه را اضافه و به رشته تبدیل می‌کنیم
+            formData.append(key, item.toString()); // هر آیتم آرایه را اضافه و به رشته تبدیل می‌کنیم
           });
         }
         // تبدیل مقدار boolean به true/false
@@ -50,7 +49,6 @@ export const createContentProjects = async (projectData: ContentProjectFormInput
       }
     }
 
-    // ارسال درخواست به API
     const response = await apiClient.post('/projects/contentprojects/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -64,8 +62,6 @@ export const createContentProjects = async (projectData: ContentProjectFormInput
     throw error;
   }
 };
-
-
 
 
 // دریافت لیست پروژه‌ها
