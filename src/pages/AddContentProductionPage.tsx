@@ -73,18 +73,34 @@ export const AddContentProductionPage = () => {
     setValue("team_members", selectedTeamMembers);
   }, [selectedTeamMembers, setValue]);
 
+  // افزودن عضو به تیم
   const handleTeamMemberSelect = (id: number) => {
-    setSelectedTeamMembers((prev) => [...prev, id]);
+    if (!selectedTeamMembers.includes(id)) {
+      const updatedTeam = [...selectedTeamMembers, id];
+      setSelectedTeamMembers(updatedTeam);
+      setValue("team_members", updatedTeam); // به‌روزرسانی مقدار فرم
+    }
   };
 
+  // حذف عضو از تیم
   const handleClearSelection = (
     newSelectedMembers: { id: number; last_name: string }[]
   ) => {
     const newSelectedIds = newSelectedMembers.map((member) => member.id);
     setSelectedTeamMembers(newSelectedIds);
+    setValue("team_members", newSelectedIds); // به‌روزرسانی مقدار فرم
   };
 
   const onSubmit: SubmitHandler<ContentProjectFormInputs> = async (data) => {
+    if (selectedTeamMembers.length === 0) {
+      console.log(selectedTeamMembers);
+      Swal.fire({
+        icon: "error",
+        title: "اعضای تیم انتخاب نشده است",
+        text: "لطفا حداقل یک عضو از تیم را انتخاب کنید.",
+      });
+      return; // جلوگیری از ارسال فرم در صورت خالی بودن اعضای تیم
+    }
     try {
       await createContentProjects(data);
       // استفاده از SweetAlert برای نمایش پیام موفقیت

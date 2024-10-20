@@ -77,7 +77,7 @@ const AddContentProject: React.FC<AddContentProjectProps> = ({
     const newSelectedTeamMembers = selectedTeamMembers.filter(
       (member) => member.id !== id
     );
-    onClearSelection(newSelectedTeamMembers); // Pass updated team members to onClearSelection
+    onClearSelection(newSelectedTeamMembers); // حذف عضو تیم و به‌روزرسانی
   };
 
   const selectedTeamMembersNames = selectedTeamMembers

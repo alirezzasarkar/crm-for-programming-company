@@ -87,13 +87,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     password: string;
   }) => {
     try {
-      const response = await apiRegister(userData);
-      const token = response.data.access;
-      localStorage.setItem("authToken", token);
-      setUser(decodeToken(token));
+      await apiRegister(userData);
     } catch (error) {
       console.error("Registration failed:", error);
-      throw new Error("Registration failed");
     }
   };
 

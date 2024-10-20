@@ -42,6 +42,7 @@ const RegisterPage: React.FC = () => {
         navigate("/login"); // Navigate to login page upon successful registration
       });
     } catch (error) {
+      console.log(error);
       Swal.fire({
         title: "خطا",
         text: "ثبت‌نام ناموفق بود",

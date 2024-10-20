@@ -54,7 +54,6 @@ const LoginPage: React.FC = () => {
         });
       }
     } catch (error) {
-      console.error(error); // ثبت خطا در کنسول
       Swal.fire({
         title: "خطا",
         text: "ورود ناموفق بود",
